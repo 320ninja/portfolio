@@ -552,9 +552,9 @@ footer a:hover{color:var(--acc)}
   background:rgba(14,14,20,.78);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.12);box-shadow:0 14px 40px -14px rgba(0,0,0,.8);transform:translateZ(40px)}
 .pt-badge b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;font-size:16px}
 .pt-badge i{width:8px;height:8px;border-radius:50%;background:#38e8b0;box-shadow:0 0 0 0 rgba(56,232,176,.6);animation:livePulse 1.6s infinite}
-.b1{left:-12%;top:12%;animation:ptFloat 6s ease-in-out infinite}
-.b2{right:-14%;top:44%;animation:ptFloat 7s ease-in-out -2s infinite}
-.b3{left:4%;bottom:2%;animation:ptFloat 6.5s ease-in-out -4s infinite}
+.b1{left:-82%;top:6%;animation:ptFloat 6s ease-in-out infinite}
+.b2{right:-10%;top:-24%;animation:ptFloat 7s ease-in-out -2s infinite}
+.b3{left:-5%;bottom:-30%;animation:ptFloat 6.5s ease-in-out -4s infinite}
 @keyframes ptFloat{50%{translate:0 -12px}}
 /* page-in */
 .portrait .pt-tilt{opacity:0;scale:.6;filter:blur(14px);clip-path:circle(0% at 50% 50%)}
