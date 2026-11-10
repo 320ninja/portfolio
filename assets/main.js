@@ -464,4 +464,53 @@ form.addEventListener('submit', e => {
     btn.innerHTML = 'Message ready ✓';
   }, 700);
 });
+
+/* ---------- full motion: scroll colour, spotlight, ripples, parallax ---------- */
+if (!reduce) {
+  const root = document.documentElement;
+  const PAL = { top: ['#ff5b2e', '#ff2e7e'], about: ['#ff2e7e', '#a855f7'], skills: ['#f97316', '#ff2e7e'], work: ['#4f8cff', '#38e8b0'],
+    process: ['#ffb02e', '#ff5b2e'], contact: ['#38e8b0', '#4f8cff'] };
+  const tIO = new IntersectionObserver(es => es.forEach(e => {
+    e.target.classList.toggle('lit', e.isIntersecting);
+    if (!e.isIntersecting) return;
+    const p = PAL[e.target.id] || (e.target.classList.contains('testimonials') ? ['#a855f7', '#ff2e7e'] : null);
+    if (p) { root.style.setProperty('--acc', p[0]); root.style.setProperty('--acc2', p[1]); }
+  }), { rootMargin: '-40% 0px -50% 0px' });
+  $$('header.hero,section.section').forEach(s => tIO.observe(s));
+
+  /* pointer spotlight + cursor colour */
+  document.addEventListener('pointermove', e => {
+    const card = e.target.closest('.skill,.work-card,.step,.t-card,.form,.clink');
+    if (card) { const r = card.getBoundingClientRect(); card.style.setProperty('--mx', (e.clientX - r.left) + 'px'); card.style.setProperty('--my', (e.clientY - r.top) + 'px'); }
+    const c = e.target.closest('.work-card,.skill');
+    cur.style.setProperty('--cc', c ? getComputedStyle(c).getPropertyValue(c.matches('.skill') ? '--c' : '--cat') : '');
+    const sec = e.target.closest('.section'); if (sec) sec.style.setProperty('--sx', (e.clientX / innerWidth * 100) + '%');
+  }, { passive: true });
+  addEventListener('pointerdown', () => cur.classList.add('down'));
+  addEventListener('pointerup', () => cur.classList.remove('down'));
+
+  /* click ripple on buttons, chips, filters and cards */
+  document.addEventListener('click', e => {
+    const t = e.target.closest('.btn,.filters button,.chips button,.work-card,.mbtn,.tools span');
+    if (!t) return;
+    const r = t.getBoundingClientRect(), d = Math.max(r.width, r.height) * 2.2, s = document.createElement('span');
+    if (getComputedStyle(t).position === 'static') t.style.position = 'relative';
+    t.style.overflow = 'hidden';
+    s.className = 'rip'; s.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX - r.left}px;top:${e.clientY - r.top}px`;
+    t.appendChild(s); setTimeout(() => s.remove(), 750);
+  });
+
+  /* scroll: heading parallax + marquee skew from scroll speed */
+  const heads = $$('.section-head .h2,.about-copy .h2,.contact .h2');
+  let lastS = scrollY, skew = 0, ticking = false;
+  const onScroll = () => {
+    const y = scrollY, v = y - lastS; lastS = y;
+    skew += (Math.max(-12, Math.min(12, v * .25)) - skew) * .3;
+    $('.marquee').style.setProperty('--skew', skew.toFixed(2) + 'deg');
+    heads.forEach(h => { const r = h.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return; h.style.translate = `0 ${((r.top + r.height / 2 - innerHeight / 2) * -.06).toFixed(1)}px`; });
+    ticking = false;
+  };
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  setInterval(() => { if (Math.abs(skew) > .05) { skew *= .8; $('.marquee').style.setProperty('--skew', skew.toFixed(2) + 'deg'); } }, 60);
+}
 })();
