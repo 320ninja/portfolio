@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Office — Smart workplace assistant</title>
+<meta name="description" content="An AI-powered office assistant that drafts emails, summarises documents, schedules meetings and answers HR questions.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--acc:#38bdf8;--acc2:#818cf8;--ok:#34d399;--warn:#fbbf24;--bg:#07080c;--panel:#0f1016;--panel2:#161820;--line:#222330;--ink:#e8eaf2;--mute:#606272;--r:12px}
+html,body{font-family:Inter,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden;height:100vh;display:flex;flex-direction:column}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+a{color:inherit;text-decoration:none}
+/* nav */
+.nav{display:flex;align-items:center;gap:14px;padding:14px clamp(14px,3vw,32px);border-bottom:1px solid var(--line);flex:none}
+.logo{font-weight:800;font-size:16px;display:flex;align-items:center;gap:10px}
+.logo i{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--acc),var(--acc2));display:flex;align-items:center;justify-content:center;font-style:normal;font-size:15px}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:9px;font-size:13px;font-weight:600;transition:.15s}
+.btn-p{background:var(--acc);color:#07080c}.btn-p:hover{opacity:.88}
+.btn-g{background:var(--panel2);border:1px solid var(--line)}.btn-g:hover{border-color:var(--acc)}
+.user-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#ec4899);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+/* body layout */
+.body{display:flex;flex:1;overflow:hidden}
+/* sidebar */
+.sidebar{width:220px;border-right:1px solid var(--line);padding:16px 12px;display:flex;flex-direction:column;gap:4px;overflow-y:auto;flex:none}
+.sidebar-label{font-size:10px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.08em;padding:6px 8px 4px}
+.sitem{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;transition:.15s;color:var(--mute)}
+.sitem:hover,.sitem.active{background:var(--panel2);color:var(--ink)}
+.sitem.active{color:var(--acc)}
+.sitem svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.badge{margin-left:auto;background:var(--acc);color:#07080c;border-radius:4px;font-size:10px;font-weight:800;padding:1px 5px}
+/* main chat */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.chat-area{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px}
+.chat-area::-webkit-scrollbar{width:4px}
+.chat-area::-webkit-scrollbar-track{background:transparent}
+.chat-area::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+/* messages */
+.msg{display:flex;gap:10px;max-width:720px}
+.msg.user{flex-direction:row-reverse;align-self:flex-end}
+.av{width:32px;height:32px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-size:14px}
+.av.ai{background:linear-gradient(135deg,var(--acc),var(--acc2));font-weight:800;color:#07080c;font-size:12px}
+.av.user{background:linear-gradient(135deg,#8b5cf6,#ec4899);font-size:14px}
+.bubble{padding:12px 16px;border-radius:14px;font-size:14px;line-height:1.6;max-width:580px}
+.msg.ai .bubble{background:var(--panel2);border:1px solid var(--line);border-top-left-radius:4px}
+.msg.user .bubble{background:color-mix(in srgb,var(--acc) 15%,transparent);border:1px solid color-mix(in srgb,var(--acc) 25%,transparent);border-top-right-radius:4px}
+.bubble p{margin-bottom:8px}.bubble p:last-child{margin-bottom:0}
+.bubble ul{padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.bubble strong{font-weight:700}
+.typing{display:flex;align-items:center;gap:5px;padding:14px 16px}
+.typing span{width:7px;height:7px;border-radius:50%;background:var(--acc);opacity:.4;animation:bounce .9s infinite}
+.typing span:nth-child(2){animation-delay:.15s}
+.typing span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px);opacity:1}}
+/* action cards */
+.action-cards{display:flex;gap:8px;flex-wrap:wrap;padding:4px 0}
+.acard{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;cursor:pointer;transition:.15s;font-size:13px;display:flex;align-items:center;gap:8px}
+.acard:hover{border-color:var(--acc);color:var(--acc)}
+.acard svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* file chips */
+.file-chip{display:inline-flex;align-items:center;gap:7px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:12px;margin-bottom:8px}
+.file-chip svg{width:14px;height:14px;stroke:var(--acc);fill:none;stroke-width:2;stroke-linecap:round}
+/* input bar */
+.input-bar{border-top:1px solid var(--line);padding:14px 20px;display:flex;flex-direction:column;gap:10px;flex:none}
+.tools-row{display:flex;gap:6px;flex-wrap:wrap}
+.tool-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;background:var(--panel2);border:1px solid var(--line);font-size:12px;font-weight:600;cursor:pointer;transition:.15s;color:var(--mute)}
+.tool-btn:hover{border-color:var(--acc);color:var(--acc)}
+.tool-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.input-row{display:flex;gap:10px;align-items:flex-end}
+.input-wrap{flex:1;position:relative}
+.input-wrap textarea{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 48px 12px 16px;color:var(--ink);font:inherit;font-size:14px;resize:none;outline:none;line-height:1.5;max-height:160px;overflow-y:auto;transition:border-color .2s}
+.input-wrap textarea:focus{border-color:var(--acc)}
+.send-btn{position:absolute;right:10px;bottom:10px;width:30px;height:30px;border-radius:8px;background:var(--acc);color:#07080c;display:flex;align-items:center;justify-content:center;border:0;cursor:pointer;transition:.15s}
+.send-btn:hover{opacity:.85;transform:scale(1.05)}
+.send-btn svg{width:14px;height:14px;fill:currentColor}
+/* stats panel */
+.stats-panel{width:260px;border-left:1px solid var(--line);padding:16px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;flex:none}
+@media(max-width:900px){.stats-panel{display:none}}
+.stat-card{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px}
+.stat-card .label{font-size:11px;color:var(--mute);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.stat-card .val{font-size:22px;font-weight:800}
+.stat-card .sub{font-size:11px;color:var(--ok);margin-top:3px;font-weight:600}
+.quick-actions{display:flex;flex-direction:column;gap:6px}
+.qa{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;cursor:pointer;font-size:13px;transition:.15s}
+.qa:hover{border-color:var(--acc);color:var(--acc)}
+.qa svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+@keyframes nj-up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes nj-word{from{opacity:0;transform:translateY(70%) rotate(5deg);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+@keyframes nj-pop{0%{transform:scale(.8);opacity:0;filter:blur(6px)}60%{transform:scale(1.06)}100%{transform:none;opacity:1;filter:none}}
+.nj-a{opacity:0;animation:nj-up .7s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(var(--i,0)*70ms + 100ms)}
+.nj-w{display:inline-block;opacity:0;animation:nj-word .8s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(var(--i,0)*70ms + 150ms)}
+.nj-pop{animation:nj-pop .55s cubic-bezier(.2,.7,.2,1)}
+@media(prefers-reduced-motion:reduce){.nj-a,.nj-w{animation:none;opacity:1}.nj-pop{animation:none}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="logo"><i>🤖</i> AI Office</div>
+  <div style="font-size:13px;color:var(--mute);margin-left:4px">Workspace Assistant</div>
+  <div class="nav-right">
+    <button class="btn btn-g" onclick="showNotif('⚙️ Settings coming soon')">Settings</button>
+    <button class="btn btn-p" onclick="showNotif('⬆️ Upgrade to Pro')">Pro ✦</button>
+    <div class="user-av">NJ</div>
+  </div>
+</nav>
+
+<div class="body">
+  <nav class="sidebar">
+    <div class="sidebar-label">Menu</div>
+    <div class="sitem active">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Assistant
+    </div>
+    <div class="sitem" onclick="showNotif('📄 Documents')">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+      Documents
+      <span class="badge">12</span>
+    </div>
+    <div class="sitem" onclick="showNotif('📧 Email drafts')">
+      <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="m22 6-10 7L2 6"/></svg>
+      Email drafts
+      <span class="badge">3</span>
+    </div>
+    <div class="sitem" onclick="showNotif('📅 Calendar')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      Calendar
+    </div>
+    <div class="sitem" onclick="showNotif('📊 Reports')">
+      <svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+      Reports
+    </div>
+    <div class="sidebar-label" style="margin-top:8px">HR Tools</div>
+    <div class="sitem" onclick="showNotif('👥 Team')">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Team
+    </div>
+    <div class="sitem" onclick="showNotif('🏖️ Leave requests')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      Leave requests
+    </div>
+  </nav>
+
+  <div class="main">
+    <div class="chat-area" id="chatArea">
+      <div class="msg ai">
+        <div class="av ai">AI</div>
+        <div class="bubble">
+          <p>Good afternoon, <strong>nin ja</strong> 👋 I'm your AI Office assistant. I can help you:</p>
+          <ul>
+            <li>Draft and send professional emails</li>
+            <li>Summarise long documents or meeting notes</li>
+            <li>Schedule meetings and check calendars</li>
+            <li>Answer HR questions (leave policy, payroll, etc.)</li>
+            <li>Generate reports and data summaries</li>
+          </ul>
+          <p style="margin-top:8px">What would you like to do today?</p>
+          <div class="action-cards">
+            <div class="acard" onclick="quickAction('draft')"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M12 11v6M9 14h6"/></svg>Draft an email</div>
+            <div class="acard" onclick="quickAction('summary')"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h10M4 17h6"/></svg>Summarise doc</div>
+            <div class="acard" onclick="quickAction('schedule')"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Schedule meeting</div>
+            <div class="acard" onclick="quickAction('hr')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>HR question</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-bar">
+      <div class="tools-row">
+        <button class="tool-btn" onclick="quickAction('draft')"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>Email</button>
+        <button class="tool-btn" onclick="quickAction('summary')"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h10M4 17h6"/></svg>Summarise</button>
+        <button class="tool-btn" onclick="quickAction('schedule')"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Schedule</button>
+        <button class="tool-btn" onclick="quickAction('hr')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>HR</button>
+      </div>
+      <div class="input-row">
+        <div class="input-wrap">
+          <textarea id="msgInput" rows="1" placeholder="Ask me anything about your work…" onkeydown="handleKey(event)" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+          <button class="send-btn" onclick="sendMessage()"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="stats-panel">
+    <div style="font-size:13px;font-weight:700;color:var(--mute)">Today's summary</div>
+    <div class="stat-card"><div class="label">Tasks done</div><div class="val">8 / 12</div><div class="sub">↑ 3 from yesterday</div></div>
+    <div class="stat-card"><div class="label">Emails drafted</div><div class="val">5</div><div class="sub">2 pending review</div></div>
+    <div class="stat-card"><div class="label">Meetings today</div><div class="val">3</div><div class="sub">Next: 3:00 PM</div></div>
+    <div style="font-size:12px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.06em">Quick actions</div>
+    <div class="quick-actions">
+      <div class="qa" onclick="quickAction('draft')"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M12 11v6M9 14h6"/></svg>Draft email</div>
+      <div class="qa" onclick="quickAction('leave')"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Apply for leave</div>
+      <div class="qa" onclick="quickAction('report')"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>Generate report</div>
+    </div>
+  </aside>
+</div>
+
+<script>
+const RESPONSES = {
+  draft: {
+    q:'Write a professional follow-up email after a client meeting',
+    a:`<div class="file-chip"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="m22 6-10 7L2 6"/></svg>Email draft ready</div><p><strong>Subject:</strong> Following up on our meeting — Next steps</p><p>Dear [Client Name],</p><p>Thank you for taking the time to meet with us yesterday. It was a pleasure discussing your project goals, and I'm excited about the direction we've outlined together.</p><p>As agreed, I'll be sending over the initial proposal and timeline by <strong>Thursday, 13 November</strong>. In the meantime, please feel free to reach out if you have any questions or additional requirements.</p><p>Looking forward to working together!</p><p>Warm regards,<br><strong>nin ja</strong><br>ninja.com.np</p><div class="action-cards"><div class="acard" onclick="showNotif('📋 Copied to clipboard')">Copy email</div><div class="acard" onclick="showNotif('✉️ Email sent!')">Send now</div></div>`
+  },
+  summary: {
+    q:'Summarise the Q3 project report (uploaded)',
+    a:`<div class="file-chip"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>Q3-Project-Report.pdf</div><p><strong>Summary of Q3 Project Report (Jul–Sep 2025)</strong></p><ul><li>✅ Delivered <strong>7 out of 9 projects</strong> on time (78% on-time rate, up from 65% in Q2)</li><li>💰 Total revenue: <strong>Rs 12.4L</strong> — 18% above target</li><li>⚠️ Two projects delayed due to client feedback cycles averaging 8+ days</li><li>🌟 Client satisfaction score: <strong>4.7 / 5</strong> (based on 23 reviews)</li></ul><p><strong>Key recommendation:</strong> Introduce a 72-hour feedback SLA with clients to reduce cycle delays in Q4.</p>`
+  },
+  schedule: {
+    q:'Schedule a team standup every Monday at 10 AM',
+    a:`<p>✅ <strong>Weekly standup scheduled!</strong></p><ul><li>📅 Every <strong>Monday at 10:00 AM</strong></li><li>👥 Team: <strong>All members</strong> (8 people)</li><li>⏱ Duration: <strong>30 minutes</strong></li><li>🔗 Zoom link auto-generated and sent to everyone</li></ul><p>I've blocked the calendar and sent invites. The first one is <strong>Monday, 11 Nov at 10:00 AM</strong>. Want me to add an agenda template too?</p><div class="action-cards"><div class="acard" onclick="showNotif('📋 Agenda template added!')">Add agenda</div><div class="acard" onclick="showNotif('↩️ Meeting cancelled')">Cancel</div></div>`
+  },
+  hr: {
+    q:"How many casual leave days do I have left?",
+    a:`<p>Based on your records, here's your leave balance for 2025:</p><ul><li>🏖️ Casual Leave: <strong>6 days remaining</strong> (used 6 / 12)</li><li>🤒 Sick Leave: <strong>10 days remaining</strong> (used 2 / 12)</li><li>🎉 Annual Leave: <strong>8 days remaining</strong> (used 7 / 15)</li></ul><p>Your next public holiday is <strong>Yomari Punhi (5 Dec)</strong>. Leave requests must be submitted at least 3 days in advance per company policy.</p><div class="action-cards"><div class="acard" onclick="showNotif('📝 Leave request form opened')">Apply for leave</div></div>`
+  },
+  leave: {
+    q:'Apply for 3 days of annual leave next week',
+    a:`<p>✅ <strong>Leave request submitted!</strong></p><ul><li>📅 Dates: <strong>Mon 11 Nov – Wed 13 Nov 2025</strong></li><li>📋 Type: <strong>Annual Leave (3 days)</li><li>👤 Approver: <strong>Manager (Suresh K.)</strong></li></ul><p>Your manager has been notified and will respond within 24 hours. Your annual leave balance will be updated to <strong>5 days</strong> once approved.</p>`
+  },
+  report: {
+    q:'Generate a weekly performance report',
+    a:`<p><strong>📊 Weekly Performance Report — Week 45</strong></p><ul><li>✅ Tasks completed: <strong>24</strong> (target: 20)</li><li>⏱ Avg response time: <strong>2.4h</strong> (down from 3.1h last week)</li><li>📧 Emails handled: <strong>47</strong></li><li>🤝 Client interactions: <strong>8</strong></li></ul><p><strong>Top win:</strong> Haven Estates project delivered 2 days ahead of schedule. <strong>Area to improve:</strong> 3 tasks moved to next week — consider time-blocking for deep work.</p><div class="action-cards"><div class="acard" onclick="showNotif('📄 Report exported as PDF')">Export PDF</div><div class="acard" onclick="showNotif('📧 Report sent to team')">Email to team</div></div>`
+  }
+};
+
+const DEFAULT_RESPONSES = [
+  "I can help with that. Let me think through it...",
+  "Great question! Based on your workspace data, here's what I found...",
+  "On it! I've drafted a response for you to review.",
+  "Done! Is there anything else you'd like me to adjust?"
+];
+
+function addMsg(role, html){
+  const area = document.getElementById('chatArea');
+  const div = document.createElement('div');
+  div.className='msg '+role;
+  div.innerHTML=`<div class="av ${role}">${role==='ai'?'AI':'😎'}</div><div class="bubble">${html}</div>`;
+  area.appendChild(div);
+  area.scrollTop=area.scrollHeight;
+}
+
+function addTyping(){
+  const area = document.getElementById('chatArea');
+  const div = document.createElement('div');
+  div.id='typing';
+  div.className='msg ai';
+  div.innerHTML=`<div class="av ai">AI</div><div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  area.appendChild(div);
+  area.scrollTop=area.scrollHeight;
+}
+
+function removeTyping(){
+  const t=document.getElementById('typing');
+  if(t) t.remove();
+}
+
+function quickAction(key){
+  const r = RESPONSES[key];
+  if(!r) return;
+  document.getElementById('msgInput').value=r.q;
+  setTimeout(sendMessage,100);
+}
+
+function sendMessage(){
+  const input = document.getElementById('msgInput');
+  const text = input.value.trim();
+  if(!text) return;
+  addMsg('user','<p>'+text+'</p>');
+  input.value=''; input.style.height='auto';
+  addTyping();
+  const key = Object.keys(RESPONSES).find(k=>text.toLowerCase().includes(k)||RESPONSES[k].q.toLowerCase()===text.toLowerCase());
+  setTimeout(()=>{
+    removeTyping();
+    if(key) addMsg('ai',RESPONSES[key].a);
+    else addMsg('ai','<p>'+DEFAULT_RESPONSES[Math.floor(Math.random()*DEFAULT_RESPONSES.length)]+'</p>');
+  },800+Math.random()*600);
+}
+
+function handleKey(e){
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}
+}
+
+let notifTimer;
+function showNotif(msg){
+  let n=document.getElementById('notif');
+  if(!n){n=document.createElement('div');n.id='notif';n.style.cssText='position:fixed;bottom:24px;left:50%;translate:-50% 0;background:#1a1a2e;border:1px solid var(--acc);color:var(--acc);padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;transition:.3s;white-space:nowrap';document.body.appendChild(n);}
+  n.textContent=msg;n.style.opacity='1';
+  clearTimeout(notifTimer);notifTimer=setTimeout(()=>n.style.opacity='0',2500);
+}
+</script>
+<script>
+(function(){
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  var q=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+  var rise=function(els,base){els.forEach(function(e,i){if(e.nodeType!==1||e.classList.contains('nj-a'))return;e.style.setProperty('--i',i+(base||0));e.classList.add('nj-a')})};
+  var split=function(el){if(!el||el.dataset.sp)return;el.dataset.sp=1;el.innerHTML=el.textContent.trim().split(/\s+/).map(function(w,i){return '<span class="nj-w" style="--i:'+i+'">'+w+'</span>'}).join(' ')};
+  rise(q('.nav,.sidebar>*,.stats-panel>*,.input-bar'));
+  q('.stats-panel>div:first-child').forEach(split);
+  ['chatArea'].forEach(function(id){var c=document.getElementById(id);if(!c)return;new MutationObserver(function(m){m.forEach(function(r){rise([].slice.call(r.addedNodes))})}).observe(c,{childList:true})});
+  
+})();
+</script>
+</body>
+</html>

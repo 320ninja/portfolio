@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DonkeyCut — Smart video trimmer & clip manager</title>
+<meta name="description" content="A fast mobile-first video trimmer and clip exporter. Trim, cut, label and export your best moments.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--acc:#8b5cf6;--acc2:#ec4899;--bg:#08080c;--panel:#111116;--panel2:#18181f;--line:#252530;--ink:#f0f0f8;--mute:#666;--r:14px}
+html,body{font-family:Inter,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+a{color:inherit;text-decoration:none}
+.nav{display:flex;align-items:center;gap:14px;padding:16px clamp(16px,4vw,48px);border-bottom:1px solid var(--line)}
+.logo{font-weight:800;font-size:17px;display:flex;align-items:center;gap:10px}
+.logo i{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--acc),var(--acc2));display:grid;place-items:center;font-style:normal;font-size:15px}
+.nav-right{margin-left:auto;display:flex;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:9px;font-size:13px;font-weight:600;transition:.15s}
+.btn-p{background:var(--acc);color:#fff}.btn-p:hover{opacity:.88}
+.btn-g{background:var(--panel2);border:1px solid var(--line)}.btn-g:hover{border-color:var(--acc)}
+/* layout */
+.app{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 61px)}
+@media(max-width:800px){.app{grid-template-columns:1fr}}
+.main{display:flex;flex-direction:column;gap:0}
+/* preview */
+.preview-area{background:#000;position:relative;aspect-ratio:16/9;overflow:hidden;border-bottom:1px solid var(--line)}
+.preview-area video{width:100%;height:100%;object-fit:contain;display:block}
+.preview-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.big-play{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.12);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;pointer-events:all;cursor:pointer;border:1px solid rgba(255,255,255,.18);transition:.2s}
+.big-play:hover{background:rgba(255,255,255,.22);transform:scale(1.07)}
+.big-play svg{width:28px;height:28px;fill:#fff;margin-left:4px}
+.preview-info{position:absolute;bottom:14px;left:16px;right:16px;display:flex;align-items:flex-end;justify-content:space-between}
+.clip-title{font-size:16px;font-weight:700;text-shadow:0 2px 8px rgba(0,0,0,.8)}
+.clip-dur{font-size:12px;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);padding:4px 10px;border-radius:6px}
+.no-video{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;height:100%;color:var(--mute);font-size:14px}
+.no-video svg{width:48px;height:48px;stroke:var(--mute);fill:none;stroke-width:1.5;stroke-linecap:round}
+.upload-btn{background:var(--panel2);border:1px dashed var(--acc);color:var(--acc);padding:12px 24px;border-radius:12px;font-weight:600;cursor:pointer;transition:.15s}
+.upload-btn:hover{background:color-mix(in srgb,var(--acc) 10%,transparent)}
+/* timeline */
+.timeline-area{background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.tl-controls{display:flex;align-items:center;gap:10px}
+.tl-time{font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;min-width:80px}
+.tl-track{position:relative;height:52px;background:var(--panel2);border-radius:10px;overflow:hidden;cursor:pointer;border:1px solid var(--line)}
+.tl-waveform{position:absolute;inset:0;display:flex;align-items:center;gap:1px;padding:4px 6px}
+.tl-bar{flex:none;width:3px;border-radius:2px;background:color-mix(in srgb,var(--acc) 60%,transparent);transition:height .05s}
+.tl-selection{position:absolute;top:0;bottom:0;background:color-mix(in srgb,var(--acc) 25%,transparent);border-left:2px solid var(--acc);border-right:2px solid var(--acc);pointer-events:none}
+.tl-cursor{position:absolute;top:0;bottom:0;width:2px;background:#fff;pointer-events:none;transition:left .05s linear}
+.trim-handles{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--mute)}
+.trim-input{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;color:var(--ink);font:inherit;font-size:12px;width:80px;text-align:center;outline:none}
+.trim-input:focus{border-color:var(--acc)}
+/* sidebar */
+.sidebar{border-left:1px solid var(--line);display:flex;flex-direction:column;overflow-y:auto}
+.sidebar-tabs{display:flex;border-bottom:1px solid var(--line)}
+.stab{flex:1;padding:14px;text-align:center;font-size:12px;font-weight:600;color:var(--mute);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}
+.stab.active{color:var(--acc);border-bottom-color:var(--acc)}
+.tab-content{padding:16px;display:flex;flex-direction:column;gap:14px;flex:1}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-label{font-size:11px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.06em}
+.form-input{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:10px 12px;color:var(--ink);font:inherit;font-size:14px;outline:none;transition:.15s}
+.form-input:focus{border-color:var(--acc)}
+select.form-input option{background:#18181f}
+.tag-row{display:flex;gap:6px;flex-wrap:wrap}
+.tag{padding:4px 10px;border-radius:6px;border:1px solid var(--line);font-size:12px;font-weight:600;cursor:pointer;transition:.15s;background:var(--panel2)}
+.tag.on{background:color-mix(in srgb,var(--acc) 15%,transparent);border-color:color-mix(in srgb,var(--acc) 40%,transparent);color:var(--acc)}
+.export-row{display:flex;flex-direction:column;gap:8px;margin-top:auto}
+.export-btn{padding:12px;border-radius:11px;font-weight:700;font-size:14px;text-align:center;cursor:pointer;border:0;transition:.2s}
+.export-btn.pri{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff}.export-btn.pri:hover{opacity:.9;transform:scale(1.02)}
+.export-btn.sec{background:var(--panel2);border:1px solid var(--line)}.export-btn.sec:hover{border-color:var(--acc)}
+/* clip list */
+.clips-panel{padding:16px;display:flex;flex-direction:column;gap:10px}
+.clip-card{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;gap:12px;align-items:center;cursor:pointer;transition:.15s}
+.clip-card:hover,.clip-card.active{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 6%,transparent)}
+.clip-thumb{width:64px;height:40px;border-radius:7px;background:var(--line);flex:none;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;font-size:20px}
+.clip-meta{flex:1;min-width:0}
+.clip-meta .name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.clip-meta .dur{font-size:11px;color:var(--mute);margin-top:2px}
+.clip-tags{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap}
+.clip-tag{padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;background:color-mix(in srgb,var(--acc) 15%,transparent);color:var(--acc)}
+.clip-actions{display:flex;gap:6px;flex-direction:column}
+.ca-btn{width:28px;height:28px;border-radius:7px;background:var(--line);display:flex;align-items:center;justify-content:center;font-size:14px;border:0;cursor:pointer;transition:.15s}
+.ca-btn:hover{background:var(--acc);color:#fff}
+.add-clip-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:12px;border:1px dashed var(--line);font-size:13px;font-weight:600;color:var(--mute);cursor:pointer;transition:.15s}
+.add-clip-btn:hover{border-color:var(--acc);color:var(--acc)}
+/* progress */
+.export-progress{display:none;flex-direction:column;gap:8px;padding:12px;background:var(--panel2);border-radius:10px;border:1px solid var(--line)}
+.ep-bar{height:4px;border-radius:2px;background:var(--line);overflow:hidden}
+.ep-fill{height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:2px;width:0%;transition:width .3s}
+.ep-label{font-size:12px;color:var(--mute)}
+
+@keyframes nj-up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes nj-word{from{opacity:0;transform:translateY(70%) rotate(5deg);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+@keyframes nj-pop{0%{transform:scale(.8);opacity:0;filter:blur(6px)}60%{transform:scale(1.06)}100%{transform:none;opacity:1;filter:none}}
+.nj-a{opacity:0;animation:nj-up .7s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(var(--i,0)*70ms + 100ms)}
+.nj-w{display:inline-block;opacity:0;animation:nj-word .8s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(var(--i,0)*70ms + 150ms)}
+.nj-pop{animation:nj-pop .55s cubic-bezier(.2,.7,.2,1)}
+@media(prefers-reduced-motion:reduce){.nj-a,.nj-w{animation:none;opacity:1}.nj-pop{animation:none}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="logo"><i>✂️</i> DonkeyCut</div>
+  <div class="nav-right">
+    <label class="btn btn-g" style="cursor:pointer"><input type="file" accept="video/*" id="fileInput" style="display:none" onchange="loadVideo(this)">+ Import video</label>
+    <button class="btn btn-p" onclick="exportClip()">Export clip ↓</button>
+  </div>
+</nav>
+
+<div class="app">
+  <div class="main">
+    <div class="preview-area" id="previewArea">
+      <video id="vid" style="display:none"></video>
+      <div class="preview-overlay" id="previewOverlay">
+        <button class="big-play" id="bigPlay" onclick="togglePlay()" style="display:none">
+          <svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg>
+        </button>
+      </div>
+      <div class="no-video" id="noVideo">
+        <svg viewBox="0 0 24 24"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="m16 10 6-4v12l-6-4"/></svg>
+        <span>No video loaded</span>
+        <label class="upload-btn"><input type="file" accept="video/*" style="display:none" onchange="loadVideo(this)">Import your video</label>
+      </div>
+      <div class="preview-info" id="previewInfo" style="display:none">
+        <span class="clip-title" id="previewTitle">My Clip</span>
+        <span class="clip-dur" id="previewDur">0:00 / 0:00</span>
+      </div>
+    </div>
+
+    <div class="timeline-area">
+      <div class="tl-controls">
+        <button class="btn btn-g" onclick="togglePlay()" id="playBtn" style="font-size:16px;padding:8px 12px">▶</button>
+        <span class="tl-time" id="tlTime">0:00 / 0:00</span>
+        <button class="btn btn-g" onclick="goToStart()" title="Go to start">⏮</button>
+        <button class="btn btn-g" onclick="splitHere()" title="Split at cursor">✂</button>
+        <button class="btn btn-g" onclick="document.getElementById('vid').playbackRate=document.getElementById('vid').playbackRate===1?0.5:1" title="Half speed">0.5×</button>
+      </div>
+      <div class="tl-track" id="tlTrack" onclick="seekTo(event)">
+        <div class="tl-waveform" id="tlWave"></div>
+        <div class="tl-selection" id="tlSel" style="left:0%;width:100%"></div>
+        <div class="tl-cursor" id="tlCursor" style="left:0%"></div>
+      </div>
+      <div class="trim-handles">
+        <span>In:</span>
+        <input class="trim-input" id="trimIn" value="0:00" onchange="updateTrimIn(this.value)">
+        <span>Out:</span>
+        <input class="trim-input" id="trimOut" value="0:30" onchange="updateTrimOut(this.value)">
+        <span style="margin-left:auto;font-weight:700;color:var(--acc)" id="trimDur">Duration: 0:30</span>
+      </div>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-tabs">
+      <div class="stab active" id="tabEdit" onclick="showTab('edit')">Edit</div>
+      <div class="stab" id="tabClips" onclick="showTab('clips')">Clips (3)</div>
+    </div>
+
+    <div id="editPanel" class="tab-content">
+      <div class="form-group">
+        <div class="form-label">Clip name</div>
+        <input class="form-input" value="My Clip" id="clipName" oninput="document.getElementById('previewTitle').textContent=this.value">
+      </div>
+      <div class="form-group">
+        <div class="form-label">Output quality</div>
+        <select class="form-input" id="quality">
+          <option>1080p (Full HD)</option>
+          <option selected>720p (HD)</option>
+          <option>480p (SD)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Output format</div>
+        <select class="form-input">
+          <option>MP4 (H.264)</option>
+          <option>WebM (VP9)</option>
+          <option>MOV (ProRes)</option>
+          <option>GIF</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Tags</div>
+        <div class="tag-row" id="tagRow">
+          <div class="tag on" onclick="this.classList.toggle('on')">Travel</div>
+          <div class="tag" onclick="this.classList.toggle('on')">Social</div>
+          <div class="tag" onclick="this.classList.toggle('on')">Reel</div>
+          <div class="tag" onclick="this.classList.toggle('on')">YouTube</div>
+          <div class="tag" onclick="this.classList.toggle('on')">TikTok</div>
+          <div class="tag" onclick="this.classList.toggle('on')">BTS</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Volume</div>
+        <input type="range" min="0" max="1" step=".05" value="1" style="width:100%;accent-color:var(--acc)" oninput="document.getElementById('vid').volume=this.value">
+      </div>
+      <div class="form-group">
+        <div class="form-label">Playback speed</div>
+        <input type="range" min=".25" max="2" step=".25" value="1" style="width:100%;accent-color:var(--acc)" oninput="document.getElementById('vid').playbackRate=this.value;this.nextElementSibling.textContent=this.value+'×'" >
+        <span style="font-size:12px;color:var(--mute)">1×</span>
+      </div>
+      <div class="export-progress" id="exportProgress">
+        <div class="ep-label" id="epLabel">Preparing…</div>
+        <div class="ep-bar"><div class="ep-fill" id="epFill"></div></div>
+      </div>
+      <div class="export-row">
+        <button class="export-btn pri" onclick="exportClip()">Export clip →</button>
+        <button class="export-btn sec" onclick="addToQueue()">Add to batch queue</button>
+      </div>
+    </div>
+
+    <div id="clipsPanel" class="clips-panel" style="display:none">
+      <div class="clip-card active" onclick="selectClip(0)">
+        <div class="clip-thumb">🏔️</div>
+        <div class="clip-meta">
+          <div class="name">Mountain Sunrise</div>
+          <div class="dur">0:00 – 0:28 · 28s</div>
+          <div class="clip-tags"><span class="clip-tag">Travel</span><span class="clip-tag">YouTube</span></div>
+        </div>
+        <div class="clip-actions">
+          <button class="ca-btn" onclick="event.stopPropagation()" title="Edit">✏️</button>
+          <button class="ca-btn" onclick="event.stopPropagation();this.closest('.clip-card').remove()" title="Delete">🗑</button>
+        </div>
+      </div>
+      <div class="clip-card" onclick="selectClip(1)">
+        <div class="clip-thumb">🍜</div>
+        <div class="clip-meta">
+          <div class="name">Street Food Reel</div>
+          <div class="dur">0:28 – 0:52 · 24s</div>
+          <div class="clip-tags"><span class="clip-tag">Reel</span><span class="clip-tag">TikTok</span></div>
+        </div>
+        <div class="clip-actions">
+          <button class="ca-btn" title="Edit">✏️</button>
+          <button class="ca-btn" onclick="event.stopPropagation();this.closest('.clip-card').remove()" title="Delete">🗑</button>
+        </div>
+      </div>
+      <div class="clip-card" onclick="selectClip(2)">
+        <div class="clip-thumb">🌆</div>
+        <div class="clip-meta">
+          <div class="name">City Time-lapse</div>
+          <div class="dur">0:52 – 1:30 · 38s</div>
+          <div class="clip-tags"><span class="clip-tag">Social</span></div>
+        </div>
+        <div class="clip-actions">
+          <button class="ca-btn" title="Edit">✏️</button>
+          <button class="ca-btn" onclick="event.stopPropagation();this.closest('.clip-card').remove()" title="Delete">🗑</button>
+        </div>
+      </div>
+      <button class="add-clip-btn" onclick="document.querySelector('input[type=file]').click()">+ Add new clip</button>
+    </div>
+  </aside>
+</div>
+
+<script>
+let videoDuration = 90;
+let trimInSec = 0;
+let trimOutSec = 90;
+let currentTime = 0;
+let playing = false;
+let interval = null;
+
+function fmt(s){const m=Math.floor(s/60);return m+':'+(Math.floor(s%60)+'').padStart(2,'0')}
+
+function generateWaveform(){
+  const wrap = document.getElementById('tlWave');
+  wrap.innerHTML='';
+  const W = wrap.offsetWidth||560;
+  const count = Math.floor(W/4);
+  for(let i=0;i<count;i++){
+    const bar = document.createElement('div');
+    bar.className='tl-bar';
+    const h = 8+Math.random()*32;
+    bar.style.height=h+'px';
+    wrap.appendChild(bar);
+  }
+}
+
+function updateTimeline(){
+  const pct = videoDuration>0?(currentTime/videoDuration*100):0;
+  document.getElementById('tlCursor').style.left=pct+'%';
+  document.getElementById('tlTime').textContent=fmt(currentTime)+' / '+fmt(videoDuration);
+  document.getElementById('previewDur').textContent=fmt(currentTime)+' / '+fmt(videoDuration);
+}
+
+function updateSelection(){
+  const inPct = trimInSec/videoDuration*100;
+  const outPct = trimOutSec/videoDuration*100;
+  const sel = document.getElementById('tlSel');
+  sel.style.left=inPct+'%';
+  sel.style.width=(outPct-inPct)+'%';
+  document.getElementById('trimIn').value=fmt(trimInSec);
+  document.getElementById('trimOut').value=fmt(trimOutSec);
+  document.getElementById('trimDur').textContent='Duration: '+fmt(trimOutSec-trimInSec);
+}
+
+function seekTo(e){
+  const track = document.getElementById('tlTrack');
+  const rect = track.getBoundingClientRect();
+  const pct = (e.clientX-rect.left)/rect.width;
+  currentTime = pct*videoDuration;
+  const vid = document.getElementById('vid');
+  if(vid.src) vid.currentTime=currentTime;
+  updateTimeline();
+}
+
+function togglePlay(){
+  if(playing){
+    clearInterval(interval);
+    playing=false;
+    document.getElementById('playBtn').textContent='▶';
+  } else {
+    playing=true;
+    document.getElementById('playBtn').textContent='⏸';
+    const vid = document.getElementById('vid');
+    if(vid.src){vid.play();}
+    else {
+      interval=setInterval(()=>{
+        currentTime+=0.1;
+        if(currentTime>=trimOutSec){currentTime=trimInSec;}
+        updateTimeline();
+      },100);
+    }
+  }
+}
+
+function goToStart(){
+  currentTime=trimInSec;
+  const vid=document.getElementById('vid');
+  if(vid.src) vid.currentTime=currentTime;
+  updateTimeline();
+}
+
+function splitHere(){
+  const dur = trimOutSec - currentTime;
+  if(dur<0.5) return;
+  const wasOut = trimOutSec;
+  trimOutSec = currentTime;
+  updateSelection();
+  showNotif('Clip split at '+fmt(currentTime));
+}
+
+function parseFmt(s){
+  const parts=s.split(':');
+  return parseInt(parts[0]||0)*60+parseFloat(parts[1]||0);
+}
+function updateTrimIn(v){trimInSec=Math.max(0,parseFmt(v));updateSelection();}
+function updateTrimOut(v){trimOutSec=Math.min(videoDuration,parseFmt(v));updateSelection();}
+
+function loadVideo(input){
+  const file=input.files[0];
+  if(!file) return;
+  const vid=document.getElementById('vid');
+  vid.src=URL.createObjectURL(file);
+  vid.style.display='block';
+  document.getElementById('noVideo').style.display='none';
+  document.getElementById('previewInfo').style.display='flex';
+  document.getElementById('bigPlay').style.display='flex';
+  document.getElementById('clipName').value=file.name.replace(/\.[^.]+$/,'');
+  document.getElementById('previewTitle').textContent=document.getElementById('clipName').value;
+  vid.onloadedmetadata=()=>{
+    videoDuration=vid.duration;
+    trimInSec=0; trimOutSec=vid.duration;
+    updateTimeline(); updateSelection(); generateWaveform();
+  };
+  vid.ontimeupdate=()=>{currentTime=vid.currentTime;updateTimeline();};
+  vid.onended=()=>{playing=false;document.getElementById('playBtn').textContent='▶';};
+}
+
+let notifTimer;
+function showNotif(msg){
+  let n=document.getElementById('notif');
+  if(!n){n=document.createElement('div');n.id='notif';n.style.cssText='position:fixed;bottom:24px;left:50%;translate:-50% 0;background:#1a1a2e;border:1px solid var(--acc);color:var(--acc);padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;transition:.3s';document.body.appendChild(n);}
+  n.textContent=msg;n.style.opacity='1';
+  clearTimeout(notifTimer);notifTimer=setTimeout(()=>n.style.opacity='0',2500);
+}
+
+function exportClip(){
+  const prog=document.getElementById('exportProgress');
+  prog.style.display='flex';
+  const fill=document.getElementById('epFill');
+  const label=document.getElementById('epLabel');
+  let p=0;
+  const steps=['Trimming…','Encoding…','Muxing audio…','Finalising…','Done!'];
+  const iv=setInterval(()=>{
+    p=Math.min(p+Math.random()*15+5,100);
+    fill.style.width=p+'%';
+    label.textContent=steps[Math.floor(p/25)]||'Done!';
+    if(p>=100){clearInterval(iv);setTimeout(()=>{prog.style.display='none';showNotif('✓ '+document.getElementById('clipName').value+'.mp4 exported');},600);}
+  },200);
+}
+
+function addToQueue(){showNotif('Added to batch queue');}
+
+function selectClip(i){
+  document.querySelectorAll('.clip-card').forEach((c,j)=>c.classList.toggle('active',j===i));
+  const data=[{name:'Mountain Sunrise',in:0,out:28},{name:'Street Food Reel',in:28,out:52},{name:'City Time-lapse',in:52,out:90}];
+  const d=data[i];
+  trimInSec=d.in; trimOutSec=d.out; currentTime=d.in;
+  videoDuration=90;
+  document.getElementById('clipName').value=d.name;
+  document.getElementById('previewTitle').textContent=d.name;
+  updateTimeline(); updateSelection();
+}
+
+function showTab(t){
+  document.getElementById('editPanel').style.display=t==='edit'?'flex':'none';
+  document.getElementById('clipsPanel').style.display=t==='clips'?'flex':'none';
+  document.querySelectorAll('.stab').forEach(s=>s.classList.remove('active'));
+  document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)).classList.add('active');
+}
+
+generateWaveform();
+updateSelection();
+updateTimeline();
+window.addEventListener('resize',generateWaveform);
+</script>
+<script>
+(function(){
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  var q=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+  var rise=function(els,base){els.forEach(function(e,i){if(e.nodeType!==1||e.classList.contains('nj-a'))return;e.style.setProperty('--i',i+(base||0));e.classList.add('nj-a')})};
+  var split=function(el){if(!el||el.dataset.sp)return;el.dataset.sp=1;el.innerHTML=el.textContent.trim().split(/\s+/).map(function(w,i){return '<span class="nj-w" style="--i:'+i+'">'+w+'</span>'}).join(' ')};
+  rise(q('.nav,.preview-area,.timeline-area,.sidebar-tabs,.tab-content>*'));
+  q('.trim-handles span:last-child').forEach(split);
+  ['clipsPanel'].forEach(function(id){var c=document.getElementById(id);if(!c)return;new MutationObserver(function(m){m.forEach(function(r){rise([].slice.call(r.addedNodes))})}).observe(c,{childList:true})});
+  
+})();
+</script>
+</body>
+</html>
