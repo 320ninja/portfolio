@@ -72,6 +72,22 @@ const PROJECTS = [
     d: 'A fully playable piano in the browser: 88 keys, keyboard mapping, sustain and reverb, chord recognition and a visual note-roll recorder. No plugin needed.',
     try: ['Press A–L keys to play the white keys', 'Hold Shift for sustain, record a phrase', 'Try the built-in chord suggestions'],
     stack: ['Web Audio API', 'JavaScript', 'Canvas', 'Music theory'], size: 'narrow' },
+  { id: 'guitarchords', t: 'GuitarChords', cat: 'app', sub: 'Chord finder with fretboard and sound', c1: '#0a0a0d', y: 2025, client: 'Music app',
+    d: 'A guitar chord app: pick any root and chord type, see the fingering on an interactive fretboard, hear the chord played and browse common progressions by genre.',
+    try: ['Pick a root note and chord type', 'Press Play to hear the chord', 'Check the progressions below the fretboard'],
+    stack: ['Canvas fretboard', 'Web Audio API', 'Music theory', 'JavaScript'], size: 'narrow' },
+  { id: 'donkeycut', t: 'DonkeyCut', cat: 'app', sub: 'Mobile-first video trimmer and clip exporter', c1: '#08080c', y: 2025, client: 'Creator app',
+    d: 'A fast video trimmer: import a clip, set in and out points on the timeline, tag and organise clips, pick quality and format, and export your best moments.',
+    try: ['Import your own video', 'Drag the timeline and set In / Out points', 'Switch to Clips and press Export'],
+    stack: ['HTML5 video', 'Timeline UX', 'Object URLs', 'JavaScript'], size: 'wide' },
+  { id: 'dating', t: 'Sathi', cat: 'app', sub: 'Swipe-based dating app built for Nepal', c1: '#08080c', y: 2025, client: 'Social startup',
+    d: 'A swipe-based dating app: drag profile cards left or right, get a match celebration, browse recent matches and tune age, distance and preferences.',
+    try: ['Drag a card right to like it', 'Use the Like, Nope and Super Like buttons', 'Change the age and distance filters'],
+    stack: ['Touch gestures', 'Card-stack UI', 'Mobile UX', 'JavaScript'], size: 'narrow' },
+  { id: 'aioffice', t: 'AI Office', cat: 'ai', sub: 'AI workplace assistant for email, docs and HR', c1: '#07080c', y: 2025, client: 'Workplace tool',
+    d: 'A workplace assistant that drafts emails, summarises reports, schedules meetings and answers HR questions like leave balances, all from one chat.',
+    try: ['Press "Draft an email"', 'Ask about your leave balance', 'Schedule a recurring standup'],
+    stack: ['Conversational UX', 'Prompt design', 'Workflow automation', 'JavaScript'], size: 'wide' },
   { id: 'nova', t: 'Nova Assistant', cat: 'ai', sub: 'AI chatbot that knows my work', c1: '#0b0b14', y: 2025, client: 'Portfolio assistant',
     d: 'A retrieval-based assistant that answers questions about my services, pricing and process using TF-IDF search with cosine similarity, plus built-in maths, time and currency tools.',
     try: ['Ask "How much does a website cost?"', 'Ask "What tools do you use for video?"', 'Try "convert 100 USD to NPR"'],
@@ -90,9 +106,18 @@ const SKILLS = [
   { k: 'ai', n: 'AI & Automation', d: 'Chatbots, smart search, content pipelines and ML prototypes that save real hours every week.',
     bars: [['LLM apps & prompting', 90], ['Python & ML basics', 80], ['Workflow automation', 88]], tools: ['OpenAI / Claude APIs', 'Python', 'LangChain', 'n8n', 'Midjourney', 'Runway'],
     ic: '<path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="3.5"/>' },
-  { k: 'app', n: 'App Development', d: 'Cross-platform mobile and desktop apps: food ordering, real estate, music tools and productivity apps.',
+  { k: 'app', n: 'App Development', d: 'My most requested service. Cross-platform iOS and Android apps from idea to store launch: food ordering, dating, video tools, music and AI office apps.',
     bars: [['React Native & Expo', 88], ['Flutter & Dart', 82], ['iOS & Android release', 85]], tools: ['React Native', 'Expo', 'Flutter', 'Firebase', 'Supabase', 'App Store / Play'],
-    ic: '<rect x="5" y="2" width="14" height="20" rx="3"/><path d="M12 18h.01"/>' }
+    ic: '<rect x="5" y="2" width="14" height="20" rx="3"/><path d="M12 18h.01"/>' },
+  { k: 'social', c: '#c084fc', n: 'Social Media Management', d: 'Content calendars, reels, captions and community management that grow real followers on Instagram, TikTok, Facebook and YouTube.',
+    bars: [['Content planning', 92], ['Reels & short video', 94], ['Community & growth', 88]], tools: ['Meta Business Suite', 'Metricool', 'CapCut', 'Canva', 'TikTok', 'Instagram'],
+    ic: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/>' },
+  { k: 'marketing', c: '#facc15', n: 'Digital Marketing', d: 'Paid ads, funnels and email campaigns that turn clicks into customers, tracked with clear monthly reports.',
+    bars: [['Meta & Google Ads', 89], ['Funnels & landing pages', 90], ['Analytics & reporting', 86]], tools: ['Meta Ads', 'Google Ads', 'GA4', 'Mailchimp', 'Tag Manager', 'Hotjar'],
+    ic: '<path d="M3 11l18-8v18L3 13z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>' },
+  { k: 'seo', c: '#22d3ee', n: 'SEO', d: 'Technical SEO, keyword research, on-page content and local SEO that put your business on page one of Google.',
+    bars: [['Technical & on-page SEO', 91], ['Keyword research', 89], ['Local & Google Maps SEO', 93]], tools: ['Search Console', 'Ahrefs', 'SEMrush', 'Screaming Frog', 'Yoast', 'PageSpeed'],
+    ic: '<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3M8 11h6M11 8v6"/>' }
 ];
 const PROCESS = [
   ['Discover', 'A free 30-minute call to understand your goals, audience and budget. You get a clear written proposal within 48 hours.', 'Day 1–2'],
@@ -106,16 +131,16 @@ const TESTI = [
   ['Our support chatbot now answers 70% of customer questions automatically. Setup was smooth and everything was explained clearly.', 'Anjali Gurung', 'Ops lead, Kora Travels', '#38e8b0'],
   ['Fast, reliable and genuinely creative. Our YouTube retention jumped after nin ja took over editing. We have not looked back.', 'Bikash Thapa', 'Creator, 450k subscribers', '#ffb02e']
 ];
-const ROLES = ['Web Developer', 'Graphic Designer', 'Video Editor', 'AI Builder', 'App Developer'];
-const TOOLS = ['React', 'Next.js', 'Figma', 'After Effects', 'Premiere Pro', 'Illustrator', 'Python', 'DaVinci Resolve', 'Tailwind', 'OpenAI', 'Photoshop', 'Node.js', 'Blender', 'TypeScript'];
+const ROLES = ['Web Developer', 'Graphic Designer', 'Video Editor', 'AI Builder', 'App Developer', 'Social Media Manager', 'Digital Marketer', 'SEO Expert'];
+const TOOLS = ['React', 'Next.js', 'Figma', 'After Effects', 'Premiere Pro', 'Illustrator', 'Python', 'DaVinci Resolve', 'Tailwind', 'OpenAI', 'Photoshop', 'Node.js', 'Blender', 'TypeScript', 'Meta Ads', 'Google Ads', 'Search Console', 'Ahrefs'];
 
 /* ---------- render ---------- */
 $('#year').textContent = new Date().getFullYear();
 $('#marquee').innerHTML = [...TOOLS, ...TOOLS].map(t => `<span>${t}</span>`).join('');
 
 $('#skillsGrid').innerHTML = SKILLS.map((s, i) => `
-  <article class="skill" style="--c:var(--${s.k})">
-    <div class="skill-media"><video muted loop playsinline preload="none" poster="media/img/poster-${['tech-code-glow','anime-cloud-drift','travel-market-walk','nature-forest-rays','city-crosswalk-rush'][i]}.jpg"><source src="media/video/${['tech-code-glow','anime-cloud-drift','travel-market-walk','nature-forest-rays','city-crosswalk-rush'][i]}.mp4" type="video/mp4"></video></div>
+  <article class="skill" style="--c:${s.c || `var(--${s.k})`}">
+    <div class="skill-media"><video muted loop playsinline preload="none" poster="media/img/poster-${['tech-code-glow','anime-cloud-drift','travel-market-walk','nature-forest-rays','city-crosswalk-rush','character-music-producer','food-pan-sizzle','travel-beach-stroll'][i]}.jpg"><source src="media/video/${['tech-code-glow','anime-cloud-drift','travel-market-walk','nature-forest-rays','city-crosswalk-rush','character-music-producer','food-pan-sizzle','travel-beach-stroll'][i]}.mp4" type="video/mp4"></video></div>
     <div class="skill-top"><div class="skill-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${s.ic}</svg></div><span class="skill-num">0${i + 1}</span></div>
     <h3>${s.n}</h3><p>${s.d}</p>
     <div class="bars">${s.bars.map(([n, v]) => `<div class="bar-row"><div><span>${n}</span><b>${v}%</b></div><div class="bar-track"><i style="--w:${v}%"></i></div></div>`).join('')}</div>
