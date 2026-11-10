@@ -537,6 +537,31 @@ if (!reduce) {
   const tilt = $('.pt-tilt', pt);
   const show = () => pt.classList.add('in');
   if (reduce) show(); else { const t = setInterval(() => { if (!$('#loader') || $('#loader').classList.contains('done')) { clearInterval(t); setTimeout(show, 350); } }, 100); }
+  /* fit the portrait into the free space right of the text so it never overlaps */
+  const fit = () => {
+    if (innerWidth <= 1000) { pt.style.width = pt.style.right = ''; pt.classList.remove('pt-compact'); return; }
+    const inner = pt.parentElement, ir = inner.getBoundingClientRect();
+    let textRight = ir.left;
+    [...inner.children].forEach(el => { if (el === pt) return; const r = el.getBoundingClientRect(); textRight = Math.max(textRight, r.right); });
+    $$('.hero-title .line>*', inner).forEach(el => { textRight = Math.max(textRight, el.getBoundingClientRect().right); });
+    const edge = innerWidth - 24;                                    /* stay on screen */
+    const gapL = textRight + 40, gap = edge - gapL;                  /* free space next to the text */
+    /* measure the real footprint (ring, orbit text, badges) with the tilt/intro transforms switched off */
+    const tilt = $('.pt-tilt', pt), saved = [tilt.style.transform, tilt.style.scale, tilt.style.transition];
+    tilt.style.transition = 'none'; tilt.style.transform = 'none'; tilt.style.scale = '1';
+    const foot = () => { const pr = pt.getBoundingClientRect(); let l = pr.left, r = pr.right;
+      $$('.pt-orbit,.pt-badge,.pt-ring', pt).forEach(e => { if (getComputedStyle(e).display === 'none') return; const b = e.getBoundingClientRect(); l = Math.min(l, b.left); r = Math.max(r, b.right); });
+      return { l: l - pr.left, w: r - l, s: pr.width }; };
+    let size = 230;
+    pt.classList.remove('pt-compact');
+    for (let k = 0; k < 3; k++) { pt.style.width = size + 'px'; const f = foot(); if (f.w <= gap) break; size = Math.max(120, size * gap / f.w); }
+    if (foot().w > gap) { pt.classList.add('pt-compact'); for (let k = 0; k < 3; k++) { pt.style.width = size + 'px'; const f = foot(); if (f.w <= gap) break; size = Math.max(110, size * gap / f.w); } }
+    const f = foot();
+    const left = gapL + Math.max(0, (gap - f.w) / 2) - f.l;          /* centre the footprint in the free space */
+    pt.style.right = (ir.right - (left + f.s)) + 'px';
+    [tilt.style.transform, tilt.style.scale, tilt.style.transition] = saved;
+  };
+  fit(); addEventListener('resize', fit); addEventListener('load', fit); document.fonts && document.fonts.ready.then(fit);
   if (reduce) return;
   let mx = 0, my = 0, sy = 0;
   const apply = () => { tilt.style.transform = `perspective(900px) rotateY(${mx * 12}deg) rotateX(${-my * 12}deg) translateY(${sy * -0.18}px) rotate(${sy * 0.02}deg)`; pt.style.opacity = Math.max(0, 1 - sy / (innerHeight * .9)); };
