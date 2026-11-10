@@ -388,3 +388,9 @@ p.reveal.in,.hero-sub.reveal.in,.work-note.reveal.in{filter:none}
   .work-card .wc-media img{scale:1}
   .h2 em.serif,.hero-title .serif{animation:none}
 }
+
+/* best service badge */
+.skill.best-skill{border-color:color-mix(in srgb,var(--c) 45%,transparent);box-shadow:0 30px 80px -40px var(--c)}
+.best{display:inline-flex;align-items:center;gap:6px;margin-top:18px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:6px 12px;border-radius:99px;color:#fff;background:linear-gradient(120deg,var(--c),#ff2e7e);animation:bestPulse 2.4s ease-in-out infinite}
+@keyframes bestPulse{50%{box-shadow:0 0 0 8px rgba(249,115,22,0)}0%{box-shadow:0 0 0 0 rgba(249,115,22,.45)}}
+@media (prefers-reduced-motion:reduce){.best{animation:none}}

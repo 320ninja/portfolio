@@ -94,6 +94,9 @@ const PROJECTS = [
     stack: ['Information retrieval', 'TF-IDF', 'Conversational UX', 'JavaScript'], size: 'wide' }
 ];
 const SKILLS = [
+  { k: 'app', best: true, n: 'App Development', d: 'My best and most requested service. Cross-platform iOS and Android apps from idea to App Store and Play Store launch: food ordering, dating, real estate, travel booking and music apps.',
+    bars: [['React Native & Expo', 88], ['Flutter & Dart', 82], ['iOS & Android release', 85]], tools: ['React Native', 'Expo', 'Flutter', 'Firebase', 'Supabase', 'App Store / Play'],
+    ic: '<rect x="5" y="2" width="14" height="20" rx="3"/><path d="M12 18h.01"/>' },
   { k: 'web', n: 'Web Development', d: 'Fast, accessible, SEO-friendly websites and web apps, from landing pages to full dashboards.',
     bars: [['React / Next.js', 92], ['HTML, CSS & JavaScript', 96], ['Node.js & APIs', 84]], tools: ['React', 'Next.js', 'TypeScript', 'Tailwind', 'Node.js', 'Firebase', 'WordPress'],
     ic: '<path d="M8 6 2 12l6 6M16 6l6 6-6 6M14 4l-4 16"/>' },
@@ -106,9 +109,6 @@ const SKILLS = [
   { k: 'ai', n: 'AI & Automation', d: 'Chatbots, smart search, content pipelines and ML prototypes that save real hours every week.',
     bars: [['LLM apps & prompting', 90], ['Python & ML basics', 80], ['Workflow automation', 88]], tools: ['OpenAI / Claude APIs', 'Python', 'LangChain', 'n8n', 'Midjourney', 'Runway'],
     ic: '<path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="3.5"/>' },
-  { k: 'app', n: 'App Development', d: 'My most requested service. Cross-platform iOS and Android apps from idea to store launch: food ordering, dating, real estate, travel booking and music apps.',
-    bars: [['React Native & Expo', 88], ['Flutter & Dart', 82], ['iOS & Android release', 85]], tools: ['React Native', 'Expo', 'Flutter', 'Firebase', 'Supabase', 'App Store / Play'],
-    ic: '<rect x="5" y="2" width="14" height="20" rx="3"/><path d="M12 18h.01"/>' },
   { k: 'social', c: '#c084fc', n: 'Social Media Management', d: 'Content calendars, reels, captions and community management that grow real followers on Instagram, TikTok, Facebook and YouTube.',
     bars: [['Content planning', 92], ['Reels & short video', 94], ['Community & growth', 88]], tools: ['Meta Business Suite', 'Metricool', 'CapCut', 'Canva', 'TikTok', 'Instagram'],
     ic: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/>' },
@@ -139,10 +139,10 @@ $('#year').textContent = new Date().getFullYear();
 $('#marquee').innerHTML = [...TOOLS, ...TOOLS].map(t => `<span>${t}</span>`).join('');
 
 $('#skillsGrid').innerHTML = SKILLS.map((s, i) => `
-  <article class="skill" style="--c:${s.c || `var(--${s.k})`}">
-    <div class="skill-media"><video muted loop playsinline preload="none" poster="media/img/poster-${['tech-code-glow','anime-cloud-drift','travel-market-walk','nature-forest-rays','city-crosswalk-rush','character-music-producer','food-pan-sizzle','travel-beach-stroll'][i]}.jpg"><source src="media/video/${['tech-code-glow','anime-cloud-drift','travel-market-walk','nature-forest-rays','city-crosswalk-rush','character-music-producer','food-pan-sizzle','travel-beach-stroll'][i]}.mp4" type="video/mp4"></video></div>
+  <article class="skill${s.best ? ' best-skill' : ''}" style="--c:${s.c || `var(--${s.k})`}">
+    <div class="skill-media"><video muted loop playsinline preload="none" poster="media/img/poster-${['city-crosswalk-rush','tech-code-glow','anime-cloud-drift','travel-market-walk','nature-forest-rays','character-music-producer','food-pan-sizzle','travel-beach-stroll'][i]}.jpg"><source src="media/video/${['city-crosswalk-rush','tech-code-glow','anime-cloud-drift','travel-market-walk','nature-forest-rays','character-music-producer','food-pan-sizzle','travel-beach-stroll'][i]}.mp4" type="video/mp4"></video></div>
     <div class="skill-top"><div class="skill-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${s.ic}</svg></div><span class="skill-num">0${i + 1}</span></div>
-    <h3>${s.n}</h3><p>${s.d}</p>
+    ${s.best ? '<span class="best">★ Best service</span>' : ''}<h3>${s.n}</h3><p>${s.d}</p>
     <div class="bars">${s.bars.map(([n, v]) => `<div class="bar-row"><div><span>${n}</span><b>${v}%</b></div><div class="bar-track"><i style="--w:${v}%"></i></div></div>`).join('')}</div>
     <div class="tools">${s.tools.map(t => `<span>${t}</span>`).join('')}</div>
   </article>`).join('');
