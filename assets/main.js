@@ -117,7 +117,16 @@ const SKILLS = [
     ic: '<path d="M3 11l18-8v18L3 13z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>' },
   { k: 'seo', c: '#22d3ee', n: 'SEO', d: 'Technical SEO, keyword research, on-page content and local SEO that put your business on page one of Google.',
     bars: [['Technical & on-page SEO', 91], ['Keyword research', 89], ['Local & Google Maps SEO', 93]], tools: ['Search Console', 'Ahrefs', 'SEMrush', 'Screaming Frog', 'Yoast', 'PageSpeed'],
-    ic: '<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3M8 11h6M11 8v6"/>' }
+    ic: '<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3M8 11h6M11 8v6"/>' },
+  { k: 'brand', c: '#f472b6', n: 'Brand & Business Branding', d: 'Complete brand identities for businesses: name, logo, colours, typography, brand guidelines, packaging and launch kits that make you look established from day one.',
+    bars: [['Logo & identity systems', 94], ['Brand strategy & naming', 88], ['Guidelines & launch kits', 91]], tools: ['Illustrator', 'Figma', 'Photoshop', 'InDesign', 'Brand books', 'Mockups'],
+    ic: '<path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17l-6.1 3.4 1.5-6.8L2.2 9l6.9-.7z"/>' },
+  { k: 'saas', c: '#818cf8', n: 'SaaS Development', d: 'Subscription software built end to end: dashboards, user accounts, payments, admin panels and APIs that scale from first customer to thousands.',
+    bars: [['Full-stack SaaS builds', 90], ['Auth, billing & subscriptions', 87], ['Admin dashboards & APIs', 91]], tools: ['Next.js', 'Supabase', 'Stripe', 'PostgreSQL', 'Vercel', 'Node.js'],
+    ic: '<path d="M7 18a5 5 0 1 1 1-9.9A6 6 0 0 1 19.5 10 4 4 0 0 1 18 18z"/><path d="M12 12v5M9.5 14.5 12 12l2.5 2.5"/>' },
+  { k: 'growth', c: '#34d399', n: 'Business Growth', d: 'One growth plan that ties your brand, website, apps, ads, social media and SEO together, with clear targets and monthly reports so you see what brings in customers.',
+    bars: [['Growth strategy & planning', 90], ['Conversion optimisation', 88], ['Reporting & KPIs', 92]], tools: ['GA4', 'Looker Studio', 'HubSpot', 'Hotjar', 'Meta Ads', 'Search Console'],
+    ic: '<path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/>' }
 ];
 const PROCESS = [
   ['Discover', 'A free 30-minute call to understand your goals, audience and budget. You get a clear written proposal within 48 hours.', 'Day 1–2'],
@@ -131,8 +140,8 @@ const TESTI = [
   ['Our support chatbot now answers 70% of customer questions automatically. Setup was smooth and everything was explained clearly.', 'Anjali Gurung', 'Ops lead, Kora Travels', '#38e8b0'],
   ['Fast, reliable and genuinely creative. Our YouTube retention jumped after nin ja took over editing. We have not looked back.', 'Bikash Thapa', 'Creator, 450k subscribers', '#ffb02e']
 ];
-const ROLES = ['Web Developer', 'App Developer', 'Graphic Designer', 'Video Editor', 'AI Builder', 'Social Media Manager', 'Digital Marketer', 'SEO Expert'];
-const TOOLS = ['React', 'Next.js', 'Figma', 'After Effects', 'Premiere Pro', 'Illustrator', 'Python', 'DaVinci Resolve', 'Tailwind', 'OpenAI', 'Photoshop', 'Node.js', 'Blender', 'TypeScript', 'Meta Ads', 'Google Ads', 'Search Console', 'Ahrefs'];
+const ROLES = ['App Developer', 'Web Developer', 'SaaS Builder', 'Brand Designer', 'Video Editor', 'AI Builder', 'Social Media Manager', 'Digital Marketer', 'SEO Expert', 'Growth Partner'];
+const TOOLS = ['React', 'Next.js', 'Figma', 'After Effects', 'Premiere Pro', 'Illustrator', 'Python', 'DaVinci Resolve', 'Tailwind', 'OpenAI', 'Photoshop', 'Node.js', 'Blender', 'TypeScript', 'Meta Ads', 'Google Ads', 'Search Console', 'Ahrefs', 'Stripe', 'Supabase', 'HubSpot'];
 
 /* ---------- render ---------- */
 $('#year').textContent = new Date().getFullYear();
@@ -140,8 +149,8 @@ $('#marquee').innerHTML = [...TOOLS, ...TOOLS].map(t => `<span>${t}</span>`).joi
 
 $('#skillsGrid').innerHTML = SKILLS.map((s, i) => `
   <article class="skill${s.best ? ' best-skill' : ''}" style="--c:${s.c || `var(--${s.k})`}">
-    <div class="skill-media"><video muted loop playsinline preload="none" poster="media/img/poster-${['city-crosswalk-rush','tech-code-glow','anime-cloud-drift','travel-market-walk','nature-forest-rays','character-music-producer','food-pan-sizzle','travel-beach-stroll'][i]}.jpg"><source src="media/video/${['city-crosswalk-rush','tech-code-glow','anime-cloud-drift','travel-market-walk','nature-forest-rays','character-music-producer','food-pan-sizzle','travel-beach-stroll'][i]}.mp4" type="video/mp4"></video></div>
-    <div class="skill-top"><div class="skill-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${s.ic}</svg></div><span class="skill-num">0${i + 1}</span></div>
+    <div class="skill-media"><video muted loop playsinline preload="none" poster="media/img/poster-${['city-crosswalk-rush','tech-code-glow','anime-cloud-drift','travel-market-walk','nature-forest-rays','character-music-producer','food-pan-sizzle','travel-beach-stroll','character-street-reporter','tech-code-glow','city-night-traffic'][i]}.jpg"><source src="media/video/${['city-crosswalk-rush','tech-code-glow','anime-cloud-drift','travel-market-walk','nature-forest-rays','character-music-producer','food-pan-sizzle','travel-beach-stroll','character-street-reporter','tech-code-glow','city-night-traffic'][i]}.mp4" type="video/mp4"></video></div>
+    <div class="skill-top"><div class="skill-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${s.ic}</svg></div><span class="skill-num">${String(i + 1).padStart(2, '0')}</span></div>
     ${s.best ? '<span class="best">★ Best service</span>' : ''}<h3>${s.n}</h3><p>${s.d}</p>
     <div class="bars">${s.bars.map(([n, v]) => `<div class="bar-row"><div><span>${n}</span><b>${v}%</b></div><div class="bar-track"><i style="--w:${v}%"></i></div></div>`).join('')}</div>
     <div class="tools">${s.tools.map(t => `<span>${t}</span>`).join('')}</div>
