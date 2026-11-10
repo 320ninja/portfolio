@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sentiment Lens — NLP Text Analysis</title>
+<meta name="description" content="Understand the emotion and tone of any text. Sentiment scoring, emotion detection, keywords and readability — all in the browser.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070810;--surface:#0d0f1a;--card:#111320;--border:#181c2c;--border2:#1f2538;
+  --ink:#dee4f5;--mute:#6070a0;--dim:#1f2538;
+  --pos:#34d399;--neg:#f87171;--neu:#94a3b8;
+  --acc:#818cf8;--acc2:#a5b4fc;
+  --r:16px;--r2:12px;--r3:8px;
+  --shadow:0 8px 32px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;overflow-x:hidden}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+a{color:inherit;text-decoration:none}
+img,video{display:block;max-width:100%}
+.back{position:fixed;top:20px;left:20px;z-index:999;display:flex;align-items:center;gap:8px;background:rgba(7,8,16,.88);backdrop-filter:blur(12px);border:1px solid var(--border2);padding:8px 14px;border-radius:999px;font-size:13px;font-weight:500;color:var(--mute);transition:color .2s}
+.back:hover{color:var(--ink)}
+.back svg{width:14px;height:14px;flex-shrink:0}
+nav{position:fixed;top:0;left:0;right:0;z-index:900;height:60px;display:flex;align-items:center;gap:24px;padding:0 48px;background:rgba(7,8,16,.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px}
+.nav-logo{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--acc),#ec4899);display:grid;place-items:center}
+.nav-logo svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:9px;font-size:14px;font-weight:600;transition:all .2s;cursor:pointer}
+.btn-ghost{border:1px solid var(--border2);color:var(--mute)}
+.btn-ghost:hover{border-color:var(--dim);color:var(--ink)}
+.btn-primary{background:linear-gradient(135deg,var(--acc),#ec4899);color:#fff;box-shadow:0 0 24px rgba(129,140,248,.2)}
+.btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn-sm{padding:7px 14px;font-size:13px;border-radius:7px}
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px 24px 80px;overflow:hidden}
+.hero-video{position:absolute;inset:0}
+.hero-video video{width:100%;height:100%;object-fit:cover;opacity:.12}
+.hero-grad{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(129,140,248,.06) 0%,transparent 60%),linear-gradient(to bottom,rgba(7,8,16,.5),rgba(7,8,16,.3) 50%,rgba(7,8,16,.97))}
+.hero-inner{position:relative;z-index:2;max-width:800px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(129,140,248,.08);border:1px solid rgba(129,140,248,.22);padding:7px 16px;border-radius:999px;font-size:13px;font-weight:500;color:var(--acc2);margin-bottom:28px}
+.hero-badge span{width:7px;height:7px;border-radius:50%;background:var(--acc2);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+h1.hero-title{font-size:clamp(44px,7vw,80px);font-weight:800;letter-spacing:-.03em;line-height:1.08;margin-bottom:24px}
+h1.hero-title em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;background:linear-gradient(135deg,var(--acc),#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(16px,2vw,20px);color:var(--mute);max-width:560px;margin:0 auto 40px;line-height:1.7}
+.hero-cta{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:60px}
+.hero-use{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.use-card{background:rgba(17,19,32,.8);border:1px solid var(--border2);border-radius:var(--r2);overflow:hidden;width:160px;text-align:left}
+.use-card img{width:100%;height:80px;object-fit:cover;opacity:.7}
+.use-card p{padding:8px 10px;font-size:12px;color:var(--mute);font-weight:600}
+#app-section{padding-top:80px;min-height:100vh}
+.app-topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;gap:16px}
+.app-topbar .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px}
+.seg{display:flex;background:var(--card);border:1px solid var(--border2);border-radius:7px;padding:3px}
+.seg button{padding:6px 12px;border-radius:5px;font-size:12.5px;font-weight:600;color:var(--mute);transition:all .2s}
+.seg button.on{background:var(--border2);color:var(--ink)}
+.app-body{max-width:1200px;margin:0 auto;padding:28px 24px;display:grid;grid-template-columns:1fr 340px;gap:20px}
+.input-panel{background:var(--card);border:1px solid var(--border2);border-radius:var(--r);padding:24px}
+.input-panel h3{font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+textarea#mainInput{width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:var(--r2);padding:16px;font:inherit;font-size:15px;color:var(--ink);outline:none;resize:vertical;min-height:160px;line-height:1.7;transition:border .2s}
+textarea#mainInput:focus{border-color:var(--acc)}
+textarea#mainInput::placeholder{color:var(--dim)}
+.input-actions{display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap}
+.sample-label{font-size:12px;color:var(--mute);font-weight:600}
+.sample-chip{padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600;background:var(--border2);color:var(--mute);cursor:pointer;border:1px solid transparent;transition:all .2s}
+.sample-chip:hover{border-color:var(--acc);color:var(--acc2)}
+.analyse-btn{margin-left:auto;display:flex;align-items:center;gap:7px;background:linear-gradient(135deg,var(--acc),#ec4899);color:#fff;padding:9px 20px;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;border:0;transition:all .2s}
+.analyse-btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.results-panel{background:var(--card);border:1px solid var(--border2);border-radius:var(--r);padding:24px;margin-top:20px}
+.results-panel.grid-col{margin-top:0;grid-column:1/3}
+.gauge-wrap{display:flex;flex-direction:column;align-items:center;padding:16px 0}
+.gauge-arc{width:160px;height:80px;position:relative;overflow:hidden}
+.gauge-arc svg{width:160px;height:80px}
+.gauge-label{text-align:center;margin-top:8px}
+.gauge-label b{font-size:28px;font-weight:800;letter-spacing:-.02em}
+.gauge-label span{display:block;font-size:12px;font-weight:600;color:var(--mute);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+.sidebar-panel{display:flex;flex-direction:column;gap:16px}
+.info-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r);padding:18px}
+.info-card h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);margin-bottom:12px}
+.emotion-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.emotion-row label{font-size:13px;width:80px;flex-shrink:0;color:var(--mute)}
+.emo-bar-bg{flex:1;height:8px;background:var(--border2);border-radius:999px;overflow:hidden}
+.emo-bar-fill{height:100%;border-radius:999px;transition:width .6s ease}
+.emotion-row span{font-size:12px;font-weight:700;width:36px;text-align:right;flex-shrink:0}
+.keyword-cloud{display:flex;flex-wrap:wrap;gap:6px}
+.kw{padding:5px 11px;border-radius:999px;font-size:12.5px;font-weight:600;cursor:default}
+.kw.pos{background:rgba(52,211,153,.12);color:#34d399;border:1px solid rgba(52,211,153,.2)}
+.kw.neg{background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.2)}
+.kw.neu{background:rgba(148,163,184,.1);color:var(--mute);border:1px solid rgba(148,163,184,.15)}
+.highlight-wrap{line-height:2;font-size:14.5px}
+.highlight-wrap span{border-radius:4px;padding:1px 3px;transition:background .3s}
+.readability-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.readability-row:last-child{border-bottom:0}
+.readability-row span{color:var(--mute);font-size:13px}
+.readability-row b{font-size:13px}
+.batch-view{display:none}
+.batch-view.active{display:block}
+.batch-textarea{width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:var(--r2);padding:16px;font:inherit;font-size:14px;color:var(--ink);outline:none;resize:vertical;min-height:200px;transition:border .2s}
+.batch-textarea:focus{border-color:var(--acc)}
+.batch-results{margin-top:16px}
+.batch-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--surface);border-radius:var(--r3);margin-bottom:6px;font-size:13.5px}
+.batch-row .sent{flex:1;color:var(--ink)}
+.batch-row .badge{padding:3px 10px;border-radius:999px;font-size:11.5px;font-weight:700;flex-shrink:0}
+.badge.pos{background:rgba(52,211,153,.12);color:#34d399}
+.badge.neg{background:rgba(248,113,113,.12);color:#f87171}
+.badge.neu{background:rgba(148,163,184,.1);color:var(--mute)}
+footer{padding:60px 48px 40px;text-align:center;border-top:1px solid var(--border)}
+.foot-brand{font-size:28px;font-weight:800;letter-spacing:-.03em;margin-bottom:12px}
+.foot-brand span{background:linear-gradient(135deg,var(--acc),#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+footer p{color:var(--mute);font-size:14px}
+@media(max-width:900px){.app-body{grid-template-columns:1fr}.sidebar-panel{order:-1}}
+@media(max-width:600px){nav{padding:0 20px}.hero{padding:100px 20px 60px}.hero-cta{flex-direction:column}.hero-use{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<a href="../../index.html#work" class="back">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+  Portfolio
+</a>
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-logo"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+    Sentiment Lens
+  </div>
+  <div class="nav-right">
+    <button class="btn btn-ghost btn-sm" onclick="document.getElementById('app-section').scrollIntoView({behavior:'smooth'})">Log in</button>
+    <button class="btn btn-primary btn-sm" onclick="document.getElementById('app-section').scrollIntoView({behavior:'smooth'})">Try free</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-video">
+    <video autoplay muted loop playsinline poster="../../media/img/poster-tech-code-glow.jpg">
+      <source src="../../media/video/tech-code-glow.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="hero-grad"></div>
+  <div class="hero-inner">
+    <div class="hero-badge"><span></span> No API key needed — runs entirely client-side</div>
+    <h1 class="hero-title">Read between<br><em>the lines.</em></h1>
+    <p class="hero-sub">Instant sentiment scoring, emotion detection, keyword extraction and readability metrics — paste any text and understand it in seconds.</p>
+    <div class="hero-cta">
+      <button class="btn btn-primary" onclick="document.getElementById('app-section').scrollIntoView({behavior:'smooth'})">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-14 9V3z"/></svg>
+        Analyse text now
+      </button>
+      <button class="btn btn-ghost">See use cases</button>
+    </div>
+    <div class="hero-use">
+      <div class="use-card"><img src="../../media/img/momo-platter.jpg" alt="Restaurant reviews"><p>Restaurant reviews</p></div>
+      <div class="use-card"><img src="../../media/img/bali-kelingking.jpg" alt="Travel feedback"><p>Travel feedback</p></div>
+      <div class="use-card"><img src="../../media/img/house-3.jpg" alt="Real estate"><p>Real estate listings</p></div>
+      <div class="use-card"><img src="../../media/img/the1971-interior.jpg" alt="Brand monitoring"><p>Brand monitoring</p></div>
+    </div>
+  </div>
+</section>
+
+<div id="app-section">
+  <div class="app-topbar">
+    <div class="brand">
+      <div class="nav-logo" style="width:26px;height:26px;border-radius:7px"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" width="14" height="14"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+      Sentiment Lens
+    </div>
+    <div class="seg" id="modeSeg">
+      <button class="on" onclick="setMode('single',this)">Single text</button>
+      <button onclick="setMode('batch',this)">Batch mode</button>
+    </div>
+  </div>
+
+  <div class="app-body" id="singleView">
+    <div>
+      <div class="input-panel">
+        <h3>Paste or type your text <span style="color:var(--mute);font-weight:400;font-size:13px" id="charCount">0 chars</span></h3>
+        <textarea id="mainInput" placeholder="Paste a review, article, social post or any text you want to analyse…" oninput="countChars(this)"></textarea>
+        <div class="input-actions">
+          <span class="sample-label">Try:</span>
+          <span class="sample-chip" onclick="loadSample('restaurant')">Restaurant review</span>
+          <span class="sample-chip" onclick="loadSample('travel')">Travel post</span>
+          <span class="sample-chip" onclick="loadSample('product')">Product review</span>
+          <button class="analyse-btn" onclick="analyse()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 3l14 9-14 9V3z"/></svg>
+            Analyse
+          </button>
+        </div>
+      </div>
+      <div class="results-panel" id="resultsPanel" style="display:none">
+        <div style="display:grid;grid-template-columns:180px 1fr;gap:24px;align-items:start">
+          <div class="gauge-wrap">
+            <div class="gauge-arc">
+              <svg viewBox="0 0 160 80">
+                <path d="M20 80 A60 60 0 0 1 140 80" fill="none" stroke="#1f2538" stroke-width="14" stroke-linecap="round"/>
+                <path id="gaugePath" d="M20 80 A60 60 0 0 1 140 80" fill="none" stroke="#34d399" stroke-width="14" stroke-linecap="round" stroke-dasharray="188.5" stroke-dashoffset="94" style="transition:stroke-dashoffset .8s,stroke .4s"/>
+              </svg>
+            </div>
+            <div class="gauge-label"><b id="gaugeScore">0</b><span id="gaugeSentiment">Neutral</span></div>
+          </div>
+          <div>
+            <p style="font-size:12px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">Emotion breakdown</p>
+            <div id="emotionBars"></div>
+          </div>
+        </div>
+        <hr style="border:0;border-top:1px solid var(--border);margin:20px 0">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div>
+            <p style="font-size:12px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">Highlighted text</p>
+            <div class="highlight-wrap" id="highlightWrap"></div>
+          </div>
+          <div>
+            <p style="font-size:12px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">Key terms</p>
+            <div class="keyword-cloud" id="keywordCloud"></div>
+            <p style="font-size:12px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.08em;margin:16px 0 10px">Readability</p>
+            <div id="readability"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-panel">
+      <div class="info-card">
+        <h4>Sentence breakdown</h4>
+        <div id="sentenceList"></div>
+      </div>
+      <div class="info-card">
+        <h4>How it works</h4>
+        <p style="font-size:13px;color:var(--mute);line-height:1.7">Lexicon-based scoring with negation handling, intensifiers (very, extremely) and sentence-level context. No data leaves your browser.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-body batch-view" id="batchView" style="display:none;grid-template-columns:1fr">
+    <div class="input-panel">
+      <h3>Batch analysis <span style="color:var(--mute);font-weight:400;font-size:13px">One text per line</span></h3>
+      <textarea class="batch-textarea" id="batchInput" placeholder="Enter one text per line to analyse them all at once…">The momo here is absolutely incredible — best in Kathmandu, hands down!
+Service was slow and the food arrived cold. Very disappointing.
+Great location near Thamel, decent prices for tourists.
+Worst hotel experience ever. Noisy, dirty and rude staff.
+The trek was challenging but the views from EBC were breathtaking and worth every step.</textarea>
+      <div style="display:flex;justify-content:flex-end;margin-top:12px">
+        <button class="analyse-btn" onclick="analyseBatch()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 3l14 9-14 9V3z"/></svg>
+          Analyse all
+        </button>
+      </div>
+      <div class="batch-results" id="batchResults"></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-brand">Sentiment<span>Lens</span></div>
+  <p>NLP text analysis — entirely client-side, entirely private. &copy; 2026</p>
+</footer>
+
+<script>
+const LEX = {
+  "good":2,"great":3,"excellent":4,"amazing":4,"wonderful":4,"fantastic":4,"outstanding":5,"superb":5,"perfect":5,"love":4,"loved":4,"enjoy":3,"enjoyed":3,"beautiful":3,"delicious":4,"tasty":3,"fresh":2,"clean":3,"friendly":3,"helpful":3,"recommend":3,"impressed":4,"impressive":4,"incredible":4,"spectacular":4,"phenomenal":5,"breathtaking":5,"magnificent":4,"brilliant":4,"exceptional":5,"happy":3,"pleased":3,"satisfied":3,"comfortable":2,"nice":2,"lovely":3,"pleasant":3,"positive":2,"fast":2,"quick":2,"efficient":2,"professional":3,"responsive":3,"worth":2,"value":2,"affordable":2,
+  "bad":-2,"terrible":-4,"horrible":-4,"awful":-4,"poor":-3,"worst":-5,"disappointing":-3,"disappointed":-3,"disgusting":-4,"disgusted":-4,"filthy":-4,"dirty":-4,"rude":-4,"unfriendly":-3,"slow":-2,"cold":-2,"noisy":-3,"overpriced":-3,"expensive":-2,"mediocre":-2,"boring":-2,"bland":-2,"tasteless":-3,"stale":-3,"broken":-3,"damaged":-2,"wrong":-2,"error":-2,"mistake":-2,"problem":-2,"issue":-2,"complaint":-3,"hate":-4,"hated":-4,"dislike":-3,"disliked":-3,"avoid":-3,"waste":-3,"regret":-3
+};
+const NEGATORS = new Set(["not","never","no","don't","didn't","doesn't","won't","wasn't","isn't","aren't","can't","couldn't","wouldn't","shouldn't","hardly","barely","scarcely"]);
+const INTENSIFIERS = {"very":1.5,"extremely":2,"absolutely":2,"incredibly":2,"really":1.3,"so":1.3,"quite":1.1,"rather":1.1,"terribly":1.5,"highly":1.5,"completely":1.5,"totally":1.5,"utterly":2,"tremendously":2,"exceptionally":2,"remarkably":1.8,"surprisingly":1.3};
+const EMOTIONS = {joy:["happy","love","wonderful","fantastic","amazing","beautiful","delightful","cheerful","excited","pleased"],anger:["hate","rude","angry","outraged","furious","terrible","horrible","disgusting","awful","worst"],sadness:["disappointing","sad","sorry","unfortunate","regret","missed","lonely","depressed"],fear:["afraid","scary","dangerous","risk","worried","nervous","anxious","threatened"],disgust:["disgusting","filthy","dirty","gross","revolting","nasty","repulsive"],surprise:["incredible","amazing","unexpected","shocked","unbelievable","stunning","breathtaking"]};
+
+function tokenize(text){return text.toLowerCase().match(/[\w']+/g)||[];}
+function score(tokens){
+  let total=0,count=0;
+  for(let i=0;i<tokens.length;i++){
+    if(!LEX.hasOwnProperty(tokens[i]))continue;
+    let s=LEX[tokens[i]];
+    if(i>0&&NEGATORS.has(tokens[i-1]))s*=-1;
+    else if(i>0&&INTENSIFIERS[tokens[i-1]])s*=INTENSIFIERS[tokens[i-1]];
+    total+=s;count++;
+  }
+  return count?total/count:0;
+}
+function getEmotions(tokens){
+  const counts={};
+  for(const[emo,words]of Object.entries(EMOTIONS)){
+    counts[emo]=words.filter(w=>tokens.includes(w)).length;
+  }
+  const max=Math.max(...Object.values(counts))||1;
+  return Object.fromEntries(Object.entries(counts).map(([k,v])=>[k,v/max]));
+}
+function getKeywords(tokens){
+  const freq={};
+  tokens.forEach(t=>{if(t.length>3&&!NEGATORS.has(t))freq[t]=(freq[t]||0)+1;});
+  return Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,12).map(([w])=>({word:w,s:LEX[w]||0}));
+}
+function highlightTokens(text,tokens){
+  let i=0;
+  return text.replace(/[\w']+/g,match=>{
+    const lower=match.toLowerCase();
+    let col='';
+    if(LEX.hasOwnProperty(lower)){
+      let s=LEX[lower];
+      if(i>0&&NEGATORS.has(tokens[i-1]))s*=-1;
+      else if(i>0&&INTENSIFIERS[tokens[i-1]])s*=INTENSIFIERS[tokens[i-1]];
+      if(s>=2)col='rgba(52,211,153,.18)';
+      else if(s>=0.5)col='rgba(52,211,153,.09)';
+      else if(s<=-2)col='rgba(248,113,113,.18)';
+      else if(s<=-0.5)col='rgba(248,113,113,.09)';
+      else col='rgba(148,163,184,.08)';
+    }
+    i++;
+    return col?`<span style="background:${col}">${match}</span>`:match;
+  });
+}
+function readabilityMetrics(text){
+  const sentences=text.split(/[.!?]+/).filter(s=>s.trim()).length||1;
+  const words=text.trim().split(/\s+/).filter(Boolean).length||1;
+  const chars=text.replace(/\s/g,'').length;
+  const syllables=text.toLowerCase().replace(/[^a-z]/g,' ').split(/\s+/).reduce((s,w)=>{
+    const m=w.match(/[aeiouy]+/g);return s+(m?m.length:1);
+  },0);
+  const fk=206.835-1.015*(words/sentences)-84.6*(syllables/words);
+  let level='Advanced';
+  if(fk>=80)level='Very easy';else if(fk>=70)level='Easy';else if(fk>=60)level='Standard';else if(fk>=50)level='Fairly difficult';else if(fk>=30)level='Difficult';
+  return[
+    {k:'Words',v:words},{k:'Sentences',v:sentences},{k:'Avg words / sentence',v:(words/sentences).toFixed(1)},
+    {k:'Flesch score',v:Math.round(fk)},{k:'Reading level',v:level}
+  ];
+}
+function sentimentLabel(s){
+  if(s>=2)return{label:'Very positive',color:'var(--pos)'};
+  if(s>=0.5)return{label:'Positive',color:'#6ee7b7'};
+  if(s<=-2)return{label:'Very negative',color:'var(--neg)'};
+  if(s<=-0.5)return{label:'Negative',color:'#fca5a5'};
+  return{label:'Neutral',color:'var(--neu)'};
+}
+function analyse(){
+  const text=document.getElementById('mainInput').value.trim();
+  if(!text){document.getElementById('mainInput').focus();return;}
+  const tokens=tokenize(text);
+  const s=score(tokens);
+  const {label,color}=sentimentLabel(s);
+  const emos=getEmotions(tokens);
+  const kws=getKeywords(tokens);
+  const sentences=text.split(/[.!?]+/).filter(t=>t.trim());
+  document.getElementById('resultsPanel').style.display='block';
+  const pct=Math.min(Math.max((s+5)/10,0),1);
+  const circumference=188.5;
+  document.getElementById('gaugePath').style.strokeDashoffset=(circumference*(1-pct)).toFixed(2);
+  document.getElementById('gaugePath').style.stroke=color;
+  document.getElementById('gaugeScore').textContent=s.toFixed(2);
+  document.getElementById('gaugeScore').style.color=color;
+  document.getElementById('gaugeSentiment').textContent=label;
+  const emoColors={joy:'#f59e0b',anger:'#ef4444',sadness:'#60a5fa',fear:'#8b5cf6',disgust:'#10b981',surprise:'#f472b6'};
+  document.getElementById('emotionBars').innerHTML=Object.entries(emos).map(([k,v])=>`
+    <div class="emotion-row">
+      <label>${k.charAt(0).toUpperCase()+k.slice(1)}</label>
+      <div class="emo-bar-bg"><div class="emo-bar-fill" style="width:${v*100}%;background:${emoColors[k]||'#818cf8'}"></div></div>
+      <span style="color:${emoColors[k]||'#818cf8'}">${Math.round(v*100)}%</span>
+    </div>`).join('');
+  document.getElementById('highlightWrap').innerHTML=highlightTokens(text,tokens);
+  document.getElementById('keywordCloud').innerHTML=kws.map(({word,s})=>`
+    <span class="kw ${s>=0.5?'pos':s<=-0.5?'neg':'neu'}">${word}</span>`).join('');
+  document.getElementById('readability').innerHTML=readabilityMetrics(text).map(r=>`
+    <div class="readability-row"><span>${r.k}</span><b>${r.v}</b></div>`).join('');
+  document.getElementById('sentenceList').innerHTML=sentences.map(sent=>{
+    const st=tokenize(sent);const sc=score(st);const{label:sl,color:sc2}=sentimentLabel(sc);
+    return `<div style="padding:8px 10px;background:var(--surface);border-radius:var(--r3);margin-bottom:6px;font-size:13px">
+      <div style="font-size:11px;font-weight:700;color:${sc2};text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">${sl}</div>
+      <div style="color:var(--mute)">${sent.trim().slice(0,100)}${sent.trim().length>100?'…':''}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('resultsPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function analyseBatch(){
+  const lines=document.getElementById('batchInput').value.split('\n').filter(l=>l.trim());
+  document.getElementById('batchResults').innerHTML=lines.map(line=>{
+    const tokens=tokenize(line);const s=score(tokens);const{label,color}=sentimentLabel(s);
+    const cls=s>=0.5?'pos':s<=-0.5?'neg':'neu';
+    return `<div class="batch-row">
+      <span class="sent">${line.trim()}</span>
+      <span class="badge ${cls}" style="background:${color}18;color:${color}">${label}</span>
+      <span style="color:${color};font-weight:700;font-size:13px;min-width:36px;text-align:right">${s.toFixed(1)}</span>
+    </div>`;
+  }).join('');
+}
+function loadSample(type){
+  const samples={
+    restaurant:'The momo at Himalayan Brew is absolutely incredible — perfectly steamed, bursting with flavor, and the spicy achar sauce is divine. The staff were incredibly friendly and attentive. The ambience is cozy and the prices are very reasonable. I will definitely be coming back every week!',
+    travel:'The trek to Everest Base Camp was challenging but completely breathtaking. Every single morning the views were spectacular and unbelievable. However, the altitude was really tough and I was extremely exhausted by day five. The tea houses were surprisingly comfortable given the remote location.',
+    product:'I was very disappointed with this product. The quality is poor and it broke after just two days. The customer service was completely unhelpful and rude. I would strongly avoid buying this. It is a terrible waste of money and I deeply regret the purchase.'
+  };
+  document.getElementById('mainInput').value=samples[type];
+  countChars({value:samples[type]});
+  analyse();
+}
+function countChars(el){document.getElementById('charCount').textContent=(el.value||'').length+' chars';}
+function setMode(mode,btn){
+  document.querySelectorAll('#modeSeg button').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  if(mode==='single'){document.getElementById('singleView').style.display='grid';document.getElementById('batchView').style.display='none';}
+  else{document.getElementById('singleView').style.display='none';document.getElementById('batchView').style.display='grid';}
+}
+</script>
+</body>
+</html>
