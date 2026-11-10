@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Part-Time Dating — nin ja</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--pink:#ff4f8b;--lav:#8b6cff;--ink:#2a1b3d;--mut:#7a6a8c;--glass:rgba(255,255,255,.62);--line:rgba(255,255,255,.7);font-family:Inter,system-ui,sans-serif;color:var(--ink)}
+body{min-height:100vh;background:#160e22;color:#fff;display:grid;grid-template-columns:minmax(0,420px) auto;justify-content:center;align-items:center;gap:56px;padding:24px;overflow-x:hidden}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+.side h1{font-size:44px;line-height:1.02;letter-spacing:-.03em;font-weight:800}
+.side h1 em{font-family:'Instrument Serif',serif;font-weight:400;font-style:italic;color:#ff8ab4}
+.side p{color:rgba(255,255,255,.68);margin:16px 0 22px;line-height:1.6}
+.side .tag{display:inline-block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#ff8ab4;border:1px solid rgba(255,138,180,.35);padding:6px 12px;border-radius:99px;margin-bottom:18px}
+.side ul{list-style:none;display:grid;gap:10px;font-size:14px;color:rgba(255,255,255,.8)}
+.side li::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--pink);margin-right:10px;vertical-align:middle}
+.phone{width:min(380px,calc(100vw - 32px));height:min(780px,calc(100vh - 48px));border-radius:46px;padding:10px;background:#0b0710;box-shadow:0 40px 120px rgba(255,79,139,.25),0 0 0 1px rgba(255,255,255,.08)}
+.screen{position:relative;height:100%;border-radius:38px;overflow:hidden;background:linear-gradient(160deg,#ffe3ee 0%,#f1e4ff 55%,#e3ecff 100%)}
+.screen::before{content:'';position:absolute;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,#ffb3cf,transparent 70%);top:-80px;right:-80px;animation:float 9s ease-in-out infinite}
+.screen::after{content:'';position:absolute;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,#c9b6ff,transparent 70%);bottom:40px;left:-90px;animation:float 11s ease-in-out infinite reverse}
+@keyframes float{50%{transform:translate(20px,30px)}}
+.status{position:relative;z-index:2;display:flex;justify-content:space-between;padding:14px 26px 0;font-size:13px;font-weight:600}
+.view{position:absolute;inset:44px 0 86px;z-index:1;display:none;flex-direction:column;padding:8px 18px 0}
+.view.on{display:flex}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.top h2{font-size:24px;font-weight:800;letter-spacing:-.02em}
+.top h2 span{background:linear-gradient(90deg,var(--pink),var(--lav));-webkit-background-clip:text;background-clip:text;color:transparent}
+.chip{font-size:12px;font-weight:600;padding:6px 11px;border-radius:99px;background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(12px);color:var(--ink)}
+/* deck */
+.deck{position:relative;flex:1;margin-bottom:12px}
+.card{position:absolute;inset:0;border-radius:28px;overflow:hidden;box-shadow:0 18px 40px rgba(80,30,120,.22);touch-action:none;user-select:none;transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .35s;will-change:transform}
+.card.drag{transition:none}
+.card .art{position:absolute;inset:0;display:grid;place-items:center;font-size:96px;font-weight:800;color:rgba(255,255,255,.92);letter-spacing:-.04em}
+.card .art i{position:absolute;border-radius:50%;background:rgba(255,255,255,.18)}
+.card .info{position:absolute;left:0;right:0;bottom:0;padding:70px 18px 18px;background:linear-gradient(transparent,rgba(30,10,45,.78));color:#fff}
+.card h3{font-size:24px;font-weight:800}.card h3 small{font-weight:500;font-size:20px;opacity:.9}
+.card .meta{font-size:13px;opacity:.85;margin:3px 0 8px}
+.card .bio{font-size:13px;line-height:1.45;opacity:.92}
+.card .ints{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.card .ints span{font-size:11px;padding:4px 9px;border-radius:99px;background:rgba(255,255,255,.22);backdrop-filter:blur(6px)}
+.card .badge{position:absolute;top:16px;left:16px;font-size:11px;font-weight:700;padding:5px 10px;border-radius:99px;background:rgba(255,255,255,.85);color:var(--pink)}
+.card .online{position:absolute;top:16px;right:16px;font-size:11px;font-weight:600;padding:5px 10px;border-radius:99px;background:rgba(20,200,120,.9);color:#fff}
+.stamp{position:absolute;top:44px;font-size:30px;font-weight:900;padding:4px 14px;border:4px solid;border-radius:12px;opacity:0;letter-spacing:.05em}
+.stamp.like{left:22px;color:#19c37d;transform:rotate(-14deg)}
+.stamp.nope{right:22px;color:#ff4f6d;transform:rotate(14deg)}
+.empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:var(--mut);font-size:14px;padding:30px}
+.empty b{display:block;color:var(--ink);font-size:18px;margin-bottom:8px}
+.empty button{margin-top:14px;padding:10px 18px;border-radius:99px;background:linear-gradient(90deg,var(--pink),var(--lav));color:#fff;font-weight:700}
+.acts{display:flex;justify-content:center;gap:18px;padding-bottom:6px}
+.act{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(14px);box-shadow:0 8px 22px rgba(80,30,120,.15);transition:transform .15s}
+.act:active{transform:scale(.9)}
+.act svg{width:26px;height:26px}
+.act.big{width:68px;height:68px;background:linear-gradient(135deg,var(--pink),var(--lav));color:#fff;border:0}
+/* chats */
+.list{overflow:auto;display:grid;gap:10px;align-content:start}
+.row{display:flex;gap:12px;align-items:center;padding:12px;border-radius:20px;background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(14px);text-align:left;width:100%}
+.av{flex:none;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:17px;position:relative}
+.av.on::after{content:'';position:absolute;right:1px;bottom:1px;width:11px;height:11px;border-radius:50%;background:#19c37d;border:2px solid #fff}
+.row b{display:block;font-size:15px}.row small{color:var(--mut);font-size:13px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:210px}
+.matches{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;margin-bottom:6px}
+.matches .av{width:58px;height:58px;font-size:19px;box-shadow:0 0 0 3px #fff,0 0 0 5px var(--pink)}
+.hint{font-size:13px;color:var(--mut);text-align:center;padding:18px}
+/* chat */
+.chat{position:absolute;inset:0;z-index:5;background:linear-gradient(160deg,#ffe8f1,#efe6ff);display:none;flex-direction:column}
+.chat.on{display:flex}
+.chat-h{display:flex;align-items:center;gap:10px;padding:48px 16px 12px;border-bottom:1px solid rgba(255,255,255,.8);background:rgba(255,255,255,.5);backdrop-filter:blur(14px)}
+.chat-h .av{width:40px;height:40px;font-size:15px}
+.chat-h b{font-size:15px}.chat-h small{display:block;font-size:12px;color:#19a96c}
+.msgs{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:8px}
+.m{max-width:76%;padding:10px 14px;border-radius:20px;font-size:14px;line-height:1.4;animation:pop .25s ease}
+.m.them{background:#fff;align-self:flex-start;border-bottom-left-radius:6px}
+.m.me{background:linear-gradient(135deg,var(--pink),var(--lav));color:#fff;align-self:flex-end;border-bottom-right-radius:6px}
+.typing{align-self:flex-start;background:#fff;padding:12px 16px;border-radius:20px;display:flex;gap:4px}
+.typing i{width:6px;height:6px;border-radius:50%;background:#b9a6cc;animation:bl 1s infinite}.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes bl{50%{opacity:.3;transform:translateY(-3px)}}
+@keyframes pop{from{opacity:0;transform:translateY(6px) scale(.96)}}
+.compose{display:flex;gap:8px;padding:10px 12px 26px;background:rgba(255,255,255,.55);backdrop-filter:blur(14px)}
+.compose input{flex:1;border:1px solid #fff;border-radius:99px;padding:12px 16px;font:inherit;font-size:14px;background:rgba(255,255,255,.85);outline:none}
+.compose button{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--lav));color:#fff;display:grid;place-items:center}
+/* profile */
+.me-card{text-align:center;padding:22px;border-radius:26px;background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(14px)}
+.me-card .av{width:92px;height:92px;font-size:32px;margin:0 auto 12px}
+.me-card h3{font-size:22px}.me-card p{font-size:13px;color:var(--mut);margin-top:4px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.stats div{padding:14px 6px;border-radius:18px;background:var(--glass);border:1px solid var(--line);text-align:center}
+.stats b{display:block;font-size:22px;background:linear-gradient(90deg,var(--pink),var(--lav));-webkit-background-clip:text;background-clip:text;color:transparent}
+.stats span{font-size:11px;color:var(--mut)}
+.reset{margin-top:14px;width:100%;padding:13px;border-radius:99px;background:#fff;font-weight:700;color:var(--pink)}
+/* tab bar */
+.tabs{position:absolute;left:14px;right:14px;bottom:16px;z-index:4;display:flex;justify-content:space-around;padding:10px 6px;border-radius:30px;background:rgba(255,255,255,.7);border:1px solid #fff;backdrop-filter:blur(18px);box-shadow:0 10px 30px rgba(80,30,120,.15)}
+.tab{display:grid;justify-items:center;gap:3px;font-size:10px;font-weight:600;color:var(--mut);padding:2px 10px;position:relative}
+.tab svg{width:22px;height:22px}
+.tab.on{color:var(--pink)}
+.tab .dot{position:absolute;top:-2px;right:8px;min-width:16px;height:16px;border-radius:99px;background:var(--pink);color:#fff;font-size:10px;display:none;place-items:center;padding:0 4px}
+.tab .dot.show{display:grid}
+/* match overlay */
+.match{position:absolute;inset:0;z-index:9;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:rgba(40,10,60,.72);backdrop-filter:blur(10px);color:#fff;text-align:center;padding:30px}
+.match.on{display:flex;animation:pop .35s ease}
+.match h2{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;font-size:52px;line-height:1}
+.match .pair{display:flex;gap:-10px}
+.match .pair .av{width:96px;height:96px;font-size:34px;box-shadow:0 0 0 4px #fff}
+.match .pair .av+.av{margin-left:-18px}
+.match button{width:100%;max-width:260px;padding:14px;border-radius:99px;font-weight:700}
+.match .go{background:linear-gradient(90deg,var(--pink),var(--lav))}
+.match .later{background:rgba(255,255,255,.15)}
+.hearts{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.hearts span{position:absolute;bottom:-30px;font-size:22px;animation:rise 2.6s ease-in forwards;color:#ff8ab4}
+@keyframes rise{to{transform:translateY(-820px) rotate(30deg);opacity:0}}
+@media (max-width:860px){body{grid-template-columns:1fr;justify-items:center}.side{display:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<aside class="side">
+  <span class="tag">iOS &amp; Android app · Expo</span>
+  <h1>Part-Time <em>Dating</em></h1>
+  <p>A swipe-to-match dating app made for Nepal. It has a light "liquid glass" look, a swipe deck, instant matches, chat and nearby search. It's built with React Native and Expo.</p>
+  <ul><li>Drag a card left or right, or use the buttons</li><li>People who already like you match instantly</li><li>Open Chats and say hi, and they reply</li><li>Profile shows your stats and resets the deck</li></ul>
+</aside>
+
+<div class="phone"><div class="screen" id="screen">
+  <div class="status"><span id="clock">9:41</span><span>● ● ▮</span></div>
+
+  <section class="view on" id="v-discover">
+    <div class="top"><h2>Dis<span>cover</span></h2><span class="chip" id="near">Near Kathmandu</span></div>
+    <div class="deck" id="deck"></div>
+    <div class="acts">
+      <button class="act" id="bNope" aria-label="Pass"><svg viewBox="0 0 24 24" fill="none" stroke="#ff4f6d" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      <button class="act big" id="bLike" aria-label="Like"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.3 3 4.5 6.7 4.5c2 0 3.4 1.1 4.3 2.4.9-1.3 2.3-2.4 4.3-2.4 3.7 0 5.8 3.8 4.3 7.2C19.5 16.4 12 21 12 21Z"/></svg></button>
+      <button class="act" id="bStar" aria-label="Super like"><svg viewBox="0 0 24 24" fill="#8b6cff"><path d="m12 2.8 2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z"/></svg></button>
+    </div>
+  </section>
+
+  <section class="view" id="v-chats">
+    <div class="top"><h2>Ch<span>ats</span></h2><span class="chip" id="mcount">0 matches</span></div>
+    <div class="matches" id="matches"></div>
+    <div class="list" id="chatList"></div>
+  </section>
+
+  <section class="view" id="v-profile">
+    <div class="top"><h2>Pro<span>file</span></h2><span class="chip">Verified ✓</span></div>
+    <div class="me-card"><div class="av" style="background:linear-gradient(135deg,#ff7aa8,#8b6cff)">AA</div><h3>Aarav Adhikari, 27</h3><p>Software Engineer · Kathmandu</p></div>
+    <div class="stats"><div><b id="sLikes">0</b><span>Likes sent</span></div><div><b id="sMatch">0</b><span>Matches</span></div><div><b id="sMsg">0</b><span>Messages</span></div></div>
+    <button class="reset" id="reset">Reset deck</button>
+  </section>
+
+  <nav class="tabs">
+    <button class="tab on" data-v="discover"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M9 8h6"/></svg>Discover</button>
+    <button class="tab" data-v="chats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/></svg>Chats<span class="dot" id="cdot"></span></button>
+    <button class="tab" data-v="profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Profile</button>
+  </nav>
+
+  <div class="chat" id="chat">
+    <div class="chat-h"><button id="back" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg></button><div class="av" id="cAv"></div><div><b id="cName"></b><small>Online now</small></div></div>
+    <div class="msgs" id="msgs"></div>
+    <form class="compose" id="compose"><input id="cIn" placeholder="Say something nice…" autocomplete="off"><button aria-label="Send"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 20.5 21 12 3 3.5 3 10l12 2-12 2z"/></svg></button></form>
+  </div>
+
+  <div class="match" id="match"><h2>It's a match!</h2><p id="matchTxt"></p><div class="pair"><div class="av" style="background:linear-gradient(135deg,#ff7aa8,#8b6cff)">AA</div><div class="av" id="mAv"></div></div><button class="go" id="mGo">Send a message</button><button class="later" id="mLater">Keep swiping</button></div>
+  <div class="hearts" id="hearts"></div>
+</div></div>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const P = [
+  ['Anu Shrestha',24,'Kathmandu',3,'Graphic Designer','Weekdays are for client briefs, weekends are for finding the best jhol momo in Thamel.',['Momo hunting','Photography','Cafés'],1,1,1,['#ff7aa8','#ffb36b']],
+  ['Subhu Karki',26,'Pokhara',18,'Travel Guide','I walk people up to Poon Hill for a living and still get excited at every sunrise.',['Trekking','Travel','Music'],0,1,0,['#5ec8ff','#8b6cff']],
+  ['Anita Thapa',22,'Lalitpur',5,'Nursing Student','Long shifts, strong tea, and a playlist for every mood. Tell me your favourite song.',['Music','Reading','Cooking'],1,0,1,['#ff6bb5','#b36bff']],
+  ['Sumana Rai',25,'Dharan',34,'Dance Instructor','Teaching kids to dance by day, learning salsa badly by night.',['Dancing','Yoga','Travel'],0,1,1,['#ffa26b','#ff4f8b']],
+  ['Samina Magar',27,'Bhaktapur',11,'Florist','My flat is basically a jungle now. Looking for someone who will help me water it.',['Cafés','Photography','Cooking'],1,0,0,['#4fd1a5','#5e8bff']],
+  ['Rinu Gurung',23,'Kathmandu',2,'Content Creator','Always the one planning the trip, never the one driving. Swap?',['Travel','Momo hunting','Music'],1,1,1,['#c06bff','#ff6b9e']],
+  ['Sonam Sherpa',28,'Lalitpur',7,'Architect','I notice old windows and wooden doors everywhere. Patan walks are my happy place.',['Photography','Trekking','Cafés'],0,1,0,['#ffcf5e','#ff7a59']]
+].map(([n,a,c,d,j,b,i,likes,ver,on,g],k)=>({id:k,n,a,c,d,j,b,i,likes:!!likes,ver:!!ver,on:!!on,g}));
+const REPLIES=['Haha, that made me smile 😄','Hi! Thanks for the like. How is your day going?','Momo or chowmein? Choose carefully 😉','I love that! Have you been to Patan Durbar Square lately?','Sounds fun. Coffee this weekend?','Tell me more about you!'];
+let deck=[], matches=[], chats={}, likes=0, sent=0, unread=0, cur=null;
+const ini = n => n.split(' ').map(w=>w[0]).join('');
+const grad = p => `linear-gradient(135deg,${p.g[0]},${p.g[1]})`;
+
+function build(){
+  deck=[...P].reverse();
+  render();
+}
+function render(){
+  const el=$('#deck'); el.innerHTML='';
+  if(!deck.length){el.innerHTML='<div class="empty"><div><b>You have seen everyone nearby</b>Widen your distance or come back later for new people.<br><button id="again">Start over</button></div></div>';$('#again').onclick=build;return;}
+  deck.slice(-3).forEach((p,i,arr)=>{
+    const c=document.createElement('div'); c.className='card'; c.dataset.id=p.id;
+    const depth=arr.length-1-i; c.style.transform=`translateY(${depth*10}px) scale(${1-depth*.04})`; c.style.zIndex=10-depth;
+    c.innerHTML=`<div class="art" style="background:${grad(p)}"><i style="width:220px;height:220px;top:-60px;left:-60px"></i><i style="width:140px;height:140px;bottom:120px;right:-40px"></i>${ini(p.n)}</div>
+      ${p.ver?'<span class="badge">✓ Verified</span>':''}${p.on?'<span class="online">● Online</span>':''}
+      <span class="stamp like">LIKE</span><span class="stamp nope">NOPE</span>
+      <div class="info"><h3>${p.n.split(' ')[0]} <small>${p.a}</small></h3><div class="meta">${p.j} · ${p.c} · ${p.d} km away</div><div class="bio">${p.b}</div><div class="ints">${p.i.map(x=>`<span>${x}</span>`).join('')}</div></div>`;
+    el.appendChild(c);
+    if(depth===0) drag(c,p);
+  });
+}
+function drag(c,p){
+  let sx=0,sy=0,dx=0,dy=0,down=false;
+  c.addEventListener('pointerdown',e=>{down=true;sx=e.clientX;sy=e.clientY;c.classList.add('drag');c.setPointerCapture(e.pointerId);});
+  c.addEventListener('pointermove',e=>{if(!down)return;dx=e.clientX-sx;dy=e.clientY-sy;c.style.transform=`translate(${dx}px,${dy}px) rotate(${dx/18}deg)`;
+    c.querySelector('.like').style.opacity=Math.max(0,dx/90);c.querySelector('.nope').style.opacity=Math.max(0,-dx/90);});
+  const up=()=>{if(!down)return;down=false;c.classList.remove('drag');
+    if(Math.abs(dx)>100) swipe(dx>0?'like':'nope'); else {c.style.transform='';c.querySelectorAll('.stamp').forEach(s=>s.style.opacity=0);}
+    dx=dy=0;};
+  c.addEventListener('pointerup',up);c.addEventListener('pointercancel',up);
+}
+function swipe(dir,superLike){
+  const p=deck[deck.length-1]; if(!p)return;
+  const c=$(`.card[data-id="${p.id}"]`);
+  c.style.transform=`translate(${dir==='like'?520:-520}px,40px) rotate(${dir==='like'?30:-30}deg)`;c.style.opacity=0;
+  c.querySelector(dir==='like'?'.like':'.nope').style.opacity=1;
+  deck.pop();
+  setTimeout(render,280);
+  if(dir==='like'){likes++;hearts();
+    if(p.likes||superLike){setTimeout(()=>matched(p),420);}
+  }
+  stats();
+}
+function matched(p){
+  matches.unshift(p); chats[p.id]=[['them',`Hey Aarav! I'm ${p.n.split(' ')[0]} 👋`]];
+  unread++; badge();
+  $('#mAv').style.background=grad(p);$('#mAv').textContent=ini(p.n);
+  $('#matchTxt').textContent=`You and ${p.n.split(' ')[0]} like each other.`;
+  $('#match').classList.add('on'); cur=p; stats(); lists();
+}
+function hearts(){const h=$('#hearts');for(let i=0;i<8;i++){const s=document.createElement('span');s.textContent='♥';s.style.left=(15+Math.random()*70)+'%';s.style.animationDelay=(i*80)+'ms';s.style.fontSize=(14+Math.random()*18)+'px';h.appendChild(s);setTimeout(()=>s.remove(),3000);}}
+function badge(){const d=$('#cdot');d.textContent=unread;d.classList.toggle('show',unread>0);}
+function stats(){$('#sLikes').textContent=likes;$('#sMatch').textContent=matches.length;$('#sMsg').textContent=sent;$('#mcount').textContent=matches.length+' match'+(matches.length===1?'':'es');}
+function lists(){
+  $('#matches').innerHTML=matches.map(p=>`<button class="av${p.on?' on':''}" data-id="${p.id}" style="background:${grad(p)}" aria-label="Chat with ${p.n}">${ini(p.n)}</button>`).join('');
+  $('#chatList').innerHTML=matches.length?matches.map(p=>{const m=chats[p.id];const last=m[m.length-1];return `<button class="row" data-id="${p.id}"><span class="av${p.on?' on':''}" style="background:${grad(p)}">${ini(p.n)}</span><span><b>${p.n}</b><small>${last[0]==='me'?'You: ':''}${last[1]}</small></span></button>`}).join(''):'<p class="hint">No matches yet. Swipe right on Anu, Anita or Rinu. They already like you.</p>';
+}
+function openChat(p){cur=p;unread=Math.max(0,unread-1);badge();$('#cAv').style.background=grad(p);$('#cAv').textContent=ini(p.n);$('#cName').textContent=p.n;drawMsgs();$('#chat').classList.add('on');setTimeout(()=>$('#cIn').focus(),100);}
+function drawMsgs(){$('#msgs').innerHTML=chats[cur.id].map(([w,t])=>`<div class="m ${w}">${t.replace(/</g,'&lt;')}</div>`).join('');$('#msgs').scrollTop=1e5;}
+$('#compose').onsubmit=e=>{e.preventDefault();const v=$('#cIn').value.trim();if(!v)return;chats[cur.id].push(['me',v]);sent++;stats();$('#cIn').value='';drawMsgs();
+  const p=cur;const t=document.createElement('div');t.className='typing';t.innerHTML='<i></i><i></i><i></i>';$('#msgs').appendChild(t);$('#msgs').scrollTop=1e5;
+  setTimeout(()=>{chats[p.id].push(['them',REPLIES[Math.random()*REPLIES.length|0]]);if(cur===p&&$('#chat').classList.contains('on'))drawMsgs();lists();},1200+Math.random()*800);lists();};
+$('#back').onclick=()=>{$('#chat').classList.remove('on');lists();};
+document.addEventListener('click',e=>{const b=e.target.closest('#matches .av,#chatList .row');if(b)openChat(matches.find(m=>m.id==b.dataset.id));});
+$('#bLike').onclick=()=>swipe('like');$('#bNope').onclick=()=>swipe('nope');$('#bStar').onclick=()=>swipe('like',true);
+$('#mGo').onclick=()=>{$('#match').classList.remove('on');go('chats');openChat(cur);};
+$('#mLater').onclick=()=>$('#match').classList.remove('on');
+function go(v){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.v===v));if(v==='chats')lists();}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>go(t.dataset.v));
+$('#reset').onclick=()=>{matches=[];chats={};likes=sent=unread=0;badge();stats();lists();build();go('discover');};
+addEventListener('keydown',e=>{if($('#chat').classList.contains('on'))return;if(e.key==='ArrowRight')swipe('like');if(e.key==='ArrowLeft')swipe('nope');});
+build();stats();lists();
+})();
+</script>
+</body>
+</html>

@@ -72,22 +72,22 @@ const PROJECTS = [
     d: 'A fully playable piano in the browser: 88 keys, keyboard mapping, sustain and reverb, chord recognition and a visual note-roll recorder. No plugin needed.',
     try: ['Press A–L keys to play the white keys', 'Hold Shift for sustain, record a phrase', 'Try the built-in chord suggestions'],
     stack: ['Web Audio API', 'JavaScript', 'Canvas', 'Music theory'], size: 'narrow' },
-  { id: 'guitarchords', t: 'GuitarChords', cat: 'app', sub: 'Chord finder with fretboard and sound', c1: '#0a0a0d', y: 2025, client: 'Music app',
-    d: 'A guitar chord app: pick any root and chord type, see the fingering on an interactive fretboard, hear the chord played and browse common progressions by genre.',
-    try: ['Pick a root note and chord type', 'Press Play to hear the chord', 'Check the progressions below the fretboard'],
-    stack: ['Canvas fretboard', 'Web Audio API', 'Music theory', 'JavaScript'], size: 'narrow' },
-  { id: 'donkeycut', t: 'DonkeyCut', cat: 'app', sub: 'Mobile-first video trimmer and clip exporter', c1: '#08080c', y: 2025, client: 'Creator app',
-    d: 'A fast video trimmer: import a clip, set in and out points on the timeline, tag and organise clips, pick quality and format, and export your best moments.',
-    try: ['Import your own video', 'Drag the timeline and set In / Out points', 'Switch to Clips and press Export'],
-    stack: ['HTML5 video', 'Timeline UX', 'Object URLs', 'JavaScript'], size: 'wide' },
-  { id: 'dating', t: 'Sathi', cat: 'app', sub: 'Swipe-based dating app built for Nepal', c1: '#08080c', y: 2025, client: 'Social startup',
-    d: 'A swipe-based dating app: drag profile cards left or right, get a match celebration, browse recent matches and tune age, distance and preferences.',
-    try: ['Drag a card right to like it', 'Use the Like, Nope and Super Like buttons', 'Change the age and distance filters'],
-    stack: ['Touch gestures', 'Card-stack UI', 'Mobile UX', 'JavaScript'], size: 'narrow' },
-  { id: 'aioffice', t: 'AI Office', cat: 'ai', sub: 'AI workplace assistant for email, docs and HR', c1: '#07080c', y: 2025, client: 'Workplace tool',
-    d: 'A workplace assistant that drafts emails, summarises reports, schedules meetings and answers HR questions like leave balances, all from one chat.',
-    try: ['Press "Draft an email"', 'Ask about your leave balance', 'Schedule a recurring standup'],
-    stack: ['Conversational UX', 'Prompt design', 'Workflow automation', 'JavaScript'], size: 'wide' },
+  { id: 'dating', t: 'Part-Time Dating', cat: 'app', sub: 'Swipe-to-match dating app for iOS & Android', c1: '#2a1238', y: 2026, client: 'Startup, Kathmandu',
+    d: 'A dating app made for Nepal with a light "liquid glass" design: a swipe deck you can drag, instant matches with people who already like you, chat with typing indicators, nearby and interest search, and a profile with live stats. Built with React Native and Expo.',
+    try: ['Drag a card right to like or left to pass', 'Like Anu, Anita or Rinu for an instant match', 'Open Chats and send a message'],
+    stack: ['React Native', 'Expo Router', 'TypeScript', 'Supabase'] },
+  { id: 'realestate', t: 'Ghar Real Estate', cat: 'app', sub: 'Buy, rent & bid on property from your phone', c1: '#0a1f18', y: 2026, client: 'Property agency, Lalitpur',
+    d: 'An installable property app (PWA) for iPhone and Android. Buyers search by Buy / Rent, type and distance, save homes and bid on HOT listings with a live countdown. Sellers post listings with photos. An assistant called Ghar Guru answers searches and converts land units.',
+    try: ['Filter by Rent or a 5 km radius', 'Open a 🔥 HOT listing and place a bid', 'Ask Ghar Guru "3 bedroom house in Lalitpur"'],
+    stack: ['PHP 8', 'SQLite / MySQL', 'PWA', 'OpenStreetMap'] },
+  { id: 'travelapp', t: 'Safar Travel App', cat: 'app', sub: 'White-label tour booking app for agencies', c1: '#0b1a3a', y: 2026, client: 'Travel agencies',
+    d: 'A mobile-first booking app that travel agencies rebrand as their own. It has tours with galleries, day-by-day itineraries with mapped routes and hotels, private notes for each day, prices that switch between USD and NPR with one tap, and a booking flow with a My trips screen.',
+    try: ['Switch prices between USD and NPR', 'Open Everest Base Camp and step through the days', 'Book for 3 travellers, then open My trips'],
+    stack: ['PHP 8', 'SQLite / MySQL', 'PWA', 'Leaflet maps'] },
+  { id: 'restaurants', t: 'Restaurant Websites', cat: 'web', sub: '8 live restaurant sites with online ordering', c1: '#1b0f0a', y: 2026, client: 'Restaurants, UK', url: 'https://cherrytree.techagent247.co.uk', live: 'cherrytree.techagent247.co.uk',
+    d: 'Websites for 8 restaurants, including The Cherry Tree, Thè 1971, Cinnamon, Cafe Jeera and Balti Village. Each one connects to the Khaja ordering app, where customers scan a QR code at their table to order. This is the live Cherry Tree site.',
+    try: ['Scroll the menu and gallery', 'Tap Order to open the live ordering app', 'Try it on your phone, since it is fully responsive'],
+    stack: ['Vite', 'Responsive design', 'QR ordering', 'Hostinger'] },
   { id: 'nova', t: 'Nova Assistant', cat: 'ai', sub: 'AI chatbot that knows my work', c1: '#0b0b14', y: 2025, client: 'Portfolio assistant',
     d: 'A retrieval-based assistant that answers questions about my services, pricing and process using TF-IDF search with cosine similarity, plus built-in maths, time and currency tools.',
     try: ['Ask "How much does a website cost?"', 'Ask "What tools do you use for video?"', 'Try "convert 100 USD to NPR"'],
@@ -106,7 +106,7 @@ const SKILLS = [
   { k: 'ai', n: 'AI & Automation', d: 'Chatbots, smart search, content pipelines and ML prototypes that save real hours every week.',
     bars: [['LLM apps & prompting', 90], ['Python & ML basics', 80], ['Workflow automation', 88]], tools: ['OpenAI / Claude APIs', 'Python', 'LangChain', 'n8n', 'Midjourney', 'Runway'],
     ic: '<path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="3.5"/>' },
-  { k: 'app', n: 'App Development', d: 'My most requested service. Cross-platform iOS and Android apps from idea to store launch: food ordering, dating, video tools, music and AI office apps.',
+  { k: 'app', n: 'App Development', d: 'My most requested service. Cross-platform iOS and Android apps from idea to store launch: food ordering, dating, real estate, travel booking and music apps.',
     bars: [['React Native & Expo', 88], ['Flutter & Dart', 82], ['iOS & Android release', 85]], tools: ['React Native', 'Expo', 'Flutter', 'Firebase', 'Supabase', 'App Store / Play'],
     ic: '<rect x="5" y="2" width="14" height="20" rx="3"/><path d="M12 18h.01"/>' },
   { k: 'social', c: '#c084fc', n: 'Social Media Management', d: 'Content calendars, reels, captions and community management that grow real followers on Instagram, TikTok, Facebook and YouTube.',
@@ -131,7 +131,7 @@ const TESTI = [
   ['Our support chatbot now answers 70% of customer questions automatically. Setup was smooth and everything was explained clearly.', 'Anjali Gurung', 'Ops lead, Kora Travels', '#38e8b0'],
   ['Fast, reliable and genuinely creative. Our YouTube retention jumped after nin ja took over editing. We have not looked back.', 'Bikash Thapa', 'Creator, 450k subscribers', '#ffb02e']
 ];
-const ROLES = ['Web Developer', 'Graphic Designer', 'Video Editor', 'AI Builder', 'App Developer', 'Social Media Manager', 'Digital Marketer', 'SEO Expert'];
+const ROLES = ['Web Developer', 'App Developer', 'Graphic Designer', 'Video Editor', 'AI Builder', 'Social Media Manager', 'Digital Marketer', 'SEO Expert'];
 const TOOLS = ['React', 'Next.js', 'Figma', 'After Effects', 'Premiere Pro', 'Illustrator', 'Python', 'DaVinci Resolve', 'Tailwind', 'OpenAI', 'Photoshop', 'Node.js', 'Blender', 'TypeScript', 'Meta Ads', 'Google Ads', 'Search Console', 'Ahrefs'];
 
 /* ---------- render ---------- */
@@ -234,6 +234,29 @@ function finishLoad() {
   cv.parentElement.addEventListener('pointerleave', () => { mouse.x = mouse.y = -999; });
   new IntersectionObserver(([en]) => { visible = en.isIntersecting; cancelAnimationFrame(raf); if (visible && !reduce) raf = requestAnimationFrame(frame); }).observe(cv);
 })();
+
+/* ---------- split headings into words for staggered reveals ---------- */
+$$('.h2').forEach(h => {
+  let i = 0;
+  const wrap = node => {
+    [...node.childNodes].forEach(n => {
+      if (n.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(part => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(' ')); return; }
+          const w = document.createElement('span'); w.className = 'w';
+          const inner = document.createElement('span'); inner.textContent = part; inner.style.setProperty('--i', i++);
+          w.appendChild(inner); frag.appendChild(w);
+        });
+        n.replaceWith(frag);
+      } else if (n.nodeType === 1 && n.tagName !== 'BR') wrap(n);
+    });
+  };
+  wrap(h);
+  h.classList.add('split');
+  if (!h.classList.contains('reveal')) h.classList.add('reveal');
+});
 
 /* ---------- reveal + counters ---------- */
 const io = new IntersectionObserver(entries => entries.forEach(en => {
@@ -345,7 +368,15 @@ $('#filters').addEventListener('click', e => {
     if (show && c.classList.contains('hidden')) { c.classList.remove('hidden', 'in'); requestAnimationFrame(() => requestAnimationFrame(() => c.classList.add('in'))); }
     else if (!show) c.classList.add('hidden');
   });
+  sizeCards();
 });
+function sizeCards() {
+  const vis = $$('.work-card:not(.hidden)');
+  vis.forEach((c, i) => {
+    c.classList.remove('wide', 'narrow', 'full');
+    c.classList.add(i === vis.length - 1 && vis.length % 2 ? 'full' : (Math.floor(i / 2) % 2 ? (i % 2 ? 'wide' : 'narrow') : (i % 2 ? 'narrow' : 'wide')));
+  });
+}
 
 /* ---------- modal ---------- */
 const modal = $('#modal'), frame = $('#mFrame');
@@ -353,15 +384,15 @@ let lastFocus;
 function openProject(id) {
   const p = PROJECTS.find(x => x.id === id); if (!p) return;
   lastFocus = document.activeElement;
-  const url = `demos/${p.id}/index.html`;
-  $('#mUrl').textContent = `ninja.com.np/work/${p.id}`;
+  const url = p.url || `demos/${p.id}/index.html`;
+  $('#mUrl').textContent = p.live || `ninja.com.np/work/${p.id}`;
   $('#mOpen').href = url;
   $('#mCat').textContent = CAT[p.cat].n; $('#mCat').style.color = CAT[p.cat].c;
   $('#mTitle').textContent = p.t;
   $('#mDesc').textContent = p.d;
   $('#mTry').innerHTML = p.try.map(t => `<li>${t}</li>`).join('');
   $('#mStack').innerHTML = p.stack.map(s => `<span>${s}</span>`).join('');
-  $('#mMeta').innerHTML = `<div><span>Client</span>${p.client}</div><div><span>Year</span>${p.y}</div><div><span>Role</span>Design &amp; build</div><div><span>Status</span>Live demo</div>`;
+  $('#mMeta').innerHTML = `<div><span>Client</span>${p.client}</div><div><span>Year</span>${p.y}</div><div><span>Role</span>Design &amp; build</div><div><span>Status</span>${p.url ? 'Live site' : 'Live demo'}</div>`;
   $('#frameLoad').classList.remove('off');
   frame.onload = () => $('#frameLoad').classList.add('off');
   frame.src = url;

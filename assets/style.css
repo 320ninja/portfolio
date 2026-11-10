@@ -339,3 +339,52 @@ img{max-width:100%;display:block}
 .skill-media::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,var(--card))}
 .skill-top{position:relative;margin-top:-56px;z-index:1}
 @media(max-width:560px){.skill-media{margin:-24px -24px 20px;height:140px}}
+/* ---------- motion: text, headings & content ---------- */
+.split.reveal{opacity:1;transform:none}
+.split .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.1em;margin-bottom:-.1em}
+.split .w>span{display:inline-block;transform:translateY(110%) rotate(5deg);transform-origin:0 100%;opacity:0;transition:transform 1s var(--ease),opacity .6s;transition-delay:calc(var(--i)*45ms)}
+.split.in .w>span{transform:none;opacity:1}
+.eyebrow.reveal{letter-spacing:.6em;transform:translateX(-12px);transition:letter-spacing 1.2s var(--ease),transform 1.2s var(--ease),opacity 1s}
+.eyebrow.reveal.in{letter-spacing:.2em;transform:none}
+.eyebrow::before{transition:transform 1s var(--ease) .3s}
+p.reveal,.hero-sub.reveal,.work-note.reveal{filter:blur(10px);transition:opacity 1.1s var(--ease),transform 1.1s var(--ease),filter 1.1s var(--ease)}
+p.reveal.in,.hero-sub.reveal.in,.work-note.reveal.in{filter:none}
+.h2 em.serif,.hero-title .serif{background:linear-gradient(100deg,var(--acc),var(--acc2),#ffb02e,var(--acc));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 7s linear infinite}
+@keyframes shine{to{background-position:300% 0}}
+.skill h3,.skill>p,.skill .bars,.skill .tools,.skill-top{opacity:0;transform:translateY(18px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.skill.in .skill-top{opacity:1;transform:none;transition-delay:.15s}
+.skill.in h3{opacity:1;transform:none;transition-delay:.25s}
+.skill.in>p{opacity:1;transform:none;transition-delay:.35s}
+.skill.in .bars{opacity:1;transform:none;transition-delay:.45s}
+.skill.in .tools{opacity:1;transform:none;transition-delay:.55s}
+.skill .tools span{display:inline-block;opacity:0;transform:scale(.8);transition:opacity .5s,transform .5s var(--ease)}
+.skill.in .tools span{opacity:1;transform:none}
+.skill.in .tools span:nth-child(1){transition-delay:.6s}.skill.in .tools span:nth-child(2){transition-delay:.66s}.skill.in .tools span:nth-child(3){transition-delay:.72s}.skill.in .tools span:nth-child(4){transition-delay:.78s}.skill.in .tools span:nth-child(5){transition-delay:.84s}.skill.in .tools span:nth-child(6){transition-delay:.9s}.skill.in .tools span:nth-child(7){transition-delay:.96s}
+.work-card .wc-media img{scale:1.15;transition:transform 1s var(--ease),filter .6s,scale 1.6s var(--ease)}
+.work-card.in .wc-media img{scale:1}
+.work-card .wc-body h3,.work-card .wc-body p,.work-card .wc-tags,.work-card .wc-arrow{opacity:0;transform:translateY(14px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.work-card.in .wc-body h3{opacity:1;transform:none;transition-delay:.2s}
+.work-card.in .wc-body p{opacity:1;transform:none;transition-delay:.3s}
+.work-card.in .wc-tags{opacity:1;transform:none;transition-delay:.4s}
+.work-card.in .wc-arrow{opacity:1;transform:none;transition-delay:.5s}
+.work-card .wc-badge,.work-card .wc-live{opacity:0;transform:translateY(-10px);transition:opacity .6s,transform .6s var(--ease)}
+.work-card.in .wc-badge,.work-card.in .wc-live{opacity:1;transform:none;transition-delay:.35s}
+.step h3,.step p,.step small,.step .n{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.step.in .n{opacity:1;transform:none;transition-delay:.1s}.step.in h3{opacity:1;transform:none;transition-delay:.2s}.step.in p{opacity:1;transform:none;transition-delay:.3s}.step.in small{opacity:1;transform:none;transition-delay:.4s}
+.hero-meta>div{opacity:0;transform:translateY(20px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.hero-meta.in>div{opacity:1;transform:none}
+.hero-meta.in>div:nth-child(2){transition-delay:.1s}.hero-meta.in>div:nth-child(3){transition-delay:.2s}.hero-meta.in>div:nth-child(4){transition-delay:.3s}
+.contact-links.in .clink,.contact-links .clink{transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.contact-links .clink{opacity:0;transform:translateX(-20px)}
+.contact-links.in .clink{opacity:1;transform:none}.contact-links.in .clink+.clink{transition-delay:.12s}
+.form.reveal .field{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.form.reveal.in .field{opacity:1;transform:none}
+.form.reveal.in .field:nth-child(2){transition-delay:.08s}.form.reveal.in .field:nth-child(3){transition-delay:.16s}.form.reveal.in .field:nth-child(4){transition-delay:.24s}.form.reveal.in .field:nth-child(5){transition-delay:.32s}
+.role{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+@media (prefers-reduced-motion:reduce){
+  .split .w>span,.skill h3,.skill>p,.skill .bars,.skill .tools,.skill-top,.skill .tools span,.work-card .wc-body h3,.work-card .wc-body p,.work-card .wc-tags,.work-card .wc-arrow,.work-card .wc-badge,.work-card .wc-live,.step h3,.step p,.step small,.step .n,.hero-meta>div,.contact-links .clink,.form.reveal .field{opacity:1;transform:none;transition:none}
+  .eyebrow.reveal{letter-spacing:.2em}
+  p.reveal,.hero-sub.reveal,.work-note.reveal{filter:none}
+  .work-card .wc-media img{scale:1}
+  .h2 em.serif,.hero-title .serif{animation:none}
+}

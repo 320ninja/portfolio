@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PosterLab — Generative Poster Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;800&family=Instrument+Serif:ital@0;1&family=Bricolage+Grotesque:wght@800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#ecebe6;--ink:#151515;--mute:#76746c;--line:#d6d4cc;--panel:#f7f6f2}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;display:grid;grid-template-rows:auto 1fr}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+header{display:flex;align-items:center;gap:14px;padding:14px 22px;border-bottom:1px solid var(--line);background:var(--panel)}
+header b{font-weight:800;font-size:18px;letter-spacing:-.02em;flex:1}
+header b span{font-family:'Instrument Serif';font-style:italic;font-weight:400}
+.btn{padding:10px 16px;border-radius:10px;font-weight:600;font-size:14px;border:1px solid var(--line);background:#fff;transition:transform .15s}
+.btn:active{transform:scale(.96)}
+.btn.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+.app{display:grid;grid-template-columns:280px 1fr 260px;min-height:0}
+.panel{background:var(--panel);padding:18px;overflow:auto;display:flex;flex-direction:column;gap:16px}
+.panel h5{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--mute)}
+.tpl{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tpl button{aspect-ratio:3/4;border-radius:10px;overflow:hidden;border:2px solid transparent;transition:transform .2s}
+.tpl button:hover{transform:translateY(-2px)}
+.tpl button.on{border-color:var(--ink)}
+.tpl canvas{width:100%;height:100%;display:block}
+label{display:grid;gap:5px;font-size:12px;font-weight:600}
+input[type=text],textarea,select{font:inherit;font-size:14px;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:#fff;width:100%}
+input[type=range]{width:100%;accent-color:var(--ink)}
+.colors{display:flex;gap:8px;flex-wrap:wrap}
+.colors input{width:36px;height:36px;border:0;padding:0;background:none;border-radius:50%;cursor:pointer}
+.stage{display:grid;place-items:center;padding:30px;overflow:auto;background:radial-gradient(circle,#0000000a 1px,transparent 1px) 0 0/18px 18px}
+#poster{box-shadow:0 30px 70px -25px rgba(0,0,0,.45);max-height:calc(100vh - 140px);max-width:100%;cursor:move;border-radius:2px}
+.hint{font-size:12px;color:var(--mute);margin-top:10px;text-align:center}
+.back{position:fixed;left:16px;bottom:16px;z-index:40;background:#111;color:#fff;font-size:12px;padding:8px 14px;border-radius:99px;text-decoration:none}
+@media(max-width:960px){.app{grid-template-columns:1fr}.stage{order:-1}}
+.ic{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.btn{display:inline-flex;align-items:center;gap:7px}
+.app{height:calc(100vh - 67px);overflow:hidden}.panel{min-height:0}.stage{min-height:0}
+.photoctl{display:grid;gap:12px;animation:pin .3s ease both}@keyframes pin{from{opacity:0;transform:translateY(-4px)}}
+.photoctl[hidden]{display:none}
+.phs{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.phs button{aspect-ratio:1;border-radius:8px;overflow:hidden;border:2px solid transparent;opacity:.75;transition:opacity .2s,border-color .2s}
+.phs button.on,.phs button:hover{opacity:1}.phs button.on{border-color:var(--ink)}
+.phs img{width:100%;height:100%;object-fit:cover;display:block}
+.upl{display:flex!important;align-items:center;gap:8px;justify-content:center;padding:10px;border:1px dashed #b9b6ab;border-radius:10px;cursor:pointer;font-weight:600;transition:background .2s}.upl:hover{background:#fff}
+.chk{display:flex!important;align-items:center;gap:8px}.chk input{accent-color:var(--ink);width:16px;height:16px}
+.tpl button{transition:transform .2s,box-shadow .2s}.tpl button:hover{box-shadow:0 10px 20px -10px rgba(0,0,0,.4)}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+@media(max-width:960px){.app{height:auto;overflow:visible}body{min-height:0}.stage{padding:16px}#poster{max-height:none;width:100%;height:auto}.tpl{grid-template-columns:repeat(4,1fr)}header{padding:12px 16px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<header><b>Poster<span>Lab</span></b><button class="btn" id="shuffle"><svg class="ic" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/><circle cx="15.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="8.5" cy="15.5" r="1.2" fill="currentColor"/></svg>Remix</button><button class="btn dark" id="export"><svg class="ic" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Export PNG</button></header>
+<div class="app">
+  <aside class="panel">
+    <h5>Templates</h5><div class="tpl" id="tpl"></div>
+    <h5>Background style</h5>
+    <select id="style"><option value="grid">Swiss grid</option><option value="orbs">Gradient orbs</option><option value="waves">Wave lines</option><option value="bauhaus">Bauhaus shapes</option><option value="noise">Halftone</option><option value="photo">Photo</option></select>
+    <div class="photoctl" id="photoctl" hidden>
+      <div class="phs" id="phs"></div>
+      <label class="upl"><svg class="ic" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Upload your photo<input type="file" id="phFile" accept="image/*" hidden></label>
+      <label>Treatment<select id="treat"><option value="duotone">Duotone (ink + accent)</option><option value="gradient">Gradient map (all 4 colours)</option><option value="original">Original colour</option></select></label>
+      <label class="chk"><input type="checkbox" id="ht"> Halftone dots</label>
+      <label>Photo fade <input type="range" id="fade" min="0" max="100" value="60"></label>
+    </div>
+    <label>Seed <input type="range" id="seed" min="1" max="999" value="42"></label>
+  </aside>
+  <div class="stage"><div><canvas id="poster" width="1080" height="1440"></canvas><div class="hint">Drag on the poster to move the headline · 1080×1440 export</div></div></div>
+  <aside class="panel">
+    <h5>Text</h5>
+    <label>Headline<textarea id="h" rows="2">SOUND OF THE VALLEY</textarea></label>
+    <label>Subline<input type="text" id="s" value="Live music · Food · Art"></label>
+    <label>Details<input type="text" id="d" value="DEC 14 — PATAN DURBAR SQ."></label>
+    <label>Font<select id="font"><option value="Anton">Anton (condensed)</option><option value="Bricolage Grotesque">Bricolage (bold)</option><option value="Instrument Serif">Instrument Serif</option></select></label>
+    <label>Headline size <input type="range" id="size" min="60" max="260" value="170"></label>
+    <h5>Colours</h5>
+    <div class="colors"><input type="color" id="c1" value="#ff5a1f" title="Background"><input type="color" id="c2" value="#1a1a1a" title="Ink"><input type="color" id="c3" value="#ffd23f" title="Accent"><input type="color" id="c4" value="#3a86ff" title="Accent 2"></div>
+  </aside>
+</div>
+<a class="back" href="../../index.html#work">← Back to portfolio</a>
+<script>
+const $=s=>document.querySelector(s);
+const cv=$('#poster'),ctx=cv.getContext('2d'),W=1080,H=1440;
+const PHOTOS=['everest-trek','kathmandu-puppets','bali-kelingking','cafe-hero-poster','pokhara-ultralight'],IMGS={};
+let P={key:'everest-trek',treat:'duotone',ht:false,fade:60};
+const TPL=[
+ {style:'grid',c:['#ff5a1f','#1a1a1a','#ffd23f','#3a86ff'],font:'Anton',h:'SOUND OF THE VALLEY',s:'Live music · Food · Art',d:'DEC 14 — PATAN DURBAR SQ.'},
+ {style:'orbs',c:['#0d0d1a','#f5f3ff','#8b5cf6','#22d3ee'],font:'Bricolage Grotesque',h:'AI CREATIVE SUMMIT',s:'Design × Machine Learning',d:'JAN 22 · KATHMANDU'},
+ {style:'waves',c:['#f1ede4','#13315c','#ef476f','#0b6e4f'],font:'Instrument Serif',h:'Slow Mornings',s:'A photo exhibition',d:'OPEN DAILY 7AM – 11AM'},
+ {style:'bauhaus',c:['#f2e8cf','#1d1d1d','#e63946','#457b9d'],font:'Bricolage Grotesque',h:'FORM FOLLOWS FUN',s:'Bauhaus design workshop',d:'SAT 10AM · DESIGN HUB'},
+ {style:'noise',c:['#111111','#f5f5f5','#c6ff3d','#ff3cac'],font:'Anton',h:'NIGHT RUN 10K',s:'Run the lit city',d:'MARCH 8 · 7PM START'},
+ {style:'orbs',c:['#fff1e6','#3d2b1f','#ff8fab','#ffb703'],font:'Instrument Serif',h:'Sweet Sunday Market',s:'Bakes · plants · vinyl',d:'EVERY SUNDAY · JHAMSIKHEL'},
+ {style:'photo',c:['#f3efe6','#0f2a3f','#ff6b35','#3d7ea6'],font:'Anton',h:'SUMMIT SEASON',s:'Everest base camp · 14 days',d:'DEPARTS OCT 02 · KATHMANDU',ph:{key:'everest-trek',treat:'duotone',ht:false,fade:60},y:.6,size:170},
+ {style:'photo',c:['#141014','#fff4e0','#ffb627','#e4572e'],font:'Bricolage Grotesque',h:'MARIONETTE NIGHTS',s:'A festival of Newari puppetry',d:'NOV 20 – 24 · BASANTAPUR',ph:{key:'kathmandu-puppets',treat:'gradient',ht:true,fade:55},y:.7,size:130}
+];
+let pos={x:.08,y:.56},rng;
+const R=s=>()=>(s=(s*16807)%2147483647)/2147483647;
+function bg(c,style,seed,X=ctx,w=W,h=H,opt=P){rng=R(seed*7+3);X.fillStyle=c[0];X.fillRect(0,0,w,h);const k=w/W;
+ if(style=='photo')drawPhoto(X,w,h,c,opt);
+ if(style=='grid'){X.strokeStyle=c[1]+'33';X.lineWidth=2*k;for(let i=0;i<=12;i++){X.beginPath();X.moveTo(i*w/12,0);X.lineTo(i*w/12,h);X.stroke()}
+  for(let i=0;i<8;i++){X.fillStyle=[c[1],c[2],c[3]][i%3];const gx=(rng()*12|0)*w/12,gy=(rng()*10|0)*h/16;X.fillRect(gx,gy,w/12*(1+rng()*3|0),h/16*(1+rng()*2|0))}
+  X.beginPath();X.arc(w*.72,h*.28,w*.22,0,7);X.fillStyle=c[2];X.fill()}
+ if(style=='orbs'){for(let i=0;i<6;i++){const x=rng()*w,y=rng()*h*.7,r=(200+rng()*400)*k,g=X.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,[c[2],c[3]][i%2]+'cc');g.addColorStop(1,[c[2],c[3]][i%2]+'00');X.fillStyle=g;X.fillRect(0,0,w,h)}
+  X.strokeStyle=c[1]+'22';X.lineWidth=1.5*k;for(let r=100;r<900;r+=70){X.beginPath();X.arc(w*.5,h*.35,r*k,0,7);X.stroke()}}
+ if(style=='waves'){const amp=20+rng()*40,f=.004+rng()*.006;for(let i=0;i<40;i++){X.beginPath();X.strokeStyle=[c[2],c[3],c[1]][i%3]+(i%3==2?'33':'aa');X.lineWidth=(3+(i%4))*k;for(let x=0;x<=w;x+=8*k){const y=(h*.08+i*h*.014)+Math.sin(x/k*f+i*.35)*amp*k;x?X.lineTo(x,y):X.moveTo(x,y)}X.stroke()}}
+ if(style=='bauhaus'){const sh=['c','s','t','h'];for(let i=0;i<9;i++){const x=(i%3)*w/3,y=(i/3|0)*h*.2,sz=w/3,col=[c[1],c[2],c[3],c[0]][rng()*4|0];X.fillStyle=col;const t=sh[rng()*4|0];X.beginPath();
+  if(t=='c')X.arc(x+sz/2,y+sz/2,sz*.42,0,7);else if(t=='s')X.rect(x+sz*.1,y+sz*.1,sz*.8,sz*.8);else if(t=='t'){X.moveTo(x+sz/2,y+sz*.08);X.lineTo(x+sz*.92,y+sz*.9);X.lineTo(x+sz*.08,y+sz*.9)}else X.arc(x+sz/2,y+sz,sz*.45,Math.PI,0);X.fill()}}
+ if(style=='noise'){const step=26*k;for(let y=0;y<h*.62;y+=step)for(let x=0;x<w;x+=step){const d=Math.hypot(x-w*.6,y-h*.25)/(w*.8),r=Math.max(0,(1-d)*step*.55*(0.6+rng()*.6));X.beginPath();X.arc(x,y,r,0,7);X.fillStyle=(x+y)%(step*4)<step*2?c[2]:c[3];X.fill()}}
+}
+
+const hexRgb=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+function drawPhoto(X,w,h,c,o){const im=IMGS[o.key];if(!im||!im.complete||!im.naturalWidth)return;
+ const off=document.createElement('canvas');off.width=w;off.height=h;const ox=off.getContext('2d',{willReadFrequently:true});
+ const s=Math.max(w/im.naturalWidth,h/im.naturalHeight),iw=im.naturalWidth*s,ih=im.naturalHeight*s;ox.drawImage(im,(w-iw)/2,(h-ih)*.35,iw,ih);
+ const id=ox.getImageData(0,0,w,h),d=id.data,lu=x=>{const[r,g,b]=hexRgb(x);return .299*r+.587*g+.114*b},srt=[...c].sort((a,b)=>lu(a)-lu(b)),stops=(o.treat=='duotone'?[srt[0],c[2]]:srt).map(hexRgb),L=new Float32Array(w*h);
+ for(let i=0,j=0;i<d.length;i+=4,j++){let l=(.299*d[i]+.587*d[i+1]+.114*d[i+2])/255;l=Math.min(1,Math.max(0,(l-.08)*1.18));L[j]=l;
+  if(o.treat=='original')continue;const t=l*(stops.length-1),a=Math.min(stops.length-2,Math.floor(t)),f=t-a,A=stops[a],B=stops[a+1];d[i]=A[0]+(B[0]-A[0])*f;d[i+1]=A[1]+(B[1]-A[1])*f;d[i+2]=A[2]+(B[2]-A[2])*f}
+ if(!o.ht){ox.putImageData(id,0,0);X.drawImage(off,0,0)}
+ else{const cell=Math.max(4,Math.round(w/77));X.fillStyle=c[0];X.fillRect(0,0,w,h);
+  for(let y=cell/2;y<h;y+=cell)for(let x=cell/2;x<w;x+=cell){const j=(y|0)*w+(x|0),i=j*4,r=(.18+(1-L[j])*.62)*cell;X.fillStyle=`rgb(${d[i]|0},${d[i+1]|0},${d[i+2]|0})`;X.beginPath();X.arc(x,y,r,0,7);X.fill()}}
+ if(o.fade>0){const f=o.fade/100,g=X.createLinearGradient(0,h*(.62-.3*f),0,h*(.62+.06*f));g.addColorStop(0,c[0]+'00');g.addColorStop(1,c[0]);X.fillStyle=g;X.fillRect(0,0,w,h)}}
+function loadImg(key,src){return new Promise(res=>{const im=new Image();im.onload=()=>{IMGS[key]=im;res()};im.onerror=()=>res();im.src=src})}
+const imgsReady=Promise.all(PHOTOS.map(k=>loadImg(k,'../../media/img/'+k+'.jpg')));
+$('#phs').innerHTML=PHOTOS.map(k=>`<button type="button" data-ph="${k}" aria-label="Photo ${k.replace(/-/g,' ')}"><img src="../../media/img/${k}.jpg" alt=""></button>`).join('');
+function syncPhotoUI(){$('#photoctl').hidden=$('#style').value!='photo';$('#treat').value=P.treat;$('#ht').checked=P.ht;$('#fade').value=P.fade;$('#phs').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.ph==P.key))}
+$('#phs').onclick=e=>{const b=e.target.closest('[data-ph]');if(!b)return;P.key=b.dataset.ph;syncPhotoUI();render()};
+$('#phFile').onchange=e=>{const f=e.target.files[0];if(!f||!/^image\//.test(f.type))return;const r=new FileReader();r.onload=()=>loadImg('upload',r.result).then(()=>{P.key='upload';$('#style').value='photo';syncPhotoUI();render()});r.readAsDataURL(f)};
+$('#treat').addEventListener('input',()=>{P.treat=$('#treat').value});$('#ht').addEventListener('input',()=>{P.ht=$('#ht').checked});$('#fade').addEventListener('input',()=>{P.fade=+$('#fade').value});
+$('#style').addEventListener('input',()=>syncPhotoUI());
+function wrap(text,maxW){const out=[];text.split('\n').forEach(par=>{let line='';par.split(' ').forEach(w=>{const t=line?line+' '+w:w;if(ctx.measureText(t).width>maxW&&line){out.push(line);line=w}else line=t});out.push(line)});return out}
+function render(){const c=['c1','c2','c3','c4'].map(id=>$('#'+id).value),font=$('#font').value,size=+$('#size').value;
+ bg(c,$('#style').value,+$('#seed').value);
+ ctx.fillStyle=c[1];ctx.textBaseline='alphabetic';
+ const serif=font=='Instrument Serif',fs=serif?size*1.05:size;
+ ctx.font=`${font=='Bricolage Grotesque'?800:400} ${fs}px "${font}"`;
+ const lines=wrap($('#h').value,W*.84),lh=fs*(serif?.98:.92);let x=pos.x*W,y=pos.y*H;
+ lines.forEach((l,i)=>ctx.fillText(l,x,y+i*lh));
+ const by=y+lines.length*lh+10;
+ ctx.fillStyle=c[1];ctx.fillRect(x,by-4,W*.84,4);
+ ctx.font=`${serif?'italic 400 56px "Instrument Serif"':'600 44px Inter'}`;ctx.fillText($('#s').value,x,by+60);
+ ctx.font='800 30px Inter';ctx.fillStyle=c[1];ctx.save();ctx.letterSpacing='4px';ctx.fillText($('#d').value,x,H-70);ctx.restore();
+ ctx.font='600 22px Inter';ctx.textAlign='right';ctx.fillText('POSTERLAB × NIN JA',W-60,H-70);ctx.textAlign='left';
+ drawTpl();
+}
+function drawTpl(){if($('#tpl').children.length)return;$('#tpl').innerHTML=TPL.map((t,i)=>`<button data-i="${i}" aria-label="Template ${i+1}"><canvas width="120" height="160"></canvas></button>`).join('');
+ [...$('#tpl').querySelectorAll('canvas')].forEach((cv2,i)=>{const t=TPL[i],x=cv2.getContext('2d');bg(t.c,t.style,42+i,x,120,160,t.ph||P);x.fillStyle=t.c[1];x.font=`${t.font=='Bricolage Grotesque'?800:400} 16px "${t.font}"`;x.fillText(t.h.split(' ').slice(0,2).join(' '),8,t.y?128:110,104);x.fillRect(8,t.y?136:118,100,1)})}
+function load(i){const t=TPL[i];$('#style').value=t.style;['c1','c2','c3','c4'].forEach((id,k)=>$('#'+id).value=t.c[k]);$('#font').value=t.font;$('#h').value=t.h;$('#s').value=t.s;$('#d').value=t.d;$('#seed').value=42+i;pos={x:.08,y:t.y||.56};$('#size').value=t.size||170;if(t.ph)P={...t.ph};syncPhotoUI();
+ [...$('#tpl').children].forEach((b,k)=>b.classList.toggle('on',k==i));render()}
+$('#tpl').onclick=e=>{const b=e.target.closest('button');if(b)load(+b.dataset.i)};
+document.querySelectorAll('input,textarea,select').forEach(el=>el.addEventListener('input',render));
+$('#shuffle').onclick=()=>{$('#seed').value=1+Math.random()*998|0;const st=['grid','orbs','waves','bauhaus','noise','photo'];$('#style').value=st[Math.random()*6|0];if($('#style').value=='photo'){P.key=PHOTOS[Math.random()*PHOTOS.length|0];P.treat=['duotone','gradient'][Math.random()*2|0];P.ht=Math.random()<.4}syncPhotoUI();render()};
+$('#export').onclick=()=>{const a=document.createElement('a');a.download='poster.png';a.href=cv.toDataURL('image/png');a.click()};
+let drag=null;
+cv.addEventListener('pointerdown',e=>{const r=cv.getBoundingClientRect();drag={sx:e.clientX,sy:e.clientY,ox:pos.x,oy:pos.y,r};cv.setPointerCapture(e.pointerId)});
+cv.addEventListener('pointermove',e=>{if(!drag)return;pos.x=Math.max(0,Math.min(.6,drag.ox+(e.clientX-drag.sx)/drag.r.width));pos.y=Math.max(.12,Math.min(.85,drag.oy+(e.clientY-drag.sy)/drag.r.height));render()});
+cv.addEventListener('pointerup',()=>drag=null);
+document.fonts.load('400 40px Anton').then(()=>Promise.all([document.fonts.load('800 40px "Bricolage Grotesque"'),document.fonts.load('400 40px "Instrument Serif"'),document.fonts.load('italic 400 40px "Instrument Serif"')])).then(()=>imgsReady).finally(()=>{$('#tpl').innerHTML='';drawTpl();load(0)});
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ghar Real Estate App — nin ja</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--a:#0f9d74;--a2:#0b7a5a;--hot:#ff5a36;--ink:#13201b;--mut:#6c7a74;--bg:#f4f7f5;--card:#fff;--line:#e3ebe7;font-family:Inter,system-ui,sans-serif;color:var(--ink)}
+body{min-height:100vh;background:#0a1512;color:#fff;display:grid;grid-template-columns:minmax(0,420px) auto;justify-content:center;align-items:center;gap:56px;padding:24px;overflow-x:hidden}
+button,input,select{font:inherit;color:inherit}button{border:0;background:none;cursor:pointer}
+.side h1{font-size:44px;line-height:1.02;letter-spacing:-.03em;font-weight:800}
+.side h1 em{font-family:'Instrument Serif',serif;font-weight:400;font-style:italic;color:#5fe0b5}
+.side p{color:rgba(255,255,255,.68);margin:16px 0 22px;line-height:1.6}
+.side .tag{display:inline-block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#5fe0b5;border:1px solid rgba(95,224,181,.35);padding:6px 12px;border-radius:99px;margin-bottom:18px}
+.side ul{list-style:none;display:grid;gap:10px;font-size:14px;color:rgba(255,255,255,.8)}
+.side li::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--a);margin-right:10px;vertical-align:middle}
+.phone{width:min(380px,calc(100vw - 32px));height:min(780px,calc(100vh - 48px));border-radius:46px;padding:10px;background:#050a08;box-shadow:0 40px 120px rgba(15,157,116,.25),0 0 0 1px rgba(255,255,255,.08)}
+.screen{position:relative;height:100%;border-radius:38px;overflow:hidden;background:var(--bg);color:var(--ink)}
+.status{display:flex;justify-content:space-between;padding:14px 26px 4px;font-size:13px;font-weight:600}
+.view{position:absolute;inset:40px 0 74px;overflow-y:auto;display:none;padding:6px 16px 16px;scrollbar-width:none}
+.view::-webkit-scrollbar{display:none}
+.view.on{display:block}
+.hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.hd h2{font-size:22px;font-weight:800;letter-spacing:-.02em}.hd h2 small{display:block;font-size:12px;color:var(--mut);font-weight:500;letter-spacing:0}
+.mode{position:relative;display:flex;background:#e2ebe7;border-radius:99px;padding:3px;font-size:12px;font-weight:700}
+.mode button{position:relative;z-index:1;padding:7px 12px;border-radius:99px;transition:color .25s}
+.mode button.on{color:#fff}
+.mode i{position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);border-radius:99px;background:var(--a);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.mode.sell i{transform:translateX(100%)}
+.search{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:11px 14px;margin-bottom:10px}
+.search input{flex:1;border:0;outline:0;background:none;font-size:14px}
+.row{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px;scrollbar-width:none}
+.row::-webkit-scrollbar{display:none}
+.pill{flex:none;font-size:12px;font-weight:600;padding:7px 12px;border-radius:99px;background:#fff;border:1px solid var(--line);transition:.2s}
+.pill.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.count{font-size:12px;color:var(--mut);margin:2px 0 10px}
+.card{background:var(--card);border-radius:22px;overflow:hidden;margin-bottom:14px;box-shadow:0 6px 20px rgba(10,40,30,.07);text-align:left;width:100%;display:block;animation:up .4s ease both}
+@keyframes up{from{opacity:0;transform:translateY(12px)}}
+.card .ph{position:relative;height:170px;background:#cfdcd6 center/cover}
+.card .tags{position:absolute;top:12px;left:12px;display:flex;gap:6px}
+.t{font-size:11px;font-weight:700;padding:5px 9px;border-radius:99px;background:rgba(255,255,255,.92)}
+.t.hot{background:var(--hot);color:#fff;animation:pulse 1.6s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 6px rgba(255,90,54,0)}0%{box-shadow:0 0 0 0 rgba(255,90,54,.5)}}
+.heart{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center}
+.heart svg{width:18px;height:18px;transition:transform .2s}
+.heart.on svg{fill:#ff3b6b;stroke:#ff3b6b;animation:hp .35s}
+@keyframes hp{50%{transform:scale(1.4)}}
+.card .b{padding:12px 14px 14px}
+.price{font-size:19px;font-weight:800;color:var(--a2)}.price small{font-size:12px;color:var(--mut);font-weight:500}
+.card h3{font-size:15px;margin:2px 0}
+.loc{font-size:12px;color:var(--mut)}
+.specs{display:flex;gap:12px;font-size:12px;color:var(--mut);margin-top:8px}
+.specs b{color:var(--ink)}
+.empty{text-align:center;color:var(--mut);font-size:14px;padding:40px 10px}
+/* detail */
+.detail{position:absolute;inset:0;z-index:6;background:var(--bg);overflow-y:auto;transform:translateY(100%);transition:transform .4s cubic-bezier(.2,.8,.2,1);scrollbar-width:none}
+.detail.on{transform:none}
+.gal{position:relative;height:300px;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.gal::-webkit-scrollbar{display:none}
+.gal div{flex:none;width:100%;height:100%;background:center/cover;scroll-snap-align:start}
+.dclose{position:absolute;top:44px;left:14px;z-index:2;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center}
+.gcount{position:absolute;bottom:12px;right:14px;font-size:11px;font-weight:700;background:rgba(0,0,0,.55);color:#fff;padding:4px 9px;border-radius:99px}
+.dbody{padding:16px;margin-top:-22px;position:relative;background:var(--bg);border-radius:24px 24px 0 0}
+.dbody .price{font-size:24px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.grid3 div{background:#fff;border-radius:14px;padding:10px;text-align:center;font-size:11px;color:var(--mut)}.grid3 b{display:block;font-size:16px;color:var(--ink)}
+.bid{background:linear-gradient(135deg,#fff1ec,#ffe3da);border:1px solid #ffd1c3;border-radius:18px;padding:14px;margin-bottom:14px}
+.bid h4{font-size:14px;color:var(--hot)}.bid .cd{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;margin:4px 0}
+.bid .bx{display:flex;gap:8px;margin-top:8px}.bid input{flex:1;border:1px solid #ffd1c3;border-radius:12px;padding:10px;background:#fff;outline:0}
+.bid button{padding:10px 14px;border-radius:12px;background:var(--hot);color:#fff;font-weight:700}
+.bid small{display:block;font-size:12px;color:var(--mut);margin-top:6px}
+.desc{font-size:14px;line-height:1.55;color:#3b4a44}
+.map{height:130px;border-radius:18px;margin:14px 0;background:#dfe9e4;position:relative;overflow:hidden}
+.map svg{position:absolute;inset:0;width:100%;height:100%}
+.ctas{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-bottom:20px}
+.ctas button{padding:13px;border-radius:14px;font-weight:700;font-size:14px}
+.wa{background:#25d366;color:#fff}.call{background:var(--ink);color:#fff}
+/* sell form */
+.form{display:grid;gap:10px}
+.form label{font-size:12px;font-weight:600;color:var(--mut)}
+.form input,.form select{width:100%;margin-top:4px;padding:12px;border-radius:12px;border:1px solid var(--line);background:#fff;outline:0;font-size:14px}
+.form input:focus{border-color:var(--a)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.toggle{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;font-size:14px}
+.sw{width:44px;height:26px;border-radius:99px;background:#cfd9d4;position:relative;transition:.2s}.sw::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}
+.sw.on{background:var(--hot)}.sw.on::after{transform:translateX(18px)}
+.primary{padding:14px;border-radius:14px;background:var(--a);color:#fff;font-weight:700;margin-top:4px}
+.upl{height:8px;border-radius:99px;background:#e2ebe7;overflow:hidden;display:none}.upl i{display:block;height:100%;width:0;background:var(--a);transition:width .15s}
+/* guru chat */
+.msgs{display:flex;flex-direction:column;gap:8px;padding-bottom:70px}
+.m{max-width:85%;padding:10px 13px;border-radius:18px;font-size:13.5px;line-height:1.45;animation:up .25s ease}
+.m.bot{background:#fff;align-self:flex-start;border-bottom-left-radius:5px}
+.m.me{background:var(--a);color:#fff;align-self:flex-end;border-bottom-right-radius:5px}
+.mini{display:flex;gap:8px;align-items:center;margin-top:8px;padding:6px;border-radius:12px;background:var(--bg);width:100%;text-align:left}
+.mini span{width:46px;height:40px;border-radius:9px;background:center/cover;flex:none}.mini b{font-size:12px;display:block}.mini small{font-size:11px;color:var(--mut)}
+.sugg{display:flex;flex-wrap:wrap;gap:6px}
+.compose{position:absolute;left:12px;right:12px;bottom:84px;z-index:3;display:none;gap:8px}
+.compose.on{display:flex}
+.compose input{flex:1;padding:12px 14px;border-radius:99px;border:1px solid var(--line);background:#fff;outline:0;font-size:14px}
+.compose button{width:44px;border-radius:50%;background:var(--a);color:#fff}
+/* tabs */
+.tabs{position:absolute;left:0;right:0;bottom:0;height:74px;z-index:4;display:flex;justify-content:space-around;align-items:flex-start;padding-top:10px;background:#fff;border-top:1px solid var(--line)}
+.tab{display:grid;justify-items:center;gap:3px;font-size:10px;font-weight:600;color:var(--mut)}
+.tab svg{width:22px;height:22px}.tab.on{color:var(--a)}
+.toast{position:absolute;left:50%;bottom:96px;z-index:9;transform:translate(-50%,20px);opacity:0;background:var(--ink);color:#fff;font-size:13px;padding:10px 16px;border-radius:99px;transition:.3s;white-space:nowrap}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media (max-width:860px){body{grid-template-columns:1fr;justify-items:center}.side{display:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<aside class="side">
+  <span class="tag">Installable app · iOS &amp; Android</span>
+  <h1>Ghar <em>Real Estate</em></h1>
+  <p>A property app for Nepal that buyers and sellers can install on their phones. It has listings with photos, bidding with a live countdown, distance filters, a WhatsApp contact button and a built-in assistant called "Ghar Guru". It runs as a PHP and SQLite web app (PWA) on ordinary hosting.</p>
+  <ul><li>Search or filter by Buy / Rent, type and distance</li><li>Open a 🔥 HOT listing and place a bid</li><li>Switch to Seller and post a property</li><li>Ask Ghar Guru "3 bedroom house in Lalitpur"</li></ul>
+</aside>
+
+<div class="phone"><div class="screen">
+  <div class="status"><span>9:41</span><span>● ● ▮</span></div>
+
+  <section class="view on" id="v-home">
+    <div class="hd"><h2>Namaste, Sita<small>Find your next ghar</small></h2><div class="mode" id="mode"><i></i><button class="on" data-m="buy">Buyer</button><button data-m="sell">Seller</button></div></div>
+    <label class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6c7a74" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="q" placeholder="Search Lalitpur, Budhanilkantha…"></label>
+    <div class="row" id="purpose"><button class="pill on" data-v="all">All</button><button class="pill" data-v="buy">Buy</button><button class="pill" data-v="rent">Rent</button><button class="pill" data-v="House">House</button><button class="pill" data-v="Apartment">Apartment</button><button class="pill" data-v="Land">Land</button></div>
+    <div class="row" id="dist"><button class="pill on" data-d="999">Any distance</button><button class="pill" data-d="3">3 km</button><button class="pill" data-d="5">5 km</button><button class="pill" data-d="10">10 km</button><button class="pill" data-d="25">25 km</button></div>
+    <p class="count" id="count"></p>
+    <div id="list"></div>
+  </section>
+
+  <section class="view" id="v-saved"><div class="hd"><h2>Saved homes<small>Tap the heart on any listing</small></h2></div><div id="savedList"></div></section>
+
+  <section class="view" id="v-sell">
+    <div class="hd"><h2>Post a property<small>Your listing goes live as soon as you publish it</small></h2></div>
+    <form class="form" id="sellForm">
+      <label>Title<input id="fT" required value="Modern 3BHK near Jhamsikhel"></label>
+      <div class="two"><label>Purpose<select id="fP"><option value="buy">Sell</option><option value="rent">Rent</option></select></label><label>Type<select id="fY"><option>House</option><option>Apartment</option><option>Land</option></select></label></div>
+      <div class="two"><label>Price (Rs)<input id="fR" required inputmode="numeric" value="28500000"></label><label>Bedrooms<input id="fB" inputmode="numeric" value="3"></label></div>
+      <label>Location<input id="fL" required value="Jhamsikhel, Lalitpur"></label>
+      <div class="toggle">Turn on bidding (7 days)<button type="button" class="sw" id="fBid" aria-label="Toggle bidding"></button></div>
+      <div class="upl" id="upl"><i></i></div>
+      <button class="primary" id="pub">Publish listing</button>
+    </form>
+  </section>
+
+  <section class="view" id="v-guru">
+    <div class="hd"><h2>Ghar Guru<small>Your property assistant</small></h2></div>
+    <div class="msgs" id="gMsgs"></div>
+  </section>
+  <form class="compose" id="gForm"><input id="gIn" placeholder="Ask about homes, prices, units…" autocomplete="off"><button aria-label="Send">➤</button></form>
+
+  <nav class="tabs">
+    <button class="tab on" data-v="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
+    <button class="tab" data-v="saved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-9-8.8C1.6 8 3.6 4.5 7 4.5c2 0 3.3 1 5 3 1.7-2 3-3 5-3 3.4 0 5.4 3.5 4 6.7-2 4.4-9 8.8-9 8.8Z"/></svg>Saved</button>
+    <button class="tab" data-v="sell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>Post</button>
+    <button class="tab" data-v="guru"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/></svg>Guru</button>
+  </nav>
+
+  <div class="detail" id="detail"></div>
+  <div class="toast" id="toast"></div>
+</div></div>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const IMG = n => `../../media/img/house-${n}.jpg`;
+const now = Date.now();
+let L = [
+  {id:1,t:'Family house with garden',p:'buy',y:'House',r:32500000,bd:4,ba:3,area:'6 aana',loc:'Bhaisepati, Lalitpur',city:'lalitpur',km:6,img:[1,2,3],bid:now+1000*60*60*53,top:31000000},
+  {id:2,t:'Bright 2BHK apartment',p:'rent',y:'Apartment',r:45000,bd:2,ba:2,area:'1,150 sq ft',loc:'Baluwatar, Kathmandu',city:'kathmandu',km:2,img:[4,5]},
+  {id:3,t:'Modern villa with mountain view',p:'buy',y:'House',r:58000000,bd:5,ba:4,area:'10 aana',loc:'Budhanilkantha, Kathmandu',city:'kathmandu',km:9,img:[6,7,8]},
+  {id:4,t:'Corner plot on a 20 ft road',p:'buy',y:'Land',r:18500000,bd:0,ba:0,area:'1 ropani',loc:'Bungamati, Lalitpur',city:'lalitpur',km:11,img:[3,1]},
+  {id:5,t:'Cosy 3BHK townhouse',p:'buy',y:'House',r:27500000,bd:3,ba:2,area:'4 aana',loc:'Imadol, Lalitpur',city:'lalitpur',km:5,img:[5,6],bid:now+1000*60*60*125,top:26200000},
+  {id:6,t:'Lakeside studio flat',p:'rent',y:'Apartment',r:22000,bd:1,ba:1,area:'560 sq ft',loc:'Lakeside, Pokhara',city:'pokhara',km:24,img:[7,4]},
+  {id:7,t:'Newly built 3BHK bungalow',p:'buy',y:'House',r:41000000,bd:3,ba:3,area:'5.5 aana',loc:'Sanepa, Lalitpur',city:'lalitpur',km:3,img:[8,2]},
+  {id:8,t:'Furnished family flat',p:'rent',y:'Apartment',r:65000,bd:3,ba:2,area:'1,600 sq ft',loc:'Jhamsikhel, Lalitpur',city:'lalitpur',km:4,img:[2,5]}
+];
+let fPur='all', fDist=999, saved=new Set(), mode='buy', bidOn=false, open=null;
+const rs = n => n>=10000000 ? 'Rs '+(n/10000000).toFixed(2).replace(/\.?0+$/,'')+' crore' : n>=100000 ? 'Rs '+(n/100000).toFixed(1).replace(/\.0$/,'')+' lakh' : 'Rs '+n.toLocaleString('en-IN');
+const toast = t => {const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),1800);};
+const left = ms => {ms=Math.max(0,ms);const d=ms/864e5|0,h=ms/36e5%24|0,m=ms/6e4%60|0,s=ms/1e3%60|0;return `${d}d ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;};
+const heartSvg='<svg viewBox="0 0 24 24" fill="none" stroke="#13201b" stroke-width="2"><path d="M12 20s-7-4.4-9-8.8C1.6 8 3.6 4.5 7 4.5c2 0 3.3 1 5 3 1.7-2 3-3 5-3 3.4 0 5.4 3.5 4 6.7-2 4.4-9 8.8-9 8.8Z"/></svg>';
+function card(x){return `<button class="card" data-id="${x.id}"><div class="ph" style="background-image:url(${IMG(x.img[0])})"><div class="tags"><span class="t">${x.p==='rent'?'For rent':'For sale'}</span>${x.bid?'<span class="t hot">🔥 HOT · bidding</span>':''}</div><span class="heart${saved.has(x.id)?' on':''}" data-h="${x.id}" role="button" aria-label="Save">${heartSvg}</span></div>
+  <div class="b"><div class="price">${rs(x.r)}${x.p==='rent'?' <small>/ month</small>':''}</div><h3>${x.t}</h3><div class="loc">📍 ${x.loc} · ${x.km} km away</div>
+  <div class="specs">${x.bd?`<span><b>${x.bd}</b> beds</span><span><b>${x.ba}</b> baths</span>`:''}<span><b>${x.area}</b></span><span>${x.y}</span></div></div></button>`;}
+function filtered(){const q=$('#q').value.trim().toLowerCase();return L.filter(x=>(fPur==='all'||x.p===fPur||x.y===fPur)&&x.km<=fDist&&(!q||(x.t+' '+x.loc+' '+x.y).toLowerCase().includes(q)));}
+function draw(){const f=filtered();$('#count').textContent=`${f.length} propert${f.length===1?'y':'ies'} found`;$('#list').innerHTML=f.length?f.map(card).join(''):'<p class="empty">No homes match. Try a wider distance.</p>';
+  const s=L.filter(x=>saved.has(x.id));$('#savedList').innerHTML=s.length?s.map(card).join(''):'<p class="empty">Nothing saved yet. Tap ♡ on a listing to keep it here.</p>';}
+$('#q').oninput=draw;
+$('#purpose').onclick=e=>{const b=e.target.closest('.pill');if(!b)return;$$('#purpose .pill').forEach(p=>p.classList.toggle('on',p===b));fPur=b.dataset.v;draw();};
+$('#dist').onclick=e=>{const b=e.target.closest('.pill');if(!b)return;$$('#dist .pill').forEach(p=>p.classList.toggle('on',p===b));fDist=+b.dataset.d;draw();};
+document.addEventListener('click',e=>{
+  const h=e.target.closest('[data-h]');
+  if(h){e.stopPropagation();const id=+h.dataset.h;saved.has(id)?saved.delete(id):saved.add(id);toast(saved.has(id)?'Saved to your homes':'Removed from saved');draw();if(open)detail(open);return;}
+  const c=e.target.closest('.card,.mini');if(c)detail(L.find(x=>x.id==c.dataset.id));
+});
+function detail(x){open=x;const d=$('#detail');
+  d.innerHTML=`<button class="dclose" id="dc" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <div style="position:relative"><div class="gal" id="gal">${x.img.map(i=>`<div style="background-image:url(${IMG(i)})"></div>`).join('')}</div><span class="gcount" id="gc">1 / ${x.img.length}</span></div>
+  <div class="dbody"><div class="price">${rs(x.r)}${x.p==='rent'?' <small>/ month</small>':''}</div><h3 style="font-size:18px;margin-top:2px">${x.t}</h3><div class="loc">📍 ${x.loc}</div>
+  <div class="grid3"><div><b>${x.bd||'—'}</b>Bedrooms</div><div><b>${x.ba||'—'}</b>Bathrooms</div><div><b>${x.area}</b>Area</div></div>
+  ${x.bid?`<div class="bid"><h4>🔥 Bidding is open</h4><div class="cd" id="cd">${left(x.bid-Date.now())}</div><small>Highest bid: <b id="top">${rs(x.top)}</b></small><div class="bx"><input id="bidIn" inputmode="numeric" placeholder="Your bid in Rs"><button id="bidBtn">Place bid</button></div></div>`:''}
+  <p class="desc">Sunny ${x.y.toLowerCase()} on a quiet street with 24-hour water, a parking space and a short walk to schools, shops and the bus stop. Owners are open to visits every day, 10am to 6pm.</p>
+  <div class="map"><svg viewBox="0 0 340 130"><path d="M0 90 Q90 60 170 80 T340 50" stroke="#fff" stroke-width="10" fill="none"/><path d="M120 0 L150 130" stroke="#fff" stroke-width="7"/><circle cx="170" cy="70" r="34" fill="rgba(15,157,116,.15)" stroke="#0f9d74" stroke-dasharray="4 4"/><circle cx="170" cy="70" r="9" fill="#0f9d74" stroke="#fff" stroke-width="3"/></svg></div>
+  <div class="ctas"><button class="wa" id="wa">WhatsApp</button><button class="call" id="sv">${saved.has(x.id)?'♥ Saved':'♡ Save'}</button></div></div>`;
+  d.classList.add('on');
+  $('#dc').onclick=()=>{d.classList.remove('on');open=null;};
+  $('#gal').onscroll=e=>{$('#gc').textContent=`${Math.round(e.target.scrollLeft/e.target.clientWidth)+1} / ${x.img.length}`;};
+  $('#wa').onclick=()=>toast('Opening WhatsApp chat with the seller…');
+  $('#sv').onclick=()=>{saved.has(x.id)?saved.delete(x.id):saved.add(x.id);draw();detail(x);};
+  if(x.bid)$('#bidBtn').onclick=()=>{const v=+$('#bidIn').value.replace(/\D/g,'');if(v<=x.top){toast(`Bid must be above ${rs(x.top)}`);return;}x.top=v;$('#top').textContent=rs(v);$('#bidIn').value='';toast('You are now the highest bidder 🎉');};
+}
+setInterval(()=>{if(open&&open.bid&&$('#cd'))$('#cd').textContent=left(open.bid-Date.now());},1000);
+/* mode switch */
+$('#mode').onclick=e=>{const b=e.target.closest('button');if(!b)return;mode=b.dataset.m;$('#mode').classList.toggle('sell',mode==='sell');$$('#mode button').forEach(x=>x.classList.toggle('on',x===b));if(mode==='sell'){go('sell');toast('Seller mode: post and manage listings');}else toast('Buyer mode: browse homes');};
+/* sell */
+$('#fBid').onclick=()=>{bidOn=!bidOn;$('#fBid').classList.toggle('on',bidOn);};
+$('#sellForm').onsubmit=e=>{e.preventDefault();const r=+$('#fR').value.replace(/\D/g,'');if(!r){toast('Enter a price');return;}
+  const u=$('#upl'),bar=u.querySelector('i');u.style.display='block';let p=0;$('#pub').disabled=true;
+  const t=setInterval(()=>{p+=12;bar.style.width=Math.min(p,100)+'%';if(p>=100){clearInterval(t);
+    const x={id:Date.now(),t:$('#fT').value,p:$('#fP').value,y:$('#fY').value,r,bd:+$('#fB').value||0,ba:2,area:'5 aana',loc:$('#fL').value,city:$('#fL').value.toLowerCase(),km:4,img:[((L.length)%8)+1,1],bid:bidOn?Date.now()+7*864e5:0,top:Math.round(r*.95)};
+    L.unshift(x);draw();u.style.display='none';bar.style.width=0;$('#pub').disabled=false;toast('Your listing is live');go('home');setTimeout(()=>detail(x),350);}},110);};
+/* guru */
+const say=(w,h)=>{const m=document.createElement('div');m.className='m '+w;m.innerHTML=h;$('#gMsgs').appendChild(m);$('#v-guru').scrollTop=1e5;};
+function guru(q){const s=q.toLowerCase();
+  const unit=s.match(/([\d.]+)\s*ropani\s*(?:in|to)\s*aana/);if(unit){say('bot',`${unit[1]} ropani = <b>${(+unit[1]*16).toLocaleString()} aana</b> (1 ropani = 16 aana ≈ 5,476 sq ft).`);return;}
+  if(/aana.*(sq|feet|ft)/.test(s)){say('bot','1 aana ≈ <b>342.25 sq ft</b>, and 16 aana make 1 ropani.');return;}
+  if(/(how|bid)/.test(s)&&/bid/.test(s)){say('bot','Open any listing with a 🔥 HOT badge, enter an amount above the current highest bid and tap <b>Place bid</b>. Bidding closes 7 days after it starts.');return;}
+  const bd=(s.match(/(\d)\s*(?:bhk|bed|bedroom)/)||[])[1];
+  const under=s.match(/under\s*([\d.]+)\s*(crore|lakh|k)?/);
+  let max=Infinity;if(under){const n=+under[1];max=under[2]==='crore'?n*1e7:under[2]==='lakh'?n*1e5:under[2]==='k'?n*1e3:n;}
+  const city=['lalitpur','kathmandu','pokhara','bhaktapur'].find(c=>s.includes(c));
+  const pur=/rent|\broom\b/.test(s)?'rent':/buy|sale|house|land|villa/.test(s)?'buy':null;
+  const type=/land|plot/.test(s)?'Land':/apartment|flat/.test(s)?'Apartment':/house|villa|bungalow/.test(s)?'House':null;
+  if(!bd&&!city&&!pur&&!type&&max===Infinity){say('bot','I can find homes for you. Try "3 bedroom house in Lalitpur under 4 crore", "room for rent in Pokhara" or "1 ropani in aana".');return;}
+  const r=L.filter(x=>(!bd||x.bd>=+bd)&&(!city||x.city.includes(city))&&(!pur||x.p===pur)&&(!type||x.y===type)&&x.r<=max);
+  say('bot',r.length?`I found <b>${r.length}</b> match${r.length>1?'es':''}:`+r.slice(0,3).map(x=>`<button class="mini" data-id="${x.id}"><span style="background-image:url(${IMG(x.img[0])})"></span><span><b>${x.t}</b><small>${rs(x.r)} · ${x.loc}</small></span></button>`).join(''):'Nothing matches that yet. Try a higher budget or another area.');}
+say('bot','Namaste! I am Ghar Guru 🏡 Ask me to find a home, or convert land units.<div class="sugg" style="margin-top:8px"><button class="pill" data-s="3 bedroom house in Lalitpur under 4 crore">3BHK in Lalitpur</button><button class="pill" data-s="flat for rent">Flats for rent</button><button class="pill" data-s="1 ropani in aana">1 ropani in aana</button></div>');
+$('#gMsgs').addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(b){say('me',b.dataset.s);setTimeout(()=>guru(b.dataset.s),400);}});
+$('#gForm').onsubmit=e=>{e.preventDefault();const v=$('#gIn').value.trim();if(!v)return;say('me',v.replace(/</g,'&lt;'));$('#gIn').value='';setTimeout(()=>guru(v),450);};
+/* nav */
+function go(v){$$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));$$('.tab').forEach(t=>t.classList.toggle('on',t.dataset.v===v));$('#gForm').classList.toggle('on',v==='guru');$('#detail').classList.remove('on');open=null;}
+$$('.tab').forEach(t=>t.onclick=()=>go(t.dataset.v));
+draw();
+})();
+</script>
+</body>
+</html>

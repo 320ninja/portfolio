@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Safar Travel App — nin ja</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--a:#2563eb;--a2:#1d4ed8;--sun:#f59e0b;--ink:#0f172a;--mut:#64748b;--bg:#f5f7fb;--line:#e2e8f0;font-family:Inter,system-ui,sans-serif;color:var(--ink)}
+body{min-height:100vh;background:#070b16;color:#fff;display:grid;grid-template-columns:minmax(0,420px) auto;justify-content:center;align-items:center;gap:56px;padding:24px;overflow-x:hidden}
+button,input,textarea,select{font:inherit;color:inherit}button{border:0;background:none;cursor:pointer}
+.side h1{font-size:44px;line-height:1.02;letter-spacing:-.03em;font-weight:800}
+.side h1 em{font-family:'Instrument Serif',serif;font-weight:400;font-style:italic;color:#7fb0ff}
+.side p{color:rgba(255,255,255,.68);margin:16px 0 22px;line-height:1.6}
+.side .tag{display:inline-block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#7fb0ff;border:1px solid rgba(127,176,255,.35);padding:6px 12px;border-radius:99px;margin-bottom:18px}
+.side ul{list-style:none;display:grid;gap:10px;font-size:14px;color:rgba(255,255,255,.8)}
+.side li::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--a);margin-right:10px;vertical-align:middle}
+.phone{width:min(380px,calc(100vw - 32px));height:min(780px,calc(100vh - 48px));border-radius:46px;padding:10px;background:#03060d;box-shadow:0 40px 120px rgba(37,99,235,.28),0 0 0 1px rgba(255,255,255,.08)}
+.screen{position:relative;height:100%;border-radius:38px;overflow:hidden;background:var(--bg);color:var(--ink)}
+.status{position:absolute;top:0;left:0;right:0;z-index:8;display:flex;justify-content:space-between;padding:14px 26px 4px;font-size:13px;font-weight:600;pointer-events:none}
+.view{position:absolute;inset:0 0 74px;overflow-y:auto;display:none;scrollbar-width:none}
+.view::-webkit-scrollbar{display:none}.view.on{display:block}
+.hero{height:250px;background:linear-gradient(180deg,rgba(15,23,42,.1),rgba(15,23,42,.7)),url(../../media/img/everest-view-breakfast.jpg) center/cover;color:#fff;padding:56px 18px 40px;display:flex;flex-direction:column;justify-content:flex-end}
+.hero small{opacity:.85;font-size:13px}.hero h2{font-size:26px;letter-spacing:-.02em;line-height:1.1}
+.cur{position:absolute;top:44px;right:16px;display:flex;background:rgba(255,255,255,.2);backdrop-filter:blur(10px);border-radius:99px;padding:3px;font-size:12px;font-weight:700;z-index:2}
+.cur button{padding:6px 11px;border-radius:99px;color:#fff}.cur button.on{background:#fff;color:var(--ink)}
+.pad{padding:14px 16px}
+.search{display:flex;gap:8px;align-items:center;background:#fff;border-radius:16px;padding:12px 14px;margin:-26px 16px 0;position:relative;box-shadow:0 10px 30px rgba(15,23,42,.1)}
+.search input{flex:1;border:0;outline:0;font-size:14px;background:none}
+.cats{display:flex;gap:8px;overflow-x:auto;padding:14px 16px 4px;scrollbar-width:none}.cats::-webkit-scrollbar{display:none}
+.pill{flex:none;font-size:12px;font-weight:600;padding:8px 13px;border-radius:99px;background:#fff;border:1px solid var(--line)}
+.pill.on{background:var(--a);border-color:var(--a);color:#fff}
+.sec{display:flex;justify-content:space-between;align-items:baseline;padding:12px 16px 8px}.sec h3{font-size:17px}.sec small{color:var(--mut);font-size:12px}
+.tour{display:block;width:calc(100% - 32px);margin:0 16px 14px;text-align:left;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 6px 20px rgba(15,23,42,.07);animation:up .4s ease both}
+@keyframes up{from{opacity:0;transform:translateY(12px)}}
+.tour .ph{height:150px;background:center/cover;position:relative}
+.tour .rt{position:absolute;top:10px;left:10px;font-size:11px;font-weight:700;background:rgba(255,255,255,.94);padding:5px 9px;border-radius:99px}
+.tour .du{position:absolute;bottom:10px;left:10px;font-size:11px;font-weight:700;background:rgba(15,23,42,.7);color:#fff;padding:5px 9px;border-radius:99px}
+.tour .b{padding:12px 14px;display:flex;justify-content:space-between;gap:10px;align-items:flex-end}
+.tour h4{font-size:15px}.tour p{font-size:12px;color:var(--mut);margin-top:2px}
+.pr{font-size:17px;font-weight:800;color:var(--a2);white-space:nowrap;text-align:right}.pr small{display:block;font-size:10px;color:var(--mut);font-weight:500}
+/* detail */
+.detail{position:absolute;inset:0;z-index:6;background:var(--bg);overflow-y:auto;transform:translateX(100%);transition:transform .4s cubic-bezier(.2,.8,.2,1);scrollbar-width:none;padding-bottom:90px}
+.detail.on{transform:none}
+.dh{height:250px;background:center/cover;position:relative}
+.dh::after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 40%,rgba(15,23,42,.65))}
+.dh .tt{position:absolute;left:16px;right:16px;bottom:14px;z-index:1;color:#fff}.dh .tt h2{font-size:24px;line-height:1.1}.dh .tt small{font-size:13px;opacity:.9}
+.back{position:absolute;top:44px;left:14px;z-index:2;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center}
+.tabs2{display:flex;gap:6px;padding:12px 16px 4px}
+.tabs2 button{flex:1;padding:9px;border-radius:12px;font-size:13px;font-weight:700;background:#fff;border:1px solid var(--line)}.tabs2 button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.days{display:flex;gap:8px;overflow-x:auto;padding:10px 16px;scrollbar-width:none}.days::-webkit-scrollbar{display:none}
+.days button{flex:none;width:56px;padding:8px 0;border-radius:14px;background:#fff;border:1px solid var(--line);font-size:11px;color:var(--mut);display:grid;justify-items:center}
+.days button b{font-size:17px;color:var(--ink)}.days button.on{background:var(--a);border-color:var(--a);color:#dbe7ff}.days button.on b{color:#fff}
+.map{margin:4px 16px 10px;height:150px;border-radius:18px;background:#e6eefb;position:relative;overflow:hidden}
+.map svg{position:absolute;inset:0;width:100%;height:100%}
+.stops{padding:0 16px;display:grid;gap:0}
+.stop{display:grid;grid-template-columns:44px 1fr;gap:10px;position:relative;padding-bottom:12px}
+.stop::before{content:'';position:absolute;left:21px;top:30px;bottom:0;width:2px;background:repeating-linear-gradient(var(--line) 0 4px,transparent 4px 8px)}
+.stop:last-child::before{display:none}
+.stop .n{width:44px;height:44px;border-radius:14px;background:#fff;border:1px solid var(--line);display:grid;place-items:center;font-weight:800;color:var(--a)}
+.stop .c{background:#fff;border-radius:16px;padding:10px 12px;border:1px solid var(--line)}
+.stop .c small{font-size:11px;color:var(--mut)}.stop .c b{display:block;font-size:14px}
+.stop .c .k{display:inline-block;font-size:10px;font-weight:700;padding:3px 7px;border-radius:99px;background:#eef4ff;color:var(--a2);margin-top:4px}
+.trav{font-size:11px;color:var(--mut);margin:6px 0 0 2px}
+.hotel{margin:2px 16px 12px;padding:12px;border-radius:16px;background:linear-gradient(135deg,#fff7e6,#ffefcc);border:1px solid #fde4a8;font-size:13px}
+.notes{margin:0 16px 12px}.notes label{font-size:12px;font-weight:700;color:var(--mut);display:flex;justify-content:space-between}
+.notes textarea{width:100%;margin-top:6px;border-radius:14px;border:1px solid var(--line);padding:10px 12px;min-height:72px;resize:none;outline:0;background:#fff;font-size:13px}
+.notes textarea:focus{border-color:var(--a)}
+.inc{padding:4px 16px;display:grid;gap:8px;font-size:13px}
+.inc div{background:#fff;border-radius:14px;padding:12px;border:1px solid var(--line)}
+.inc h5{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);margin-bottom:6px}
+.inc li{list-style:none;padding:3px 0}
+.bookbar{position:absolute;left:0;right:0;bottom:0;z-index:7;background:#fff;border-top:1px solid var(--line);padding:12px 16px 26px;display:none;align-items:center;justify-content:space-between;gap:12px}
+.bookbar.on{display:flex}
+.bookbar .pr{text-align:left}
+.bk{padding:13px 22px;border-radius:14px;background:var(--a);color:#fff;font-weight:700}
+/* booking sheet */
+.sheet{position:absolute;inset:0;z-index:9;background:rgba(15,23,42,.45);display:none;align-items:flex-end}
+.sheet.on{display:flex}
+.sheet .in{width:100%;background:#fff;border-radius:26px 26px 0 0;padding:18px 18px 28px;animation:sh .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes sh{from{transform:translateY(100%)}}
+.sheet h3{font-size:18px;margin-bottom:12px}
+.f{display:grid;gap:10px}
+.f label{font-size:12px;font-weight:600;color:var(--mut)}
+.f input{width:100%;margin-top:4px;padding:12px;border-radius:12px;border:1px solid var(--line);outline:0}
+.stp{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin-top:4px}
+.stp button{width:32px;height:32px;border-radius:10px;background:var(--bg);font-weight:800;font-size:18px}
+.tot{display:flex;justify-content:space-between;font-size:14px;margin:12px 0;padding-top:12px;border-top:1px dashed var(--line)}.tot b{font-size:20px;color:var(--a2)}
+.err{font-size:12px;color:#dc2626;min-height:14px}
+.ok{text-align:center;padding:10px 0}.ok .tick{width:70px;height:70px;border-radius:50%;background:#dcfce7;color:#16a34a;display:grid;place-items:center;margin:0 auto 12px;font-size:34px;animation:pop .4s}
+@keyframes pop{0%{transform:scale(.4)}70%{transform:scale(1.1)}}
+.ok p{font-size:13px;color:var(--mut);margin:6px 0 14px}
+/* trips */
+.empty{text-align:center;color:var(--mut);font-size:14px;padding:40px 20px}
+.trip{margin:0 16px 12px;background:#fff;border-radius:18px;padding:12px;display:flex;gap:12px;align-items:center;border:1px solid var(--line)}
+.trip span{width:62px;height:62px;border-radius:14px;background:center/cover;flex:none}.trip b{display:block;font-size:14px}.trip small{font-size:12px;color:var(--mut)}
+.trip em{font-style:normal;font-size:11px;font-weight:700;color:#16a34a;background:#dcfce7;padding:3px 8px;border-radius:99px;display:inline-block;margin-top:4px}
+.ttl{padding:56px 16px 12px}.ttl h2{font-size:24px}.ttl small{color:var(--mut);font-size:13px}
+.nav{position:absolute;left:0;right:0;bottom:0;height:74px;z-index:5;display:flex;justify-content:space-around;align-items:flex-start;padding-top:10px;background:#fff;border-top:1px solid var(--line)}
+.tab{display:grid;justify-items:center;gap:3px;font-size:10px;font-weight:600;color:var(--mut);position:relative}
+.tab svg{width:22px;height:22px}.tab.on{color:var(--a)}
+.tab i{position:absolute;top:-4px;right:-6px;min-width:16px;height:16px;border-radius:99px;background:#ef4444;color:#fff;font-size:10px;font-style:normal;display:none;place-items:center}
+.tab i.show{display:grid}
+@media (max-width:860px){body{grid-template-columns:1fr;justify-items:center}.side{display:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<aside class="side">
+  <span class="tag">Installable app · iOS &amp; Android</span>
+  <h1>Safar <em>Travel</em></h1>
+  <p>A ready-made booking app that travel agencies rebrand as their own. Each tour has a day-by-day plan with map routes, stops, hotels and private notes. All prices switch between USD and NPR with one tap. It runs as a PHP web app (PWA) on ordinary hosting.</p>
+  <ul><li>Tap USD / NPR to switch every price</li><li>Open a tour and step through the itinerary days</li><li>Write a private note for a day, and it saves itself</li><li>Book with dates and travellers, then check My trips</li></ul>
+</aside>
+
+<div class="phone"><div class="screen">
+  <div class="status" id="status"><span>9:41</span><span>● ● ▮</span></div>
+
+  <section class="view on" id="v-explore">
+    <div class="hero"><small>Namaste, Priya 👋</small><h2>Where will you go next?</h2></div>
+    <div class="cur" id="cur"><button class="on" data-c="usd">USD</button><button data-c="npr">NPR</button></div>
+    <label class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="q" placeholder="Search Everest, Pokhara, Bali…"></label>
+    <div class="cats" id="cats"><button class="pill on" data-k="all">All tours</button><button class="pill" data-k="trek">Treks</button><button class="pill" data-k="city">Nepal tours</button><button class="pill" data-k="intl">International</button></div>
+    <div class="sec"><h3>Popular tours</h3><small id="cnt"></small></div>
+    <div id="tours"></div>
+  </section>
+
+  <section class="view" id="v-trips"><div class="ttl"><h2>My trips</h2><small>Your bookings show up here</small></div><div id="trips"></div></section>
+
+  <div class="detail" id="detail"></div>
+  <div class="bookbar" id="bookbar"><div class="pr" id="bbPr"></div><button class="bk" id="bk">Book now</button></div>
+  <div class="sheet" id="sheet"><div class="in" id="sheetIn"></div></div>
+
+  <nav class="nav">
+    <button class="tab on" data-v="explore"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg>Explore</button>
+    <button class="tab" data-v="trips"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>My trips<i id="tb"></i></button>
+  </nav>
+</div></div>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const RATE = 134;
+const I = n => `../../media/img/${n}.jpg`;
+const T = [
+  {id:'ebc',t:'Everest Base Camp Trek',k:'trek',where:'Solukhumbu, Nepal',d:12,usd:1390,r:4.9,img:'everest-trek',
+   days:[{h:'Fly to Lukla, walk to Phakding',stops:[['06:30','Kathmandu airport','Flight','35 min flight'],['07:10','Lukla','Village','3 h walk'],['11:00','Phakding','Village','']],hotel:'Phakding Lodge'},
+         {h:'Climb to Namche Bazaar',stops:[['08:00','Monjo','Village','1 h walk'],['10:30','Hillary Bridge','Viewpoint','2 h climb'],['14:00','Namche Bazaar','Town','']],hotel:'Namche Hotel & Bakery'},
+         {h:'Acclimatisation day',stops:[['07:00','Everest View Hotel','Viewpoint','1 h walk'],['11:00','Khumjung','Village','1.5 h walk'],['15:00','Sherpa Museum','Museum','']],hotel:'Namche Hotel & Bakery'}],
+   inc:['Domestic flights','Licensed guide and porter','Tea-house stays','Park permits'],exc:['International flights','Travel insurance','Tips']},
+  {id:'pkr',t:'Pokhara Lakes & Sunrise',k:'city',where:'Pokhara, Nepal',d:4,usd:320,r:4.8,img:'pokhara-ultralight',
+   days:[{h:'Lakeside arrival and boating',stops:[['10:00','Tourist bus park','Transfer','15 min drive'],['13:00','Phewa Lake','Lake','20 min boat'],['15:00','Tal Barahi Temple','Temple','']],hotel:'Lakeside Retreat'},
+         {h:'Sarangkot sunrise and ultralight',stops:[['05:00','Sarangkot','Viewpoint','30 min drive'],['09:30','Ultralight airfield','Adventure','20 min drive'],['14:00','Davis Falls','Nature','']],hotel:'Lakeside Retreat'}],
+   inc:['Hotel with breakfast','Boat ride','Sunrise transfer'],exc:['Ultralight flight fee','Lunch and dinner']},
+  {id:'bali',t:'Bali Island Escape',k:'intl',where:'Bali, Indonesia',d:6,usd:890,r:4.7,img:'pkg-bali',
+   days:[{h:'Ubud temples and rice terraces',stops:[['09:00','Tegallalang','Rice terraces','40 min drive'],['12:30','Ubud Market','Market','25 min drive'],['16:00','Ulun Danu Temple','Temple','']],hotel:'Ubud Garden Villa'},
+         {h:'Nusa Penida day trip',stops:[['07:30','Sanur harbour','Boat','45 min boat'],['10:00','Kelingking Beach','Beach','30 min drive'],['14:00','Crystal Bay','Snorkelling','']],hotel:'Seminyak Beach Resort'}],
+   inc:['Return flights from KTM','4-star hotels','Private driver'],exc:['Visa on arrival','Lunches']},
+  {id:'dxb',t:'Dubai City & Desert',k:'intl',where:'Dubai, UAE',d:5,usd:980,r:4.6,img:'dubai-desert-safari',
+   days:[{h:'City highlights',stops:[['10:00','Burj Khalifa','Landmark','15 min drive'],['13:00','Dubai Mall','Shopping','20 min drive'],['19:00','Dubai Fountain','Show','']],hotel:'Downtown Suites'},
+         {h:'Desert safari',stops:[['15:00','Al Awir desert','Dune bashing','45 min drive'],['18:00','Camp','Dinner & show','']],hotel:'Downtown Suites'}],
+   inc:['Return flights','Hotel with breakfast','Desert safari'],exc:['Visa fee','Dinners in the city']},
+  {id:'thai',t:'Thailand Beaches',k:'intl',where:'Phuket, Thailand',d:7,usd:760,r:4.7,img:'pkg-thailand',
+   days:[{h:'Phuket old town',stops:[['10:00','Old Phuket Town','Heritage','30 min drive'],['16:00','Promthep Cape','Sunset','']],hotel:'Patong Bay Hotel'},
+         {h:'Phi Phi islands',stops:[['08:00','Rassada pier','Boat','2 h boat'],['11:00','Maya Bay','Beach','30 min boat'],['14:00','Pileh Lagoon','Swim','']],hotel:'Patong Bay Hotel'}],
+   inc:['Return flights','Island tour','Airport transfers'],exc:['Lunches','Insurance']}
+];
+let cur='usd', cat='all', open=null, day=0, tab='plan', trips=[], notes={};
+try{notes=JSON.parse(localStorage.getItem('safar-notes')||'{}');}catch(e){}
+const money = u => cur==='usd' ? '$'+u.toLocaleString('en-US') : 'Rs '+Math.round(u*RATE).toLocaleString('en-IN');
+function list(){const q=$('#q').value.trim().toLowerCase();const f=T.filter(x=>(cat==='all'||x.k===cat)&&(!q||(x.t+' '+x.where).toLowerCase().includes(q)));
+  $('#cnt').textContent=f.length+' tours';
+  $('#tours').innerHTML=f.length?f.map(x=>`<button class="tour" data-id="${x.id}"><div class="ph" style="background-image:url(${I(x.img)})"><span class="rt">★ ${x.r}</span><span class="du">${x.d} days</span></div><div class="b"><div><h4>${x.t}</h4><p>📍 ${x.where}</p></div><div class="pr">${money(x.usd)}<small>per person</small></div></div></button>`).join(''):'<p class="empty">No tours found. Try "Everest" or "Bali".</p>';}
+$('#q').oninput=list;
+$('#cats').onclick=e=>{const b=e.target.closest('.pill');if(!b)return;$$('#cats .pill').forEach(p=>p.classList.toggle('on',p===b));cat=b.dataset.k;list();};
+$('#cur').onclick=e=>{const b=e.target.closest('button');if(!b)return;cur=b.dataset.c;$$('#cur button').forEach(x=>x.classList.toggle('on',x===b));list();if(open)detail(open,true);trip();};
+$('#tours').onclick=e=>{const c=e.target.closest('.tour');if(c){day=0;tab='plan';detail(T.find(x=>x.id===c.dataset.id));}};
+function pins(n){const pts=[[50,110],[150,60],[260,95],[310,40]].slice(0,n);
+  return `<svg viewBox="0 0 340 150"><path d="M0 120 Q100 90 180 120 T340 100" stroke="#fff" stroke-width="8" fill="none"/><path d="M90 0 Q120 80 80 150" stroke="#fff" stroke-width="6" fill="none"/><path d="M220 0 L240 150" stroke="#fff" stroke-width="5"/>
+  <polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#2563eb" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round"><animate attributeName="stroke-dashoffset" from="22" to="0" dur="1s" repeatCount="indefinite"/></polyline>
+  ${pts.map((p,i)=>`<g><circle cx="${p[0]}" cy="${p[1]}" r="13" fill="#2563eb" stroke="#fff" stroke-width="3"/><text x="${p[0]}" y="${p[1]+4}" text-anchor="middle" font-size="11" font-weight="800" fill="#fff" font-family="Inter">${i+1}</text></g>`).join('')}</svg>`;}
+function detail(x,keep){open=x;const d=$('#detail');const dd=x.days[day];const key=x.id+'-'+day;
+  d.innerHTML=`<div class="dh" style="background-image:url(${I(x.img)})"><button class="back" id="bk2" aria-label="Back"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg></button><div class="tt"><small>📍 ${x.where} · ★ ${x.r}</small><h2>${x.t}</h2></div></div>
+  <div class="tabs2"><button data-t="plan" class="${tab==='plan'?'on':''}">Itinerary</button><button data-t="inc" class="${tab==='inc'?'on':''}">What's included</button></div>
+  ${tab==='plan'?`<div class="days">${x.days.map((_,i)=>`<button data-d="${i}" class="${i===day?'on':''}">Day<b>${i+1}</b></button>`).join('')}<button disabled style="opacity:.5">+${x.d-x.days.length}<b>…</b></button></div>
+  <div class="sec" style="padding-top:2px"><h3>${dd.h}</h3></div>
+  <div class="map">${pins(dd.stops.length)}</div>
+  <div class="stops">${dd.stops.map(([tm,pl,k,tr],i)=>`<div class="stop"><div class="n">${i+1}</div><div><div class="c"><small>${tm}</small><b>${pl}</b><span class="k">${k}</span></div>${tr?`<div class="trav">🚶 ${tr} to next stop</div>`:''}</div></div>`).join('')}</div>
+  <div class="hotel">🏨 Tonight: <b>${dd.hotel}</b></div>
+  <div class="notes"><label for="nt">My private note for day ${day+1}<span id="sv"></span></label><textarea id="nt" placeholder="Pack a warm jacket, buy snacks in Namche…">${(notes[key]||'').replace(/</g,'&lt;')}</textarea></div>`
+  :`<div class="inc"><div><h5>Included</h5><ul>${x.inc.map(i=>`<li>✅ ${i}</li>`).join('')}</ul></div><div><h5>Not included</h5><ul>${x.exc.map(i=>`<li>✖️ ${i}</li>`).join('')}</ul></div></div>`}`;
+  if(!keep)d.scrollTop=0;
+  d.classList.add('on');$('#bookbar').classList.add('on');$('#bbPr').innerHTML=`${money(x.usd)}<small>per person · ${x.d} days</small>`;
+  $('#bk2').onclick=close;
+  d.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;detail(x,true);});
+  d.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{day=+b.dataset.d;detail(x,true);});
+  const nt=$('#nt');if(nt){let t;nt.oninput=()=>{clearTimeout(t);$('#sv').textContent='Saving…';t=setTimeout(()=>{notes[key]=nt.value;try{localStorage.setItem('safar-notes',JSON.stringify(notes));}catch(e){}$('#sv').textContent='Saved ✓';},500);};}
+}
+function close(){$('#detail').classList.remove('on');$('#bookbar').classList.remove('on');open=null;}
+/* booking */
+let pax=2;
+$('#bk').onclick=()=>{pax=2;sheet();};
+function sheet(){const x=open;const tomorrow=new Date(Date.now()+864e5*14).toISOString().slice(0,10);
+  $('#sheetIn').innerHTML=`<h3>Book ${x.t}</h3><form class="f" id="bf"><label>Start date<input type="date" id="bd" value="${tomorrow}" min="${new Date().toISOString().slice(0,10)}"></label>
+  <label>Travellers<div class="stp"><button type="button" id="mn">−</button><b id="px">${pax}</b><button type="button" id="pl">+</button></div></label>
+  <label>Full name<input id="bn" placeholder="As on your passport" autocomplete="name"></label>
+  <div class="tot"><span>Total for <span id="tp">${pax}</span></span><b id="tt">${money(x.usd*pax)}</b></div><div class="err" id="er"></div>
+  <button class="bk" style="width:100%">Confirm booking</button></form>`;
+  $('#sheet').classList.add('on');
+  const upd=()=>{$('#px').textContent=pax;$('#tp').textContent=pax;$('#tt').textContent=money(x.usd*pax);};
+  $('#mn').onclick=()=>{pax=Math.max(1,pax-1);upd();};$('#pl').onclick=()=>{pax=Math.min(12,pax+1);upd();};
+  $('#bf').onsubmit=e=>{e.preventDefault();const n=$('#bn').value.trim();if(n.length<3){$('#er').textContent='Please enter the lead traveller\'s full name.';$('#bn').focus();return;}
+    const ref='SF'+Math.random().toString(36).slice(2,7).toUpperCase();trips.unshift({x,pax,date:$('#bd').value,ref,n});trip();
+    $('#sheetIn').innerHTML=`<div class="ok"><div class="tick">✓</div><h3>You're booked!</h3><p>Booking ${ref} · ${pax} traveller${pax>1?'s':''} · starts ${new Date($('#bd').value).toDateString().slice(4)}</p><button class="bk" id="vt" style="width:100%">View my trips</button></div>`;
+    $('#vt').onclick=()=>{$('#sheet').classList.remove('on');close();go('trips');};};
+}
+$('#sheet').onclick=e=>{if(e.target.id==='sheet')$('#sheet').classList.remove('on');};
+function trip(){$('#tb').textContent=trips.length;$('#tb').classList.toggle('show',trips.length>0);
+  $('#trips').innerHTML=trips.length?trips.map(t=>`<div class="trip"><span style="background-image:url(${I(t.x.img)})"></span><div><b>${t.x.t}</b><small>${t.date} · ${t.pax} traveller${t.pax>1?'s':''} · ${money(t.x.usd*t.pax)}</small><br><em>Confirmed · ${t.ref}</em></div></div>`).join(''):'<p class="empty">No trips yet. Book a tour from Explore.</p>';}
+function go(v){$$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));$$('.tab').forEach(t=>t.classList.toggle('on',t.dataset.v===v));close();}
+$$('.tab').forEach(t=>t.onclick=()=>go(t.dataset.v));
+list();trip();
+})();
+</script>
+</body>
+</html>

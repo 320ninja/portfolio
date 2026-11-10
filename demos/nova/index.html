@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nova — ask about nin ja</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0f;--side:#101017;--surface:#15151e;--surface2:#1b1b26;--line:#24242f;--line2:#30303e;
+  --text:#ececf3;--muted:#8b8b9c;--dim:#5b5b6b;
+  --a1:#8b5cf6;--a2:#22d3ee;--a3:#f472b6;--ok:#34d399;--warn:#fbbf24;
+  --sans:'Sora',system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+button,textarea{font:inherit;color:inherit}
+.app{display:grid;grid-template-columns:300px minmax(0,1fr);height:100vh;height:100dvh}
+/* sidebar */
+.side{background:var(--side);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:22px 18px;gap:18px;overflow:auto}
+.id{display:flex;align-items:center;gap:12px}
+.orb{width:44px;height:44px;border-radius:50%;position:relative;flex:none;background:conic-gradient(from 0deg,var(--a1),var(--a2),var(--a3),var(--a1));animation:spin 8s linear infinite;box-shadow:0 0 22px rgba(139,92,246,.45)}
+.orb::before{content:"";position:absolute;inset:3px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0,rgba(255,255,255,.6) 8%,transparent 30%),radial-gradient(circle at 60% 70%,rgba(34,211,238,.9),transparent 55%),radial-gradient(circle at 30% 70%,rgba(244,114,182,.85),transparent 55%),#1a1033;animation:spin 5s linear infinite reverse}
+.orb::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(139,92,246,.35);animation:breathe 3s ease-in-out infinite}
+.orb.lg{width:84px;height:84px}
+.busy .orb{animation-duration:2s}.busy .orb::after{animation-duration:.9s;border-color:rgba(34,211,238,.6)}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.15);opacity:0}}
+.id h1{font-size:18px;font-weight:600;letter-spacing:-.01em}
+.id p{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.id p i{width:7px;height:7px;border-radius:50%;background:var(--ok);display:inline-block}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+.panel h2{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.how-empty{font-size:13px;color:var(--dim);line-height:1.5}
+.how-row{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:8px;gap:8px}
+.how-row b{color:var(--text);font-weight:500;text-align:right}
+.tag{font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:99px;background:rgba(139,92,246,.15);color:#c4b5fd;border:1px solid rgba(139,92,246,.3)}
+.conf{height:6px;background:var(--surface2);border-radius:99px;overflow:hidden;margin:4px 0 12px}
+.conf i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--a1),var(--a2));transition:width .8s cubic-bezier(.3,.7,.2,1)}
+.cands{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.cand{display:grid;grid-template-columns:1fr 44px;gap:8px;align-items:center;font-size:12px;color:var(--muted)}
+.cand.lead{color:var(--text)}
+.cand .mbar{grid-column:1/-1;height:3px;background:var(--surface2);border-radius:99px;overflow:hidden}
+.cand .mbar i{display:block;height:100%;background:var(--dim);transition:width .6s}
+.cand.lead .mbar i{background:var(--a2)}
+.cand span:nth-child(2){font-family:var(--mono);text-align:right}
+.terms{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.terms span{font-family:var(--mono);font-size:10.5px;padding:2px 6px;border-radius:5px;background:var(--surface2);color:var(--muted)}
+.terms span b{color:var(--a2);font-weight:500;margin-left:3px}
+.side-foot{margin-top:auto;font-size:11px;color:var(--dim);line-height:1.6}
+.side-foot a{color:var(--muted)}
+/* main */
+.main{display:flex;flex-direction:column;min-height:0;position:relative}
+.top{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;border-bottom:1px solid var(--line);gap:12px}
+.top .title{font-size:14px;color:var(--muted)}
+.top .title b{color:var(--text);font-weight:500}
+.icon-btn{height:34px;padding:0 12px;border-radius:9px;border:1px solid var(--line2);background:transparent;cursor:pointer;font-size:12px;display:inline-flex;align-items:center;gap:6px;color:var(--muted);transition:background .2s,color .2s,transform .12s}
+.icon-btn:hover{background:var(--surface);color:var(--text)}
+.icon-btn:active{transform:scale(.96)}
+.icon-btn svg{width:14px;height:14px}
+.icon-btn:focus-visible,.chip:focus-visible,.send:focus-visible{outline:2px solid var(--a2);outline-offset:2px}
+.mobile-how{display:none}
+.feed{flex:1;overflow-y:auto;padding:28px 22px 12px;scroll-behavior:smooth}
+.feed-inner{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.hero{text-align:center;padding:40px 0 10px;display:flex;flex-direction:column;align-items:center;gap:14px;animation:rise .5s ease}
+.hero h2{font-size:28px;font-weight:600;letter-spacing:-.02em}
+.hero h2 span{background:linear-gradient(90deg,var(--a1),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--muted);font-size:14px;max-width:440px;line-height:1.6}
+.msg{display:flex;gap:12px;animation:rise .35s cubic-bezier(.3,.7,.2,1)}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.msg .av{width:30px;height:30px;flex:none;margin-top:2px}
+.msg .orb{width:30px;height:30px;box-shadow:0 0 12px rgba(139,92,246,.35)}
+.msg .orb::after{display:none}
+.bubble{font-size:14.5px;line-height:1.65;color:#dcdce6;min-width:0;overflow-wrap:anywhere}
+.bubble p+p,.bubble p+ul,.bubble ul+p,.bubble p+ol,.bubble ol+p{margin-top:10px}
+.bubble ul,.bubble ol{padding-left:20px}
+.bubble li{margin:3px 0}
+.bubble li::marker{color:var(--a2)}
+.bubble strong{color:#fff;font-weight:600}
+.bubble a{color:var(--a2);text-decoration:none;border-bottom:1px solid rgba(34,211,238,.35)}
+.bubble a:hover{border-bottom-color:var(--a2)}
+.bubble code{font-family:var(--mono);font-size:12.5px;background:var(--surface2);border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+.msg.user{justify-content:flex-end}
+.msg.user .bubble{background:var(--surface2);border:1px solid var(--line2);padding:10px 14px;border-radius:16px 16px 4px 16px;max-width:80%;color:var(--text)}
+.caret{display:inline-block;width:7px;height:15px;background:var(--a2);vertical-align:-2px;margin-left:2px;border-radius:1px;animation:blink .9s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.thinking{display:flex;gap:5px;align-items:center;height:30px}
+.thinking i{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:dot 1.1s ease-in-out infinite}
+.thinking i:nth-child(2){animation-delay:.15s}.thinking i:nth-child(3){animation-delay:.3s}
+.thinking span{font-size:12px;color:var(--dim);margin-left:6px;font-family:var(--mono)}
+@keyframes dot{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1;background:var(--a2)}}
+.meta-line{font-family:var(--mono);font-size:10.5px;color:var(--dim);margin-top:6px}
+.dock{padding:10px 22px 22px}
+.dock-inner{max-width:760px;margin:0 auto}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;min-height:0}
+.chip{border:1px solid var(--line2);background:var(--surface);border-radius:99px;padding:7px 12px;font-size:12.5px;cursor:pointer;color:#cfcfdb;transition:background .2s,border-color .2s,transform .12s;animation:rise .3s ease both}
+.chip:hover{border-color:var(--a1);background:#1c1830}
+.chip:active{transform:scale(.96)}
+.composer{display:flex;gap:8px;align-items:flex-end;background:var(--surface);border:1px solid var(--line2);border-radius:16px;padding:8px 8px 8px 16px;transition:border-color .2s}
+.composer:focus-within{border-color:var(--a1)}
+.composer textarea{flex:1;background:transparent;border:0;outline:none;resize:none;font-size:14.5px;line-height:1.5;padding:7px 0;max-height:140px;min-height:24px}
+.composer textarea::placeholder{color:var(--dim)}
+.send{width:38px;height:38px;border-radius:11px;border:0;cursor:pointer;background:linear-gradient(135deg,var(--a1),#6d28d9);display:grid;place-items:center;transition:opacity .2s,transform .12s;flex:none}
+.send:active{transform:scale(.94)}
+.send:disabled{opacity:.35;cursor:default}
+.send svg{width:17px;height:17px}
+.hint{font-size:11px;color:var(--dim);text-align:center;margin-top:8px}
+.back{position:fixed;right:16px;bottom:16px;background:#fff;color:#111;font-size:12px;padding:8px 14px;border-radius:99px;text-decoration:none;z-index:40;font-weight:500;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.overlay{display:none}
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;inset:0 auto 0 0;width:min(320px,88vw);z-index:30;transform:translateX(-102%);transition:transform .3s cubic-bezier(.3,.7,.2,1)}
+  .side.open{transform:none;box-shadow:20px 0 60px rgba(0,0,0,.5)}
+  .overlay{display:block;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:25;opacity:0;pointer-events:none;transition:opacity .3s}
+  .overlay.open{opacity:1;pointer-events:auto}
+  .mobile-how{display:inline-flex}
+  .top{padding:12px 16px}.feed{padding:20px 16px 8px}.dock{padding:8px 16px 64px}
+  .hero{padding-top:16px}.hero h2{font-size:23px}
+  .top .title span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <aside class="side" id="side">
+    <div class="id">
+      <div class="orb" aria-hidden="true"></div>
+      <div><h1>Nova</h1><p><i></i>Runs locally · no API</p></div>
+    </div>
+    <div class="panel">
+      <h2>How Nova answered</h2>
+      <div id="how"><div class="how-empty">Ask something. Nova turns your question into a TF‑IDF vector, compares it with 28 knowledge entries by cosine similarity, and shows its working here.</div></div>
+    </div>
+    <div class="panel">
+      <h2>Built-in tools</h2>
+      <div class="how-row"><span>Calculator</span><b>“what is 12*7”</b></div>
+      <div class="how-row"><span>Clock</span><b>“what time is it”</b></div>
+      <div class="how-row"><span style="display:inline-flex;align-items:center;gap:4px">NPR<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h15l-4-4M20 16H5l4 4"/></svg>USD</span><b>“5000 npr to usd”</b></div>
+      <div class="how-row" style="margin:0"><span>Fixed rate</span><b>1 USD = 133.50 NPR</b></div>
+    </div>
+    <div class="side-foot">Nova answers questions about <b>nin ja</b> — web developer, designer &amp; video editor in Kathmandu. Retrieval, intents and tools are plain JavaScript in this one file.</div>
+  </aside>
+  <div class="overlay" id="overlay"></div>
+  <section class="main">
+    <div class="top">
+      <button class="icon-btn mobile-how" id="openSide" aria-label="Show how Nova answered"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Insights</button>
+      <div class="title"><b>Chat with Nova</b><span> · nin ja’s portfolio assistant</span></div>
+      <button class="icon-btn" id="clear" title="Clear conversation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>Clear chat</button>
+    </div>
+    <div class="feed" id="feed"><div class="feed-inner" id="feedInner"></div></div>
+    <div class="dock">
+      <div class="dock-inner">
+        <div class="chips" id="chips"></div>
+        <form class="composer" id="form">
+          <label for="q" style="position:absolute;left:-9999px">Message Nova</label>
+          <textarea id="q" rows="1" placeholder="Ask about services, pricing, tools…" autocomplete="off"></textarea>
+          <button class="send" id="send" type="submit" aria-label="Send message" disabled><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </form>
+        <div class="hint">Enter to send · Shift+Enter for a new line · conversation is saved in this browser</div>
+      </div>
+    </div>
+  </section>
+</div>
+<a class="back" href="../../index.html#work">← Back to portfolio</a>
+
+<script>
+(() => {
+'use strict';
+const $ = id => document.getElementById(id);
+const USD_NPR = 133.5;
+const EMAIL = 'hello@ninja.com.np';
+
+/* ---------------- Knowledge base ---------------- */
+const KB = [
+  {id:'about', t:'Who is nin ja', q:'who is nin ja tell me about nin ja introduce yourself about him bio summary who are they what does nin ja do', a:`**nin ja** is a multidisciplinary creative from **Nepal** — a web developer, graphic designer, video editor and AI enthusiast.\n\nThe short version: they build fast websites, design brands that hold together, cut videos that keep people watching, and wire AI into workflows so small teams can do more. You can find everything at [ninja.com.np](https://ninja.com.np).`, f:['What services do you offer?','Show me some projects','Where are you based?']},
+  {id:'location', t:'Location', q:'where are you based location city country live from nepal kathmandu where located office time zone', a:`nin ja is based in **Kathmandu, Nepal** (UTC+5:45). They work with local clients in person and with international clients remotely.`, f:['Do you work with international clients?','How can I contact you?']},
+  {id:'contact', t:'Contact', q:'contact email reach get in touch how to contact message hire email address phone whatsapp talk', a:`The best way to reach nin ja is email: [${EMAIL}](mailto:${EMAIL}).\n\nInclude a few lines about your project, your timeline and a rough budget — you'll usually get a reply **within one working day**. The site is [ninja.com.np](https://ninja.com.np).`, f:['Are you available right now?','How much does a website cost?']},
+  {id:'services', t:'Services overview', q:'services offer what can you do help with services list provide offerings capabilities work types', a:`nin ja offers four main services:\n\n- **Websites** — landing pages, business sites, e‑commerce and web apps\n- **Branding** — logos, visual identity, brand guidelines, social templates\n- **Video editing** — reels, YouTube, ads, motion graphics and colour grading\n- **AI automation** — chatbots, content pipelines and custom tools with the OpenAI API\n\nMany clients combine them, e.g. a brand + website launch package.`, f:['Website pricing','Tell me about AI automation','What tools do you use?']},
+  {id:'web', t:'Web development', q:'web development website build site landing page web app frontend developer ecommerce online store responsive develop websites', a:`For the web, nin ja builds **fast, responsive, SEO‑friendly** sites:\n\n- Landing pages and portfolio sites\n- Business and multi‑page marketing sites with a CMS\n- E‑commerce stores\n- Custom web apps and dashboards\n\nThe usual stack is **React** and **Next.js**, with clean animations and a focus on performance (good Core Web Vitals out of the box).`, f:['How much does a website cost?','How long does a website take?']},
+  {id:'brand', t:'Branding & graphic design', q:'graphic design branding logo brand identity visual identity design poster social media graphics print packaging designer brand guidelines', a:`On the design side nin ja does **branding and graphic design**:\n\n- Logo design and full visual identity\n- Colour, typography and brand guidelines\n- Social media templates and campaign graphics\n- Posters, packaging and print\n\nWork starts with research and moodboards, then a few distinct concepts before refining one.`, f:['Branding pricing','What design tools do you use?']},
+  {id:'video', t:'Video editing', q:'video editing editor edit videos youtube reels shorts tiktok ads motion graphics colour grading color correction documentary wedding film', a:`nin ja edits video for creators and brands:\n\n- **Short‑form** reels, Shorts and TikToks with captions and hooks\n- **Long‑form** YouTube and interviews\n- **Ads and promos**, motion graphics and title sequences\n- **Colour grading** and sound clean‑up\n\nTurnaround for a reel is often 1–3 days.`, f:['Video editing pricing','Which video software do you use?']},
+  {id:'ai', t:'AI automation', q:'ai automation artificial intelligence chatbot gpt openai machine learning automate workflow llm assistant bots ai enthusiast integrate ai', a:`nin ja is an **AI enthusiast** who builds practical automation:\n\n- Custom chatbots trained on your docs (like this one, but with an LLM)\n- Content pipelines — drafts, captions, summaries, translations\n- Data clean‑up and report generation with **Python**\n- Integrations with the **OpenAI API** and tools you already use\n\nThe goal is always hours saved per week, not hype.`, f:['AI automation pricing','What tech do you use for AI?']},
+  {id:'webtools', t:'Web tech stack', q:'react next js nextjs javascript typescript tech stack frontend framework tailwind node coding languages html css stack technologies programming', a:`The web stack nin ja reaches for:\n\n- **React** and **Next.js** for most sites and apps\n- **TypeScript**, HTML, modern CSS and Tailwind\n- Node.js for APIs, plus headless CMSs\n- Deployment on Vercel or Netlify\n\nFor simple sites, plain HTML/CSS/JS is fine too — whatever keeps it fast and easy to maintain.`, f:['What design tools do you use?','How long does a website take?']},
+  {id:'designtools', t:'Design tools', q:'figma photoshop illustrator design tools software adobe creative suite indesign ui ux design app', a:`Design tools in daily use:\n\n- **Figma** — UI/UX, wireframes, prototypes, design systems\n- **Adobe Photoshop** — photo editing, compositing, social graphics\n- **Adobe Illustrator** — logos, icons, vector illustration\n\nFiles are handed over organised and editable.`, f:['Which video software do you use?','Branding pricing']},
+  {id:'videotools', t:'Video tools', q:'premiere pro after effects davinci resolve video software editing tools adobe premiere motion graphics app colour grading tool', a:`For video nin ja uses:\n\n- **Adobe Premiere Pro** — editing and assembly\n- **Adobe After Effects** — motion graphics, titles and effects\n- **DaVinci Resolve** — colour grading and finishing\n\nProject files can be shared if you have your own team.`, f:['Video editing pricing','Show me some projects']},
+  {id:'aitools', t:'AI & Python tools', q:'python openai api gpt chatgpt langchain ai tools tech for ai scripts automation tools whisper', a:`For AI work the toolkit is **Python** plus the **OpenAI APIs** (chat, embeddings, Whisper for transcription, image generation), with JavaScript for web front‑ends. Smaller in‑browser tricks — like Nova's TF‑IDF retrieval — are plain JS.`, f:['AI automation pricing','How does Nova work?']},
+  {id:'price-web', t:'Website pricing', q:'how much website cost price pricing rates website quote budget charge fee landing page cost ecommerce price npr rupees', a:`Typical website pricing (NPR):\n\n- **Landing page:** Rs 25,000 – 60,000\n- **Business site (5–10 pages, CMS):** Rs 60,000 – 1,50,000\n- **E‑commerce:** Rs 1,50,000 – 4,00,000\n- **Custom web app:** quoted per project\n\nEvery project gets a fixed quote after a short call. Ask me to convert any amount to USD.`, f:['Convert 60000 NPR to USD','How long does a website take?','What are your payment terms?']},
+  {id:'price-brand', t:'Branding pricing', q:'branding price logo cost how much logo design pricing identity cost brand package rates graphic design price', a:`Branding pricing (NPR):\n\n- **Logo only:** Rs 15,000 – 40,000\n- **Full visual identity + guidelines:** Rs 50,000 – 1,20,000\n- **Social media template pack:** Rs 10,000 – 25,000\n\nBundled brand + website packages get a discount.`, f:['How long does branding take?','What is your design process?']},
+  {id:'price-video', t:'Video editing pricing', q:'video editing price cost how much reel per video rates youtube edit price charge video', a:`Video editing pricing (NPR):\n\n- **Short‑form reel / Short:** Rs 3,000 – 8,000 each\n- **YouTube video (10–20 min):** Rs 10,000 – 35,000\n- **Ads / promos with motion graphics:** from Rs 20,000\n\nMonthly retainers for regular content are available at a lower per‑video rate.`, f:['Convert 8000 NPR to USD','Which video software do you use?']},
+  {id:'price-ai', t:'AI automation pricing', q:'ai automation price cost chatbot cost how much ai project pricing automation rates', a:`AI automation pricing (NPR):\n\n- **Simple automation or script:** Rs 40,000 – 80,000\n- **Custom chatbot on your data:** Rs 80,000 – 2,00,000\n- **Larger integrations:** quoted after a discovery call\n\nAPI usage costs (e.g. OpenAI) are billed at cost and are usually small.`, f:['Tell me about AI automation','What is your process?']},
+  {id:'timeline', t:'Timelines', q:'how long does it take timeline turnaround deadline duration weeks days delivery time fast rush urgent schedule', a:`Typical timelines:\n\n- **Landing page:** 1–2 weeks\n- **Business website:** 3–5 weeks\n- **E‑commerce:** 5–8 weeks\n- **Logo / identity:** 1–3 weeks\n- **Reel:** 1–3 days · **YouTube edit:** 3–7 days\n\nRush delivery is possible for an extra fee, depending on the calendar.`, f:['Are you available right now?','What is your process?']},
+  {id:'process', t:'Process', q:'process how do you work workflow steps approach methodology stages start project kickoff what happens', a:`nin ja's process, in five steps:\n\n1. **Discovery call** — goals, audience, budget, timeline\n2. **Proposal** — fixed quote, scope and milestones\n3. **Design / draft** — concepts or a first cut to react to\n4. **Build & refine** — with revision rounds and regular updates\n5. **Launch & handover** — files, training and a support window\n\nYou'll always know what's happening and what's next.`, f:['How many revisions do I get?','What are your payment terms?']},
+  {id:'avail', t:'Availability', q:'available availability hire freelance free now open for work booking take new projects capacity full time job start when can you start', a:`nin ja is currently **open to new freelance projects** and usually books **1–2 weeks ahead**. Small tasks can sometimes start within days.\n\nEmail [${EMAIL}](mailto:${EMAIL}) with your dates to lock in a slot.`, f:['How can I contact you?','How long does a website take?']},
+  {id:'projects', t:'Projects', q:'projects portfolio past work examples case studies previous clients show work samples what have you built made', a:`A few highlights from the portfolio:\n\n- **Brew & Bean** — café website with online menu and ordering\n- **BrandForge** — a full identity system for a startup\n- **ReelCut** — a short‑form video series for a creator\n- **NeuralPlay**, **Sentiment Lens** and **Nova** — in‑browser AI demos (you're using one!)\n\nSee them all on [the portfolio](../../index.html#work).`, f:['What services do you offer?','Tell me about AI automation']},
+  {id:'revisions', t:'Revisions', q:'revisions changes edits how many revisions feedback rounds modify changes after delivery', a:`Most projects include **2–3 revision rounds** at each milestone. Small text or image swaps after launch are free for the first **30 days**; bigger changes are quoted separately.`, f:['What are your payment terms?','Do you offer maintenance?']},
+  {id:'payment', t:'Payment terms', q:'payment terms pay methods advance deposit invoice esewa khalti bank transfer paypal wise upfront installments', a:`Payment terms:\n\n- **50% upfront**, 50% on delivery (larger projects split into milestones)\n- Local: bank transfer, **eSewa** or **Khalti**\n- International: **Wise** or PayPal, invoiced in USD\n\nAsk me to convert any NPR amount to USD.`, f:['Convert 100000 NPR to USD','Website pricing']},
+  {id:'intl', t:'International clients', q:'international clients remote abroad overseas worldwide usa uk australia foreign clients english outside nepal', a:`Yes — nin ja works **remotely with clients worldwide**. Calls happen over Google Meet or Zoom, files live in shared drives, and the Nepal time zone (UTC+5:45) overlaps well with Europe, the Middle East, Asia and Australia. Invoices can be in USD.`, f:['What are your payment terms?','Convert 500 USD to NPR']},
+  {id:'maint', t:'Hosting, SEO & maintenance', q:'hosting domain maintenance support seo after launch updates security backups google ranking care plan', a:`After launch nin ja can handle:\n\n- **Domain and hosting** setup\n- **Technical SEO** — metadata, sitemaps, speed\n- **Care plans** from Rs 3,000/month for updates, backups and small edits\n\nEvery site comes with 30 days of free support.`, f:['How much does a website cost?','How can I contact you?']},
+  {id:'exp', t:'Experience', q:'experience years background education how long have you been working skills expertise qualification learned self taught', a:`nin ja has **several years** of hands‑on experience across web, design and video, working with cafés, startups, creators and NGOs. They're largely self‑taught and keep learning in public — lately with a big focus on applied AI.`, f:['Show me some projects','Why should I hire you?']},
+  {id:'lang', t:'Languages', q:'languages speak nepali english hindi communicate language', a:`nin ja works in **English** and **Nepali** (and understands Hindi), so communication is easy for both local and international clients.`, f:['Do you work with international clients?']},
+  {id:'why', t:'Why hire', q:'why should i hire you why choose you what makes you different unique advantage benefits compared agency', a:`Why clients pick nin ja:\n\n- **One person, four skills** — brand, site and video stay consistent\n- **Agency quality, freelancer pricing** and direct communication\n- **Fast and reliable** — clear milestones, no disappearing acts\n- **AI‑savvy** — automations that keep paying off after launch`, f:['Are you available right now?','How much does a website cost?']},
+  {id:'nova', t:'How Nova works', q:'how does nova work how do you work bot are you ai chatgpt how were you built algorithm tf idf retrieval cosine similarity are you real', a:`I'm a small **retrieval‑based assistant** that runs entirely in your browser:\n\n1. Your message is tokenised, stop‑words removed and lightly stemmed\n2. It becomes a **TF‑IDF vector**\n3. I compare it against 28 knowledge entries with **cosine similarity**\n4. The best match above a threshold wins; otherwise I check tools and small talk, or admit I don't know\n\nThe **How Nova answered** panel shows the scores live.`, f:['What is 12*7?','What time is it?']}
+];
+
+/* ---------------- Text processing ---------------- */
+const STOP = new Set('a an the and or but if of to in on at by for with from is are was were be been am do does did doing have has had i me my we our you your he she it its they them their this that these those what which who whom how can could would should will shall may might must there here so than too very just about into also any some get got please tell know want need like much many does'.split(' '));
+const SYN = {cost:'price',costs:'price',pricing:'price',prices:'price',charge:'price',rates:'price',rate:'price',fee:'price',quote:'price',budget:'price',site:'website',web:'website',websites:'website',logo:'brand',branding:'brand',identity:'brand',edit:'video',editing:'video',videos:'video',reel:'video',reels:'video',ai:'ai',chatbot:'ai',email:'contact',mail:'contact',reach:'contact',nextjs:'next',located:'location',based:'location',live:'location',long:'timeline',turnaround:'timeline',duration:'timeline',deadline:'timeline',hire:'available',freelance:'available',portfolio:'projects',work:'work',color:'colour'};
+function stem(w){
+  if (w.length > 5 && w.endsWith('ing')) w = w.slice(0, -3);
+  else if (w.length > 4 && w.endsWith('ed')) w = w.slice(0, -2);
+  else if (w.length > 4 && w.endsWith('ies')) w = w.slice(0, -3) + 'y';
+  else if (w.length > 3 && w.endsWith('s') && !w.endsWith('ss')) w = w.slice(0, -1);
+  return w;
+}
+function tokens(text){
+  return (text.toLowerCase().replace(/next\.js/g, 'nextjs').replace(/nin ja/g, 'ninja').match(/[a-z0-9]+/g) || [])
+    .filter(w => !STOP.has(w)).map(w => stem(SYN[w] || w));
+}
+// Build TF-IDF index (question text weighted x2 + title + answer text)
+const docs = KB.map(e => { const tk = [...tokens(e.q), ...tokens(e.q), ...tokens(e.t), ...tokens(e.t), ...tokens(e.a.replace(/\(.*?\)/g, ''))]; return tk; });
+const DF = {}; docs.forEach(d => new Set(d).forEach(w => DF[w] = (DF[w] || 0) + 1));
+const N = docs.length;
+const idf = w => Math.log((N + 1)/((DF[w] || 0) + 1)) + 1;
+function vec(tks){
+  const tf = {}; tks.forEach(w => tf[w] = (tf[w] || 0) + 1);
+  const v = {}; let norm = 0;
+  for (const w in tf){ const x = (1 + Math.log(tf[w])) * idf(w); v[w] = x; norm += x*x; }
+  norm = Math.sqrt(norm) || 1; for (const w in v) v[w] /= norm; return v;
+}
+const DOCV = docs.map(vec);
+function cosine(a, b){ let s = 0; for (const w in a) if (b[w]) s += a[w]*b[w]; return s; }
+function retrieve(q){
+  const qt = tokens(q); const qv = vec(qt);
+  const scored = DOCV.map((dv, i) => ({e: KB[i], s: cosine(qv, dv)})).sort((a, b) => b.s - a.s);
+  return {qt: [...new Set(qt)], scored};
+}
+
+/* ---------------- Tools ---------------- */
+function calc(expr){
+  // recursive-descent parser: + - * / % ^ ( ) sqrt
+  const s = expr.replace(/\s+/g, '').replace(/[x×]/g, '*').replace(/÷/g, '/').replace(/,/g, '');
+  let i = 0;
+  const peek = () => s[i];
+  const num = () => { const m = /^(\d+\.?\d*|\.\d+)/.exec(s.slice(i)); if (!m) throw 0; i += m[0].length; return parseFloat(m[0]); };
+  function factor(){
+    if (peek() === '-'){ i++; return -factor(); }
+    if (peek() === '+'){ i++; return factor(); }
+    if (s.startsWith('sqrt', i)){ i += 4; return Math.sqrt(factor()); }
+    let v;
+    if (peek() === '('){ i++; v = add(); if (peek() !== ')') throw 0; i++; } else v = num();
+    if (peek() === '^'){ i++; v = Math.pow(v, factor()); }
+    return v;
+  }
+  function mul(){ let v = factor(); while (peek() === '*' || peek() === '/' || peek() === '%'){ const o = s[i++]; const r = factor(); v = o === '*' ? v*r : o === '/' ? v/r : v % r; } return v; }
+  function add(){ let v = mul(); while (peek() === '+' || peek() === '-'){ const o = s[i++]; const r = mul(); v = o === '+' ? v + r : v - r; } return v; }
+  const v = add(); if (i !== s.length) throw 0; return v;
+}
+const fmt = n => Number.isInteger(n) ? n.toLocaleString('en-US') : (+n.toFixed(6)).toLocaleString('en-US', {maximumFractionDigits: 6});
+function tryTools(q){
+  const l = q.toLowerCase().trim();
+  // percent of
+  let m = l.match(/(\d+(?:\.\d+)?)\s*%\s*of\s*(\d[\d,]*(?:\.\d+)?)/);
+  if (m){ const a = parseFloat(m[1]), b = parseFloat(m[2].replace(/,/g, '')); return {tool: 'Calculator', text: `**${m[1]}% of ${fmt(b)}** = **${fmt(a/100*b)}**`}; }
+  // currency
+  const CUR = '(npr|usd|\\brs\\.?|rupees?|dollars?|\\$)', NUM = '(\\d[\\d,]*(?:\\.\\d+)?)';
+  const before = l.match(new RegExp(CUR + '\\s*' + NUM)), after = l.match(new RegExp(NUM + '\\s*' + CUR));
+  let amtS = null, cur = null;
+  if (after && (!before || after.index <= before.index)){ amtS = after[1]; cur = after[2]; }
+  else if (before){ amtS = before[2]; cur = before[1]; }
+  if (amtS){
+    const amt = parseFloat(amtS.replace(/,/g, ''));
+    const fromUsd = /usd|dollar|\$/.test(cur);
+    if (!isNaN(amt)){
+      return fromUsd
+        ? {tool: 'Currency', text: `**$${fmt(amt)} USD** ≈ **Rs ${fmt(Math.round(amt*USD_NPR*100)/100)} NPR**\n\nUsing a fixed demo rate of 1 USD = ${USD_NPR} NPR.`}
+        : {tool: 'Currency', text: `**Rs ${fmt(amt)} NPR** ≈ **$${fmt(Math.round(amt/USD_NPR*100)/100)} USD**\n\nUsing a fixed demo rate of 1 USD = ${USD_NPR} NPR.`};
+    }
+  }
+  if (/(exchange rate|usd rate|dollar rate|npr rate)/.test(l)) return {tool: 'Currency', text: `Nova uses a fixed demo rate: **1 USD = ${USD_NPR} NPR** (so Rs 1,000 ≈ $${(1000/USD_NPR).toFixed(2)}).`};
+  // time / date
+  if (/(what time|time is it|current time|time now|time in kathmandu|the time\b)/.test(l) && !/(delivery|turnaround|how long)/.test(l)){
+    const d = new Date();
+    const local = d.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+    const ktm = d.toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Kathmandu'});
+    return {tool: 'Clock', text: `It's **${local}** where you are, and **${ktm}** in Kathmandu (UTC+5:45).`};
+  }
+  if (/(what('?s| is) (the |today'?s )?date|today'?s date|date today|what day|day is it|current date)/.test(l)){
+    const d = new Date();
+    return {tool: 'Clock', text: `Today is **${d.toLocaleDateString('en-US', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})}**.`};
+  }
+  // math
+  const expr = l.replace(/^(what('?s| is)|calculate|calc|compute|solve|evaluate|how much is)\s*/, '').replace(/[?=!]+$/, '').replace(/\btimes\b/g, '*').replace(/\bplus\b/g, '+').replace(/\bminus\b/g, '-').replace(/\b(divided by|over)\b/g, '/').replace(/\bsquare root of\b/g, 'sqrt').trim();
+  if (/\d/.test(expr) && /^[\d\s+\-*/x×÷^%().,sqrt]+$/.test(expr) && /[+\-*/x×÷^%]|sqrt/.test(expr)){
+    try { const v = calc(expr); if (isFinite(v)) return {tool: 'Calculator', text: `**${expr.replace(/\*/g, '×').replace(/\//g, '÷')}** = **${fmt(v)}**`}; } catch (e) { /* not math */ }
+  }
+  return null;
+}
+
+/* ---------------- Small talk ---------------- */
+const SMALL = [
+  {re: /^(hi|hey|hello|hiya|yo|namaste|namaskar|good (morning|afternoon|evening))\b/, a: () => `Namaste! I'm **Nova**, nin ja's portfolio assistant. Ask me about services, pricing, tools or availability.`, f: ['What services do you offer?', 'How much does a website cost?', 'Are you available right now?']},
+  {re: /\b(thanks|thank you|thx|cheers|appreciate it|dhanyabad|dhanyabaad)\b/, a: () => `You're welcome! Anything else you'd like to know about nin ja's work?`, f: ['How can I contact you?', 'Show me some projects']},
+  {re: /\b(bye|goodbye|see you|later|cya)\b/, a: () => `Bye for now! When you're ready, email [${EMAIL}](mailto:${EMAIL}).`, f: []},
+  {re: /\bhow are (you|u)\b|\bhow'?s it going\b/, a: () => `Running smoothly at 60 fps, thanks for asking! How can I help?`, f: ['What services do you offer?']},
+  {re: /\b(joke|funny)\b/, a: () => `Why did the designer break up with the developer? *They kept saying "it works on my machine" about the kerning.*`, f: ['Tell me about branding']},
+  {re: /\b(who are you|what are you|your name)\b/, a: () => `I'm **Nova** — a tiny assistant that lives in this page. I answer questions about nin ja using TF‑IDF retrieval, no cloud AI involved.`, f: ['How does Nova work?']},
+  {re: /^(ok|okay|cool|nice|great|awesome|wow)[.!]*$/, a: () => `Want to know about pricing, timelines or how to get started?`, f: ['Website pricing', 'What is your process?']}
+];
+
+/* ---------------- Answer engine ---------------- */
+const THRESH = 0.2;
+function answer(q){
+  const tool = tryTools(q);
+  if (tool) return {text: tool.text, how: {method: 'Tool', detail: tool.tool, conf: 1}, f: ['What is 15% of 2400?', 'Convert 250 USD to NPR', 'What time is it?'].filter(x => x.toLowerCase() !== q.toLowerCase()).slice(0, 2)};
+  const l = q.toLowerCase().trim();
+  const r = retrieve(q);
+  const top = r.scored[0];
+  for (const s of SMALL) if (s.re.test(l) && (top.s < 0.35 || l.split(/\s+/).length <= 3)) return {text: s.a(), how: {method: 'Small talk', detail: 'intent pattern', conf: 1, r}, f: s.f};
+  if (top.s >= THRESH) return {text: top.e.a, how: {method: 'Retrieval', detail: top.e.t, conf: top.s, r}, f: top.e.f};
+  const near = r.scored.slice(0, 2).filter(x => x.s > 0.08).map(x => x.e.t);
+  return {
+    text: `I'm not sure about that one — I only know about nin ja's work.${near.length ? `\n\nDid you mean: ${near.map(n => `**${n}**`).join(' or ')}?` : ''}\n\nFor anything else, email [${EMAIL}](mailto:${EMAIL}).`,
+    how: {method: 'Fallback', detail: `best score ${top.s.toFixed(2)} < ${THRESH}`, conf: top.s, r},
+    f: ['What services do you offer?', 'How much does a website cost?', 'How can I contact you?']
+  };
+}
+
+/* ---------------- Markdown-ish ---------------- */
+const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function inline(s){
+  return esc(s)
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>')
+    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (m, t, u) => `<a href="${u}"${/^https?:/.test(u) ? ' target="_blank" rel="noopener"' : ''}>${t}</a>`);
+}
+function md(src){
+  const lines = src.split('\n'); let html = '', list = null;
+  const close = () => { if (list){ html += `</${list}>`; list = null; } };
+  let para = [];
+  const flush = () => { if (para.length){ html += `<p>${inline(para.join(' '))}</p>`; para = []; } };
+  for (const ln of lines){
+    let m;
+    if ((m = ln.match(/^\s*[-*]\s+(.*)/))){ flush(); if (list !== 'ul'){ close(); html += '<ul>'; list = 'ul'; } html += `<li>${inline(m[1])}</li>`; }
+    else if ((m = ln.match(/^\s*\d+\.\s+(.*)/))){ flush(); if (list !== 'ol'){ close(); html += '<ol>'; list = 'ol'; } html += `<li>${inline(m[1])}</li>`; }
+    else if (!ln.trim()){ flush(); close(); }
+    else { close(); para.push(ln); }
+  }
+  flush(); close(); return html;
+}
+
+/* ---------------- UI ---------------- */
+const feed = $('feed'), inner = $('feedInner'), input = $('q'), send = $('send');
+let history = [];
+let busy = false;
+const KEY = 'nova-chat-v1';
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(history.slice(-60))); } catch (e) { /* storage unavailable */ } };
+const load = () => { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { return []; } };
+const START = ['What services do you offer?', 'How much does a website cost?', 'What tools do you use for video?', 'Are you available right now?', 'What is 12*7?', 'Convert 50000 NPR to USD'];
+
+function hero(){
+  inner.innerHTML = `<div class="hero" id="hero"><div class="orb lg" aria-hidden="true"></div><h2>Hi, I'm <span>Nova</span></h2><p>Ask me anything about <b>nin ja</b> — web developer, designer and video editor from Kathmandu. Services, pricing in NPR, tools, timelines, availability.</p></div>`;
+}
+function scrollDown(){ feed.scrollTop = feed.scrollHeight; }
+function addUser(text){
+  const h = document.getElementById('hero'); if (h) h.remove();
+  const el = document.createElement('div'); el.className = 'msg user';
+  el.innerHTML = `<div class="bubble">${esc(text).replace(/\n/g, '<br>')}</div>`;
+  inner.appendChild(el); scrollDown();
+}
+function addBot(){
+  const el = document.createElement('div'); el.className = 'msg bot';
+  el.innerHTML = `<div class="av"><div class="orb"></div></div><div style="min-width:0"><div class="bubble"></div><div class="meta-line"></div></div>`;
+  inner.appendChild(el); scrollDown(); return el;
+}
+function setChips(list){
+  $('chips').innerHTML = (list || []).slice(0, 4).map((c, i) => `<button class="chip" type="button" style="animation-delay:${i*50}ms">${esc(c)}</button>`).join('');
+}
+$('chips').addEventListener('click', e => { const b = e.target.closest('.chip'); if (b && !busy) ask(b.textContent); });
+
+function renderHow(how, q){
+  if (!how) return;
+  const pct = Math.round(Math.min(1, how.conf)*100);
+  let html = `<div class="how-row"><span>Method</span><span class="tag">${how.method}</span></div>
+    <div class="how-row"><span>${how.method === 'Retrieval' ? 'Matched entry' : 'Detail'}</span><b>${esc(how.detail)}</b></div>
+    <div class="how-row" style="margin-bottom:2px"><span>Confidence${how.method === 'Retrieval' || how.method === 'Fallback' ? ' (cosine)' : ''}</span><b style="font-family:var(--mono)">${how.method === 'Retrieval' || how.method === 'Fallback' ? how.conf.toFixed(3) : 'rule'}</b></div>
+    <div class="conf"><i id="confBar"></i></div>`;
+  if (how.r){
+    const top3 = how.r.scored.slice(0, 3); const mx = Math.max(top3[0].s, 0.001);
+    html += `<div class="how-row" style="margin-bottom:6px"><span>Top candidates</span></div><div class="cands">` +
+      top3.map((c, i) => `<div class="cand ${i === 0 && how.method === 'Retrieval' ? 'lead' : ''}"><span>${esc(c.e.t)}</span><span>${c.s.toFixed(2)}</span><div class="mbar"><i style="width:${c.s/mx*100}%"></i></div></div>`).join('') + '</div>';
+    if (how.r.qt.length) html += `<div class="terms">` + how.r.qt.slice(0, 10).map(t => `<span>${esc(t)}<b>${idf(t).toFixed(1)}</b></span>`).join('') + `</div><div class="how-row" style="margin:6px 0 0;font-size:10.5px"><span>query terms · idf weight</span></div>`;
+  }
+  $('how').innerHTML = html;
+  requestAnimationFrame(() => requestAnimationFrame(() => { const b = $('confBar'); if (b) b.style.width = (how.method === 'Retrieval' || how.method === 'Fallback' ? pct : 100) + '%'; }));
+}
+
+function stream(el, text, done){
+  const bubble = el.querySelector('.bubble');
+  let i = 0;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const tick = () => {
+    i = reduce ? text.length : Math.min(text.length, i + 2 + Math.floor(Math.random()*4));
+    bubble.innerHTML = md(text.slice(0, i)) + (i < text.length ? '<span class="caret"></span>' : '');
+    // put caret inside last block
+    const caret = bubble.querySelector('.caret'); const last = bubble.lastElementChild && bubble.lastElementChild.previousElementSibling;
+    if (caret && last){ const target = last.tagName === 'UL' || last.tagName === 'OL' ? last.lastElementChild : last; target && target.appendChild(caret); }
+    const nearBottom = feed.scrollHeight - feed.scrollTop - feed.clientHeight < 120; if (nearBottom) scrollDown();
+    if (i < text.length) setTimeout(tick, 16); else done();
+  };
+  tick();
+}
+
+function ask(q){
+  q = q.trim(); if (!q || busy) return;
+  busy = true; send.disabled = true; document.body.classList.add('busy');
+  addUser(q); setChips([]);
+  history.push({role: 'user', text: q}); save();
+  input.value = ''; autosize();
+  const el = addBot();
+  el.querySelector('.bubble').innerHTML = '<div class="thinking"><i></i><i></i><i></i><span>retrieving…</span></div>';
+  const res = answer(q);
+  const delay = 450 + Math.random()*500;
+  setTimeout(() => {
+    renderHow(res.how, q);
+    const meta = res.how.method === 'Retrieval' ? `retrieval · ${res.how.detail} · ${(res.how.conf*100).toFixed(0)}% match` : res.how.method.toLowerCase() + (res.how.detail ? ' · ' + res.how.detail : '');
+    stream(el, res.text, () => {
+      el.querySelector('.meta-line').textContent = meta;
+      history.push({role: 'bot', text: res.text, meta, how: {method: res.how.method, detail: res.how.detail, conf: res.how.conf}, f: res.f}); save();
+      setChips(res.f && res.f.length ? res.f : START.slice(0, 3));
+      busy = false; document.body.classList.remove('busy'); send.disabled = !input.value.trim();
+    });
+  }, delay);
+}
+
+function restore(){
+  history = load();
+  if (!history.length){ hero(); setChips(START); return; }
+  inner.innerHTML = '';
+  history.forEach(m => {
+    if (m.role === 'user') addUser(m.text);
+    else { const el = addBot(); el.querySelector('.bubble').innerHTML = md(m.text); el.querySelector('.meta-line').textContent = m.meta || ''; }
+  });
+  const lastBot = [...history].reverse().find(m => m.role === 'bot');
+  setChips(lastBot && lastBot.f && lastBot.f.length ? lastBot.f : START);
+  if (lastBot && lastBot.how) renderHow({...lastBot.how});
+  requestAnimationFrame(scrollDown);
+}
+
+function autosize(){ input.style.height = 'auto'; input.style.height = Math.min(140, input.scrollHeight) + 'px'; }
+input.addEventListener('input', () => { autosize(); send.disabled = busy || !input.value.trim(); });
+input.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); ask(input.value); } });
+$('form').addEventListener('submit', e => { e.preventDefault(); ask(input.value); });
+$('clear').onclick = () => {
+  if (busy) return;
+  history = []; save(); hero(); setChips(START);
+  $('how').innerHTML = '<div class="how-empty">Conversation cleared. Ask something new to see how Nova finds its answer.</div>';
+  input.focus();
+};
+const side = $('side'), ov = $('overlay');
+$('openSide').onclick = () => { side.classList.add('open'); ov.classList.add('open'); };
+ov.onclick = () => { side.classList.remove('open'); ov.classList.remove('open'); };
+document.addEventListener('keydown', e => { if (e.key === 'Escape'){ side.classList.remove('open'); ov.classList.remove('open'); } });
+
+restore();
+window.__nova = {answer, retrieve, tryTools, calc};
+})();
+</script>
+</body>
+</html>
