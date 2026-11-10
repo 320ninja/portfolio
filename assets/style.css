@@ -623,3 +623,17 @@ footer a:hover{color:var(--acc)}
 /* smaller portrait details */
 .portrait .pt-badge{font-size:11px;padding:6px 11px}
 .pt-orbit text{font-size:11px}
+
+/* ---------- colourful portrait ---------- */
+.portrait{translate:0 -50%}
+.pt-ring{inset:-5%;padding:6px;background:conic-gradient(from var(--ang),#ff5b2e,#ff2e7e,#a855f7,#4f8cff,#22d3ee,#38e8b0,#ffd23f,#ff5b2e);animation:edgeSpin 4s linear infinite;filter:drop-shadow(0 0 12px rgba(255,46,126,.55))}
+.pt-tilt::before{content:'';position:absolute;inset:-11%;border-radius:50%;border:2px dashed transparent;background:conic-gradient(from calc(var(--ang) * -1),#38e8b0,#4f8cff,#a855f7,#ff2e7e,#ffb02e,#38e8b0) border-box;-webkit-mask:linear-gradient(#000 0 0) padding-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.55;animation:edgeSpin 9s linear infinite reverse}
+.pt-glow{inset:-26%;background:conic-gradient(from var(--ang),rgba(255,91,46,.55),rgba(255,46,126,.5),rgba(168,85,247,.5),rgba(79,140,255,.5),rgba(56,232,176,.5),rgba(255,91,46,.55));filter:blur(38px);opacity:.85;animation:edgeSpin 10s linear infinite,ptBreathe 5s ease-in-out infinite}
+.pt-photo{background:linear-gradient(135deg,#ffe1d6,#ffd6ec 45%,#dcd6ff 75%,#d1f5ff)}
+.pt-photo img{mix-blend-mode:multiply}
+.pt-photo::after{content:'';position:absolute;inset:0;border-radius:50%;pointer-events:none;box-shadow:inset 0 0 0 5px rgba(8,8,11,.85),inset 0 0 40px rgba(255,46,126,.25)}
+.pt-orbit text{fill:url(#ptGrad)}
+.pt-badge{border:1px solid transparent;background:linear-gradient(rgba(14,14,20,.9),rgba(14,14,20,.9)) padding-box,linear-gradient(120deg,#ff5b2e,#ff2e7e,#a855f7,#4f8cff) border-box}
+.pt-badge.b2{background:linear-gradient(rgba(14,14,20,.9),rgba(14,14,20,.9)) padding-box,linear-gradient(120deg,#38e8b0,#22d3ee,#4f8cff) border-box}
+.pt-badge.b3{background:linear-gradient(rgba(14,14,20,.9),rgba(14,14,20,.9)) padding-box,linear-gradient(120deg,#ffd23f,#ff5b2e,#ff2e7e) border-box}
+@media (prefers-reduced-motion:reduce){.pt-tilt::before{animation:none}}

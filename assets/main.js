@@ -539,7 +539,7 @@ if (!reduce) {
   if (reduce) show(); else { const t = setInterval(() => { if (!$('#loader') || $('#loader').classList.contains('done')) { clearInterval(t); setTimeout(show, 350); } }, 100); }
   /* fit the portrait into the free space right of the text so it never overlaps */
   const fit = () => {
-    if (innerWidth <= 1000) { pt.style.width = pt.style.right = ''; pt.classList.remove('pt-compact'); return; }
+    if (innerWidth <= 1000) { pt.style.width = pt.style.right = pt.style.top = ''; pt.classList.remove('pt-compact'); return; }
     const inner = pt.parentElement, ir = inner.getBoundingClientRect();
     let textRight = ir.left;
     [...inner.children].forEach(el => { if (el === pt) return; const r = el.getBoundingClientRect(); textRight = Math.max(textRight, r.right); });
@@ -552,13 +552,17 @@ if (!reduce) {
     const foot = () => { const pr = pt.getBoundingClientRect(); let l = pr.left, r = pr.right;
       $$('.pt-orbit,.pt-badge,.pt-ring', pt).forEach(e => { if (getComputedStyle(e).display === 'none') return; const b = e.getBoundingClientRect(); l = Math.min(l, b.left); r = Math.max(r, b.right); });
       return { l: l - pr.left, w: r - l, s: pr.width }; };
-    let size = 165;
+    let size = 205;
     pt.classList.remove('pt-compact');
     for (let k = 0; k < 3; k++) { pt.style.width = size + 'px'; const f = foot(); if (f.w <= gap) break; size = Math.max(120, size * gap / f.w); }
     if (foot().w > gap) { pt.classList.add('pt-compact'); for (let k = 0; k < 3; k++) { pt.style.width = size + 'px'; const f = foot(); if (f.w <= gap) break; size = Math.max(110, size * gap / f.w); } }
     const f = foot();
     const left = gapL + Math.max(0, (gap - f.w) / 2) - f.l;          /* centre the footprint in the free space */
     pt.style.right = (ir.right - (left + f.s)) + 'px';
+    /* line it up with the headline + intro on the left (centre of that block) */
+    const h1 = $('.hero-title', inner), sub = $('.hero-sub', inner) || h1;
+    const top = h1.getBoundingClientRect().top, bottom = sub.getBoundingClientRect().bottom;
+    pt.style.top = ((top + bottom) / 2 - ir.top) + 'px';
     [tilt.style.transform, tilt.style.scale, tilt.style.transition] = saved;
   };
   fit(); addEventListener('resize', fit); addEventListener('load', fit); document.fonts && document.fonts.ready.then(fit);
