@@ -33,7 +33,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .deck{position:relative;flex:1;margin-bottom:12px}
 .card{position:absolute;inset:0;border-radius:28px;overflow:hidden;box-shadow:0 18px 40px rgba(80,30,120,.22);touch-action:none;user-select:none;transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .35s;will-change:transform}
 .card.drag{transition:none}
-.card .art{position:absolute;inset:0;display:grid;place-items:center;font-size:96px;font-weight:800;color:rgba(255,255,255,.92);letter-spacing:-.04em}
+.card .art{position:absolute;inset:0;background-size:cover!important;background-position:center!important}
 .card .art i{position:absolute;border-radius:50%;background:rgba(255,255,255,.18)}
 .card .info{position:absolute;left:0;right:0;bottom:0;padding:70px 18px 18px;background:linear-gradient(transparent,rgba(30,10,45,.78));color:#fff}
 .card h3{font-size:24px;font-weight:800}.card h3 small{font-weight:500;font-size:20px;opacity:.9}
@@ -174,11 +174,12 @@ const P = [
   ['Samina Magar',27,'Bhaktapur',11,'Florist','My flat is basically a jungle now. Looking for someone who will help me water it.',['Cafés','Photography','Cooking'],1,0,0,['#4fd1a5','#5e8bff']],
   ['Rinu Gurung',23,'Kathmandu',2,'Content Creator','Always the one planning the trip, never the one driving. Swap?',['Travel','Momo hunting','Music'],1,1,1,['#c06bff','#ff6b9e']],
   ['Sonam Sherpa',28,'Lalitpur',7,'Architect','I notice old windows and wooden doors everywhere. Patan walks are my happy place.',['Photography','Trekking','Cafés'],0,1,0,['#ffcf5e','#ff7a59']]
-].map(([n,a,c,d,j,b,i,likes,ver,on,g],k)=>({id:k,n,a,c,d,j,b,i,likes:!!likes,ver:!!ver,on:!!on,g}));
+].map(([n,a,c,d,j,b,i,likes,ver,on,g],k)=>({id:k,n,a,c,d,j,b,i,likes:!!likes,ver:!!ver,on:!!on,g,ph:`img/p${String(k+1).padStart(2,'0')}.jpg`}));
 const REPLIES=['Haha, that made me smile 😄','Hi! Thanks for the like. How is your day going?','Momo or chowmein? Choose carefully 😉','I love that! Have you been to Patan Durbar Square lately?','Sounds fun. Coffee this weekend?','Tell me more about you!'];
 let deck=[], matches=[], chats={}, likes=0, sent=0, unread=0, cur=null;
 const ini = n => n.split(' ').map(w=>w[0]).join('');
 const grad = p => `linear-gradient(135deg,${p.g[0]},${p.g[1]})`;
+const avs = p => `background:url(${p.ph}) center/cover`;
 
 function build(){
   deck=[...P].reverse();
@@ -190,7 +191,7 @@ function render(){
   deck.slice(-3).forEach((p,i,arr)=>{
     const c=document.createElement('div'); c.className='card'; c.dataset.id=p.id;
     const depth=arr.length-1-i; c.style.transform=`translateY(${depth*10}px) scale(${1-depth*.04})`; c.style.zIndex=10-depth;
-    c.innerHTML=`<div class="art" style="background:${grad(p)}"><i style="width:220px;height:220px;top:-60px;left:-60px"></i><i style="width:140px;height:140px;bottom:120px;right:-40px"></i>${ini(p.n)}</div>
+    c.innerHTML=`<div class="art" style="background:${grad(p)} center/cover;background-image:url(${p.ph})"></div>
       ${p.ver?'<span class="badge">✓ Verified</span>':''}${p.on?'<span class="online">● Online</span>':''}
       <span class="stamp like">LIKE</span><span class="stamp nope">NOPE</span>
       <div class="info"><h3>${p.n.split(' ')[0]} <small>${p.a}</small></h3><div class="meta">${p.j} · ${p.c} · ${p.d} km away</div><div class="bio">${p.b}</div><div class="ints">${p.i.map(x=>`<span>${x}</span>`).join('')}</div></div>`;
@@ -223,7 +224,7 @@ function swipe(dir,superLike){
 function matched(p){
   matches.unshift(p); chats[p.id]=[['them',`Hey Aarav! I'm ${p.n.split(' ')[0]} 👋`]];
   unread++; badge();
-  $('#mAv').style.background=grad(p);$('#mAv').textContent=ini(p.n);
+  $('#mAv').style.cssText=avs(p);$('#mAv').textContent='';
   $('#matchTxt').textContent=`You and ${p.n.split(' ')[0]} like each other.`;
   $('#match').classList.add('on'); cur=p; stats(); lists();
 }
@@ -231,10 +232,10 @@ function hearts(){const h=$('#hearts');for(let i=0;i<8;i++){const s=document.cre
 function badge(){const d=$('#cdot');d.textContent=unread;d.classList.toggle('show',unread>0);}
 function stats(){$('#sLikes').textContent=likes;$('#sMatch').textContent=matches.length;$('#sMsg').textContent=sent;$('#mcount').textContent=matches.length+' match'+(matches.length===1?'':'es');}
 function lists(){
-  $('#matches').innerHTML=matches.map(p=>`<button class="av${p.on?' on':''}" data-id="${p.id}" style="background:${grad(p)}" aria-label="Chat with ${p.n}">${ini(p.n)}</button>`).join('');
-  $('#chatList').innerHTML=matches.length?matches.map(p=>{const m=chats[p.id];const last=m[m.length-1];return `<button class="row" data-id="${p.id}"><span class="av${p.on?' on':''}" style="background:${grad(p)}">${ini(p.n)}</span><span><b>${p.n}</b><small>${last[0]==='me'?'You: ':''}${last[1]}</small></span></button>`}).join(''):'<p class="hint">No matches yet. Swipe right on Anu, Anita or Rinu. They already like you.</p>';
+  $('#matches').innerHTML=matches.map(p=>`<button class="av${p.on?' on':''}" data-id="${p.id}" style="${avs(p)}" aria-label="Chat with ${p.n}"></button>`).join('');
+  $('#chatList').innerHTML=matches.length?matches.map(p=>{const m=chats[p.id];const last=m[m.length-1];return `<button class="row" data-id="${p.id}"><span class="av${p.on?' on':''}" style="${avs(p)}"></span><span><b>${p.n}</b><small>${last[0]==='me'?'You: ':''}${last[1]}</small></span></button>`}).join(''):'<p class="hint">No matches yet. Swipe right on Anu, Anita or Rinu. They already like you.</p>';
 }
-function openChat(p){cur=p;unread=Math.max(0,unread-1);badge();$('#cAv').style.background=grad(p);$('#cAv').textContent=ini(p.n);$('#cName').textContent=p.n;drawMsgs();$('#chat').classList.add('on');setTimeout(()=>$('#cIn').focus(),100);}
+function openChat(p){cur=p;unread=Math.max(0,unread-1);badge();$('#cAv').style.cssText=avs(p);$('#cAv').textContent='';$('#cName').textContent=p.n;drawMsgs();$('#chat').classList.add('on');setTimeout(()=>$('#cIn').focus(),100);}
 function drawMsgs(){$('#msgs').innerHTML=chats[cur.id].map(([w,t])=>`<div class="m ${w}">${t.replace(/</g,'&lt;')}</div>`).join('');$('#msgs').scrollTop=1e5;}
 $('#compose').onsubmit=e=>{e.preventDefault();const v=$('#cIn').value.trim();if(!v)return;chats[cur.id].push(['me',v]);sent++;stats();$('#cIn').value='';drawMsgs();
   const p=cur;const t=document.createElement('div');t.className='typing';t.innerHTML='<i></i><i></i><i></i>';$('#msgs').appendChild(t);$('#msgs').scrollTop=1e5;
