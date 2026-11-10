@@ -319,11 +319,13 @@ if (matchMedia('(hover:hover) and (pointer:fine)').matches && !reduce) {
     b.addEventListener('pointermove', e => { const r = b.getBoundingClientRect(); b.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * .25}px,${(e.clientY - r.top - r.height / 2) * .35}px)`; });
     b.addEventListener('pointerleave', () => b.style.transform = '');
   });
-  $$('.skill').forEach(s => {
-    s.addEventListener('pointermove', e => { const r = s.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+  $$('.skill,.work-card,.step,.form,.float-card').forEach(s => {
+    const k = s.matches('.work-card') ? 6 : s.matches('.form') ? 3 : 7;
+    s.addEventListener('pointermove', e => { if (!s.classList.contains('in') && !s.matches('.form,.float-card')) return; const r = s.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
       s.style.setProperty('--mx', x * 100 + '%'); s.style.setProperty('--my', y * 100 + '%');
-      s.style.transform = `perspective(900px) rotateX(${(.5 - y) * 4}deg) rotateY(${(x - .5) * 5}deg)`; });
-    s.addEventListener('pointerleave', () => s.style.transform = '');
+      s.style.transition = 'transform .15s ease-out,border-color .3s,box-shadow .3s';
+      s.style.transform = `perspective(1000px) translateY(-8px) rotateX(${(.5 - y) * k}deg) rotateY(${(x - .5) * k * 1.2}deg) scale(1.015)`; });
+    s.addEventListener('pointerleave', () => { s.style.transition = 'transform .7s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .3s'; s.style.transform = ''; setTimeout(() => { s.style.transition = ''; }, 750); });
   });
 } else cur.remove();
 
@@ -503,11 +505,15 @@ if (!reduce) {
 
   /* scroll: heading parallax + marquee skew from scroll speed */
   const heads = $$('.section-head .h2,.about-copy .h2,.contact .h2');
+  const boxes = $$('.skill,.work-card,.step,.float-card,.t-wrap,.form');
+  /* animated glowing edge on every box */
+  $$('.skill,.work-card,.step,.form,.float-card,.clink,.about-tags span,.hero-meta>div,.t-wrap,.filters').forEach(b => { const e = document.createElement('i'); e.className = 'edge'; e.setAttribute('aria-hidden', 'true'); b.appendChild(e); if (getComputedStyle(b).position === 'static') b.style.position = 'relative'; });
   let lastS = scrollY, skew = 0, ticking = false;
   const onScroll = () => {
     const y = scrollY, v = y - lastS; lastS = y;
     skew += (Math.max(-12, Math.min(12, v * .25)) - skew) * .3;
     $('.marquee').style.setProperty('--skew', skew.toFixed(2) + 'deg');
+    boxes.forEach(b => { const r = b.getBoundingClientRect(); if (r.bottom < -100 || r.top > innerHeight + 100) return; const p = (r.top + r.height / 2 - innerHeight / 2) / innerHeight; b.style.setProperty('--sy', (p * -26).toFixed(1) + 'px'); });
     heads.forEach(h => { const r = h.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return; h.style.translate = `0 ${((r.top + r.height / 2 - innerHeight / 2) * -.06).toFixed(1)}px`; });
     ticking = false;
   };
