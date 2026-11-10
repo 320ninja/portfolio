@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Khaja Order — nin ja</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --bg:#0c0804;--s1:#171009;--s2:#1f1510;--border:rgba(255,200,120,.07);
+  --app:#f97316;--app2:#fb923c;--app-glow:rgba(249,115,22,.18);
+  --t1:#fff;--t2:rgba(255,240,220,.7);--t3:rgba(255,240,220,.35);
+  --r:18px;--r2:14px;--r3:10px;
+  font-family:'Inter',sans-serif;color:var(--t1);background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+}
+body{min-height:100vh;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
+img{display:block;max-width:100%;border-radius:var(--r2)}
+.back{position:fixed;top:22px;left:22px;z-index:200;display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:rgba(12,8,4,.82);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:99px;font-size:13px;font-weight:500;transition:.25s;white-space:nowrap}
+.back svg{opacity:.6;transition:.2s}
+.back:hover{background:rgba(249,115,22,.12);border-color:rgba(249,115,22,.4);color:var(--app)}
+.back:hover svg{opacity:1;stroke:var(--app)}
+#ld{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity .6s .1s}
+#ld.out{opacity:0;pointer-events:none}
+.ld-logo{font-size:28px;font-weight:900;letter-spacing:-.04em}
+.ld-logo span{color:var(--app)}
+.ld-bar{width:160px;height:2px;background:rgba(255,255,255,.08);border-radius:1px;overflow:hidden}
+.ld-fill{height:100%;background:var(--app);border-radius:1px;width:0;transition:width .4s ease}
+.hero{position:relative;min-height:100svh;display:grid;place-items:center;overflow:hidden;padding:80px 24px 60px}
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.22}
+.hero-overlay{position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 50% 40%,rgba(249,115,22,.08) 0%,transparent 70%),linear-gradient(to bottom,rgba(12,8,4,.3) 0%,rgba(12,8,4,.6) 60%,var(--bg) 100%)}
+.hero-noise{position:absolute;inset:0;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:160px}
+.hero-inner{position:relative;z-index:2;max-width:860px;text-align:center}
+.tag{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border:1px solid rgba(249,115,22,.28);border-radius:99px;font-size:12px;font-weight:600;letter-spacing:.1em;color:var(--app);margin-bottom:32px;text-transform:uppercase;backdrop-filter:blur(8px)}
+.tag-dot{width:7px;height:7px;border-radius:50%;background:var(--app);animation:blink 2s infinite}
+@keyframes blink{0%,100%{box-shadow:0 0 0 0 rgba(249,115,22,.5)}60%{box-shadow:0 0 0 9px rgba(249,115,22,0)}}
+.hero h1{font-size:clamp(2.8rem,8vw,5.2rem);font-weight:900;line-height:1.03;letter-spacing:-.04em;margin-bottom:24px}
+.serif{font-family:'Instrument Serif',serif;font-weight:400;font-style:italic;color:var(--app)}
+.hero-sub{font-size:1.1rem;color:var(--t2);max-width:540px;margin:0 auto 40px;line-height:1.7}
+.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:60px}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:14px 28px;border-radius:99px;font-size:14px;font-weight:700;transition:.22s;white-space:nowrap}
+.btn svg{transition:transform .22s}
+.btn:hover svg{transform:translateX(3px)}
+.btn-p{background:var(--app);color:#fff;box-shadow:0 8px 32px rgba(249,115,22,.3)}
+.btn-p:hover{background:#ea6a0a;transform:translateY(-2px);box-shadow:0 12px 40px rgba(249,115,22,.45)}
+.btn-g{border:1px solid rgba(255,255,255,.12);color:var(--t2)}
+.btn-g:hover{border-color:rgba(249,115,22,.4);color:var(--app);background:rgba(249,115,22,.06)}
+.stats{display:flex;gap:0;justify-content:center;border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;backdrop-filter:blur(8px);background:rgba(23,16,9,.6);max-width:520px;margin:0 auto}
+.stat{flex:1;padding:20px 16px;text-align:center;border-right:1px solid var(--border)}
+.stat:last-child{border:none}
+.stat b{display:block;font-size:1.6rem;font-weight:800;color:var(--app);line-height:1}
+.stat span{font-size:11px;color:var(--t3);letter-spacing:.06em;text-transform:uppercase;margin-top:4px;display:block}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+section{padding:100px 0}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--app);margin-bottom:12px}
+.h2{font-size:clamp(2rem,4.5vw,3.2rem);font-weight:800;letter-spacing:-.035em;line-height:1.1;margin-bottom:16px}
+.h2 .serif{font-size:1.1em}
+.demo-sec{background:var(--s1);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.demo-layout{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+@media(max-width:760px){.demo-layout{grid-template-columns:1fr}}
+.phone-frame{background:linear-gradient(160deg,#2a1f14,#1a1109);border:1px solid rgba(249,115,22,.12);border-radius:36px;overflow:hidden;box-shadow:0 0 0 1px rgba(0,0,0,.5),0 40px 100px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,200,100,.08);max-width:360px;margin:0 auto;position:sticky;top:100px}
+.pf-notch{height:36px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+.pf-time{font-size:12px;font-weight:700}
+.pf-icons{display:flex;gap:5px;align-items:center}
+.pf-icons svg{opacity:.7}
+.app-top{padding:12px 18px 0;display:flex;justify-content:space-between;align-items:center}
+.app-loc{font-size:10px;color:var(--t3);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.app-city{font-size:15px;font-weight:700;display:flex;align-items:center;gap:4px}
+.cart-fab{width:38px;height:38px;border-radius:50%;background:var(--app);display:flex;align-items:center;justify-content:center;position:relative}
+.cart-badge{position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:#fff;color:var(--bg);font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.app-search{margin:14px 18px 0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:11px 14px;display:flex;align-items:center;gap:10px;color:var(--t3);font-size:13px}
+.promo{margin:12px 18px 0;border-radius:var(--r2);overflow:hidden;position:relative;height:100px}
+.promo img{width:100%;height:100%;object-fit:cover;border-radius:var(--r2)}
+.promo-text{position:absolute;inset:0;background:linear-gradient(to right,rgba(249,115,22,.85),transparent);padding:14px 16px;display:flex;flex-direction:column;justify-content:center;border-radius:var(--r2)}
+.promo-title{font-size:14px;font-weight:800;line-height:1.2}
+.promo-sub{font-size:11px;color:rgba(255,255,255,.8);margin-top:4px}
+.app-cats{display:flex;gap:8px;padding:14px 18px 0;overflow-x:auto;scrollbar-width:none}
+.app-cats::-webkit-scrollbar{display:none}
+.cat-pill{flex-shrink:0;padding:7px 14px;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;transition:.18s;border:1px solid transparent}
+.cat-pill.on{background:var(--app);color:#fff;border-color:var(--app)}
+.cat-pill:not(.on){background:rgba(255,255,255,.06);color:var(--t2);border-color:rgba(255,255,255,.07)}
+.section-row{padding:14px 18px 0}
+.section-row h4{font-size:13px;font-weight:700;margin-bottom:12px}
+.food-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.food-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:var(--r2);overflow:hidden;cursor:pointer;transition:.2s;position:relative}
+.food-card:active{transform:scale(.97)}
+.food-card img{width:100%;height:90px;object-fit:cover;border-radius:0}
+.food-card-info{padding:10px 10px 12px}
+.food-name{font-size:12px;font-weight:700;line-height:1.3;margin-bottom:4px}
+.food-price{font-size:12px;font-weight:800;color:var(--app)}
+.food-add{position:absolute;bottom:10px;right:10px;width:26px;height:26px;border-radius:50%;background:var(--app);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;font-weight:700;line-height:1}
+.food-badge{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);border-radius:99px;padding:3px 7px;font-size:9px;font-weight:700;color:var(--app);letter-spacing:.04em;text-transform:uppercase}
+.cart-sheet{margin:14px 18px 18px;background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.2);border-radius:var(--r2);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:.18s}
+.cart-sheet:hover{background:rgba(249,115,22,.14)}
+.cs-left{display:flex;align-items:center;gap:10px}
+.cs-count{background:var(--app);color:#fff;width:28px;height:28px;border-radius:50%;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.cs-label{font-size:13px;font-weight:600}
+.cs-total{font-size:14px;font-weight:800;color:var(--app)}
+.demo-tabs{display:flex;gap:6px;margin-bottom:28px}
+.dtab{padding:10px 20px;border-radius:var(--r3);font-size:13px;font-weight:600;cursor:pointer;transition:.18s;border:1px solid var(--border);color:var(--t3)}
+.dtab.on{background:var(--app);border-color:var(--app);color:#fff}
+.panel{display:none}
+.panel.on{display:block}
+.track-top{padding:14px 18px 0}
+.order-card{background:rgba(255,255,255,.04);border:1px solid rgba(249,115,22,.12);border-radius:var(--r2);padding:16px}
+.oc-id{font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--t3);text-transform:uppercase;margin-bottom:4px}
+.oc-rest{font-size:15px;font-weight:700;margin-bottom:10px}
+.oc-eta{background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.2);border-radius:var(--r3);padding:12px 14px;display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.oc-time{font-size:32px;font-weight:900;color:var(--app);line-height:1}
+.oc-time-label{font-size:11px;color:var(--t2);line-height:1.5}
+.track-steps{display:flex;flex-direction:column;gap:0}
+.ts{display:flex;gap:14px;padding-bottom:20px;position:relative}
+.ts:not(:last-child)::after{content:'';position:absolute;left:15px;top:32px;width:2px;height:calc(100% - 10px);background:var(--border)}
+.ts.done::after{background:var(--app)}
+.ts-dot{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);background:var(--s1);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px}
+.ts.done .ts-dot{background:var(--app);border-color:var(--app);box-shadow:0 0 16px rgba(249,115,22,.4)}
+.ts.active .ts-dot{border-color:var(--app);animation:tspulse 1.6s infinite}
+@keyframes tspulse{0%,100%{box-shadow:0 0 0 0 rgba(249,115,22,.4)}50%{box-shadow:0 0 0 7px rgba(249,115,22,0)}}
+.ts-info{padding-top:5px}
+.ts-label{font-size:13px;font-weight:600}
+.ts-sub{font-size:11px;color:var(--t3);margin-top:2px}
+.cart-panel{padding:14px 18px 18px}
+.ci{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.ci:last-of-type{border:none}
+.ci-img{width:52px;height:52px;border-radius:var(--r3);overflow:hidden;flex-shrink:0}
+.ci-img img{width:100%;height:100%;object-fit:cover;border-radius:0}
+.ci-info{flex:1;min-width:0}
+.ci-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci-price{font-size:12px;color:var(--app);font-weight:700;margin-top:2px}
+.qty{display:flex;align-items:center;gap:8px}
+.qty-b{width:28px;height:28px;border-radius:50%;background:rgba(249,115,22,.12);color:var(--app);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;border:1px solid rgba(249,115,22,.2)}
+.qty-b:hover{background:var(--app);color:#fff}
+.qty-n{font-size:13px;font-weight:700;min-width:18px;text-align:center}
+.cart-summ{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r2);padding:16px;margin-top:8px}
+.cr{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;color:var(--t2)}
+.cr.tot{font-size:14px;font-weight:800;color:var(--t1);border-top:1px solid var(--border);margin-top:8px;padding-top:12px}
+.place-btn{width:100%;margin-top:12px;padding:14px;background:var(--app);color:#fff;border-radius:var(--r2);font-size:14px;font-weight:800;cursor:pointer;border:none;transition:.2s;box-shadow:0 6px 24px rgba(249,115,22,.3)}
+.place-btn:hover{background:#ea6a0a}
+.demo-text{padding-top:60px}
+.demo-text .eyebrow{margin-bottom:20px}
+.feature-list{display:flex;flex-direction:column;gap:16px;margin-top:32px}
+.fl-item{display:flex;gap:16px;align-items:flex-start;padding:20px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r2);transition:.2s}
+.fl-item:hover{border-color:rgba(249,115,22,.2);background:rgba(249,115,22,.04)}
+.fl-ic{width:44px;height:44px;border-radius:var(--r3);background:rgba(249,115,22,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.fl-ic svg{stroke:var(--app)}
+.fl-h{font-size:14px;font-weight:700;margin-bottom:4px}
+.fl-p{font-size:13px;color:var(--t2);line-height:1.5}
+.screens-sec{background:var(--s1);border-top:1px solid var(--border)}
+.screens-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}
+@media(max-width:600px){.screens-grid{grid-template-columns:repeat(2,1fr)}}
+.screen{border-radius:var(--r2);overflow:hidden;position:relative;aspect-ratio:3/4;background:var(--s2)}
+.screen img{width:100%;height:100%;object-fit:cover;border-radius:0;transition:.4s}
+.screen:hover img{transform:scale(1.04)}
+.screen-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(0,0,0,.8),transparent);padding:16px 14px 12px;font-size:12px;font-weight:600;color:var(--t2)}
+.stack-tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:32px}
+.stag{padding:8px 16px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:99px;font-size:13px;color:var(--t2);transition:.18s}
+.stag:hover{border-color:rgba(249,115,22,.3);color:var(--app)}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+.char{display:inline-block;opacity:0;transform:translateY(60px);transition:opacity .55s cubic-bezier(.22,1,.36,1),transform .55s cubic-bezier(.22,1,.36,1)}
+.hero h1.anim-in .char{opacity:1;transform:none}
+.hero h1 .word{display:inline-block;overflow:visible;white-space:pre}
+.hero h1 .word-gap{display:inline-block;width:.28em}
+#heroParticles{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.phone-frame{transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1);opacity:0;transform:translateY(40px)}
+.phone-frame.entered{opacity:1;transform:translateY(0);animation:phoneFloat 3.6s ease-in-out infinite}
+@keyframes phoneFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.plus-bubble{position:absolute;right:12px;bottom:36px;background:var(--app);color:#fff;font-size:11px;font-weight:800;padding:3px 7px;border-radius:99px;pointer-events:none;animation:bubblePop .7s cubic-bezier(.22,1,.36,1) forwards;z-index:10}
+@keyframes bubblePop{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-28px) scale(1.2)}}
+.promo img{will-change:transform}
+.eyebrow{position:relative;display:inline-block}
+.eyebrow::after{content:'';position:absolute;left:0;bottom:-3px;height:2px;width:0;background:var(--app);border-radius:1px;transition:width .6s cubic-bezier(.22,1,.36,1) .2s}
+.eyebrow.in::after{width:100%}
+.screen::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(249,115,22,.55),rgba(249,115,22,.12));opacity:0;transition:opacity .3s;z-index:1;border-radius:var(--r2)}
+.screen:hover::before{opacity:1}
+.stat b{transition:color .2s}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--s2);border:1px solid rgba(249,115,22,.3);border-radius:var(--r2);padding:12px 20px;font-size:13px;font-weight:600;color:var(--t1);z-index:500;transition:.3s;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div id="ld">
+  <div class="ld-logo">khaja<span>.</span></div>
+  <div class="ld-bar"><div class="ld-fill" id="ldFill"></div></div>
+</div>
+<a href="../../index.html#work" class="back">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+  Back to portfolio
+</a>
+<section class="hero">
+  <canvas id="heroParticles"></canvas>
+  <video class="hero-video" autoplay muted loop playsinline poster="../../media/img/poster-food-coffee-pour.jpg">
+    <source src="../../media/video/food-coffee-pour.mp4" type="video/mp4">
+  </video>
+  <div class="hero-overlay"></div>
+  <div class="hero-noise"></div>
+  <div class="hero-inner">
+    <div class="tag reveal"><span class="tag-dot"></span>App Development</div>
+    <h1 class="reveal">Order <span class="serif">khaja,</span><br>track it live.</h1>
+    <p class="hero-sub reveal">A mobile-first food ordering app for Kathmandu's restaurants. Browse real menus, build your cart and watch your order move in real time.</p>
+    <div class="hero-cta reveal">
+      <a href="#demo" class="btn btn-p">Try the demo <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      <a href="#features" class="btn btn-g">See features</a>
+    </div>
+    <div class="stats reveal">
+      <div class="stat"><b data-target="50" data-suffix="+">50+</b><span>Restaurants</span></div>
+      <div class="stat"><b data-target="18" data-suffix=" min">18 min</b><span>Avg delivery</span></div>
+      <div class="stat"><b data-target="4.9" data-suffix="" data-decimal="1">4.9</b><span>App rating</span></div>
+    </div>
+  </div>
+</section>
+<section class="demo-sec" id="demo">
+  <div class="wrap" style="padding-top:100px;padding-bottom:100px">
+    <div class="demo-layout">
+      <div>
+        <div class="demo-tabs">
+          <button class="dtab on" onclick="switchTab('browse',this)">Browse</button>
+          <button class="dtab" onclick="switchTab('cart',this)">Cart</button>
+          <button class="dtab" onclick="switchTab('track',this)">Track</button>
+        </div>
+        <div class="phone-frame">
+          <div class="pf-notch">
+            <span class="pf-time">9:41</span>
+            <div class="pf-icons">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M1.5 8.5a13 13 0 0 1 21 0M5 12a10 10 0 0 1 14 0M8.5 15.5a6 6 0 0 1 7 0M12 19h.01"/></svg>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2"/></svg>
+            </div>
+          </div>
+          <div class="panel on" id="panel-browse">
+            <div class="app-top">
+              <div>
+                <div class="app-loc">Delivery to</div>
+                <div class="app-city">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--app)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+                  Thamel, Kathmandu
+                </div>
+              </div>
+              <div class="cart-fab" onclick="switchTab('cart',document.querySelectorAll('.dtab')[1])">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                <span class="cart-badge" id="cartBadge">3</span>
+              </div>
+            </div>
+            <div class="app-search">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              Momo, chiya, dal bhat...
+            </div>
+            <div class="promo" style="margin:12px 18px 0">
+              <img src="../../media/img/momo-platter.jpg" alt="Promo">
+              <div class="promo-text">
+                <div class="promo-title">Today's Special</div>
+                <div class="promo-sub">Buff momo platter · 20% off</div>
+              </div>
+            </div>
+            <div class="app-cats">
+              <div class="cat-pill on" onclick="filterFood(this,'all')">All</div>
+              <div class="cat-pill" onclick="filterFood(this,'momo')">Momo</div>
+              <div class="cat-pill" onclick="filterFood(this,'chiya')">Chiya</div>
+              <div class="cat-pill" onclick="filterFood(this,'rice')">Rice</div>
+              <div class="cat-pill" onclick="filterFood(this,'snack')">Snacks</div>
+            </div>
+            <div class="section-row">
+              <h4>Popular near you</h4>
+              <div class="food-grid" id="foodGrid"></div>
+            </div>
+            <div class="cart-sheet" onclick="switchTab('cart',document.querySelectorAll('.dtab')[1])">
+              <div class="cs-left"><div class="cs-count" id="csCount">3</div><div class="cs-label">View cart</div></div>
+              <div class="cs-total" id="csTotal">Rs 500</div>
+            </div>
+          </div>
+          <div class="panel" id="panel-cart"><div class="cart-panel" id="cartPanel"></div></div>
+          <div class="panel" id="panel-track">
+            <div class="track-top">
+              <div class="order-card">
+                <div class="oc-id">Order #KJ-2847</div>
+                <div class="oc-rest">Himalayan Brew House</div>
+                <div class="oc-eta">
+                  <div class="oc-time" id="etaTime">18</div>
+                  <div><div class="oc-time-label">min estimated<br><b>Arriving ~2:45 PM</b></div></div>
+                </div>
+                <div class="track-steps">
+                  <div class="ts done"><div class="ts-dot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="ts-info"><div class="ts-label">Order placed</div><div class="ts-sub">2:21 PM · Confirmed</div></div></div>
+                  <div class="ts done"><div class="ts-dot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="ts-info"><div class="ts-label">Restaurant accepted</div><div class="ts-sub">2:23 PM</div></div></div>
+                  <div class="ts active"><div class="ts-dot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--app)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2h3l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div><div class="ts-info"><div class="ts-label">Preparing your order</div><div class="ts-sub">In kitchen · 2:27 PM</div></div></div>
+                  <div class="ts"><div class="ts-dot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="ts-info"><div class="ts-label">Out for delivery</div><div class="ts-sub">Waiting</div></div></div>
+                  <div class="ts"><div class="ts-dot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div><div class="ts-info"><div class="ts-label">Delivered</div><div class="ts-sub">Waiting</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-text">
+        <div class="eyebrow">Live Demo</div>
+        <h2 class="h2">An app that feels <span class="serif">real.</span></h2>
+        <p style="color:var(--t2);line-height:1.7;font-size:15px;max-width:460px">Switch between Browse, Cart and Track to walk through the full ordering experience. Everything is interactive — tap food to add it, adjust quantities, place the order and watch it tracked live.</p>
+        <div class="feature-list" id="features">
+          <div class="fl-item"><div class="fl-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div><div><div class="fl-h">Live order tracking</div><div class="fl-p">Watch your rider's position update in real time as they head to your door.</div></div></div>
+          <div class="fl-item"><div class="fl-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div><div><div class="fl-h">Photo menus</div><div class="fl-p">Every dish shown with real photos, variants (spice level, size) and daily specials.</div></div></div>
+          <div class="fl-item"><div class="fl-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div><div><div class="fl-h">Smart cart</div><div class="fl-p">Promo codes, VAT, delivery fee — all calculated upfront with no surprises at checkout.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="screens-sec">
+  <div class="wrap">
+    <div class="eyebrow reveal">Visual design</div>
+    <h2 class="h2 reveal">Every screen, <span class="serif">crafted.</span></h2>
+    <div class="screens-grid">
+      <div class="screen reveal"><img src="../../media/img/momo-platter.jpg" alt="Menu screen" loading="lazy"><div class="screen-label">Menu browse</div></div>
+      <div class="screen reveal" style="transition-delay:.1s"><img src="../../media/img/chicken-steamed-momo.jpg" alt="Food detail" loading="lazy"><div class="screen-label">Item detail</div></div>
+      <div class="screen reveal" style="transition-delay:.2s"><img src="../../media/img/veg-dal-bhat-set.jpg" alt="Category" loading="lazy"><div class="screen-label">Rice meals</div></div>
+      <div class="screen reveal" style="transition-delay:.05s"><img src="../../media/img/masala-chiya.jpg" alt="Chiya" loading="lazy"><div class="screen-label">Beverages</div></div>
+      <div class="screen reveal" style="transition-delay:.15s"><img src="../../media/img/pani-puri.jpg" alt="Snacks" loading="lazy"><div class="screen-label">Street snacks</div></div>
+      <div class="screen reveal" style="transition-delay:.25s"><img src="../../media/img/samay-baji.jpg" alt="Newari" loading="lazy"><div class="screen-label">Newari set</div></div>
+    </div>
+  </div>
+</section>
+<section style="padding:80px 0 100px">
+  <div class="wrap">
+    <div class="eyebrow reveal">Tech stack</div>
+    <h2 class="h2 reveal" style="margin-bottom:8px">Built for <span class="serif">mobile.</span></h2>
+    <p style="color:var(--t2);max-width:500px;line-height:1.6;font-size:15px;margin-bottom:0" class="reveal">React Native with Expo for iOS and Android from one codebase. Firebase for real-time order state. Google Maps SDK for live tracking.</p>
+    <div class="stack-tags reveal">
+      <span class="stag">React Native</span><span class="stag">Expo</span><span class="stag">Firebase Realtime DB</span><span class="stag">Firebase Auth</span><span class="stag">React Navigation</span><span class="stag">Reanimated 3</span><span class="stag">Zustand</span><span class="stag">Google Maps SDK</span><span class="stag">FCM Push Notifications</span><span class="stag">Stripe SDK</span>
+    </div>
+  </div>
+</section>
+<div class="toast" id="toast"></div>
+<script>
+const FOODS=[
+  {id:1,name:'Buff Momo (Steamed)',price:220,cat:'momo',img:'../../media/img/momo-platter.jpg',badge:'Popular'},
+  {id:2,name:'Masala Chiya',price:80,cat:'chiya',img:'../../media/img/masala-chiya.jpg',badge:null},
+  {id:3,name:'Dal Bhat Set',price:280,cat:'rice',img:'../../media/img/veg-dal-bhat-set.jpg',badge:'Today\'s special'},
+  {id:4,name:'Pani Puri (6 pcs)',price:120,cat:'snack',img:'../../media/img/pani-puri.jpg',badge:null},
+  {id:5,name:'Chicken Momo',price:260,cat:'momo',img:'../../media/img/chicken-steamed-momo.jpg',badge:null},
+  {id:6,name:'Samay Baji',price:350,cat:'rice',img:'../../media/img/samay-baji.jpg',badge:'Newari'},
+  {id:7,name:'Ginger Lemon Tea',price:90,cat:'chiya',img:'../../media/img/ginger-lemon-honey-tea.jpg',badge:null},
+  {id:8,name:'Sel Roti',price:60,cat:'snack',img:'../../media/img/sel-roti.jpg',badge:null},
+];
+const cart={1:1,3:1,7:1};
+function getTotal(){return Object.entries(cart).reduce((s,[id,q])=>s+(FOODS.find(f=>f.id==+id)?.price||0)*q,0)}
+function getCount(){return Object.values(cart).reduce((s,q)=>s+q,0)}
+function updateCartIndicators(){const count=getCount(),total=getTotal();document.getElementById('cartBadge').textContent=count;document.getElementById('csCount').textContent=count;document.getElementById('csTotal').textContent='Rs '+total}
+function renderFoods(cat){const list=cat==='all'?FOODS:FOODS.filter(f=>f.cat===cat);document.getElementById('foodGrid').innerHTML=list.map(f=>`<div class="food-card" onclick="addToCart(${f.id},'${f.name}',event)"><img src="${f.img}" alt="${f.name}" onerror="this.style.opacity='.2'">${f.badge?`<span class="food-badge">${f.badge}</span>`:''}<div class="food-card-info"><div class="food-name">${f.name}</div><div class="food-price">Rs ${f.price}</div></div><div class="food-add">+</div></div>`).join('')}
+function addToCart(id,name,evt){cart[id]=(cart[id]||0)+1;updateCartIndicators();showToast(name+' added to cart');if(evt){const card=evt.currentTarget;const bub=document.createElement('div');bub.className='plus-bubble';bub.textContent='+1';card.appendChild(bub);bub.addEventListener('animationend',()=>bub.remove())}}
+function filterFood(el,cat){document.querySelectorAll('.cat-pill').forEach(c=>c.classList.remove('on'));el.classList.add('on');renderFoods(cat)}
+function renderCart(){const items=Object.entries(cart).map(([id,qty])=>({...FOODS.find(f=>f.id==+id),qty})).filter(Boolean);const sub=getTotal(),del=50,vat=Math.round(sub*.13);document.getElementById('cartPanel').innerHTML=`${items.map(item=>`<div class="ci"><div class="ci-img"><img src="${item.img}" alt="${item.name}" onerror="this.style.opacity='.2'"></div><div class="ci-info"><div class="ci-name">${item.name}</div><div class="ci-price">Rs ${item.price}</div></div><div class="qty"><div class="qty-b" onclick="chQty(${item.id},-1)">−</div><span class="qty-n">${item.qty}</span><div class="qty-b" onclick="chQty(${item.id},1)">+</div></div></div>`).join('')}<div class="cart-summ"><div class="cr"><span>Subtotal</span><span>Rs ${sub}</span></div><div class="cr"><span>Delivery</span><span>Rs ${del}</span></div><div class="cr"><span>VAT (13%)</span><span>Rs ${vat}</span></div><div class="cr tot"><span>Total</span><span>Rs ${sub+del+vat}</span></div></div><button class="place-btn" onclick="placeOrder()">Place Order → Rs ${sub+del+vat}</button>`}
+function chQty(id,d){if(!cart[id])return;cart[id]=Math.max(0,cart[id]+d);if(cart[id]===0)delete cart[id];updateCartIndicators();renderCart()}
+function placeOrder(){showToast('Order placed! Watch it live.');setTimeout(()=>switchTab('track',document.querySelectorAll('.dtab')[2]),600);startEtaCountdown()}
+function switchTab(name,btn){document.querySelectorAll('.dtab').forEach(t=>t.classList.remove('on'));btn.classList.add('on');document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));document.getElementById('panel-'+name).classList.add('on');if(name==='cart')renderCart()}
+let etaVal=18;
+function startEtaCountdown(){const el=document.getElementById('etaTime');const id=setInterval(()=>{etaVal--;if(el)el.textContent=etaVal;if(etaVal<=0)clearInterval(id)},2000)}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+function splitText(el){const temp=document.createElement('div');temp.innerHTML=el.innerHTML;el.innerHTML='';temp.childNodes.forEach(node=>{if(node.nodeType===3){const words=node.textContent.split(' ');words.forEach((word,wi)=>{const wordSpan=document.createElement('span');wordSpan.className='word';word.split('').forEach(ch=>{const s=document.createElement('span');s.className='char';s.textContent=ch;wordSpan.appendChild(s)});el.appendChild(wordSpan);if(wi<words.length-1){const gap=document.createElement('span');gap.className='word-gap';gap.innerHTML='&nbsp;';el.appendChild(gap)}})}else{if(node.nodeName==='BR'){el.appendChild(node.cloneNode())}else{const inner=node.cloneNode(true);const wordSpan=document.createElement('span');wordSpan.className='word';inner.textContent.split('').forEach(ch=>{const s=document.createElement('span');s.className='char';s.style.color=inner.className.includes('serif')?'var(--app)':'';s.textContent=ch;wordSpan.appendChild(s)});el.appendChild(wordSpan)}}})}
+function initParticles(){const c=document.getElementById('heroParticles');if(!c)return;const ctx=c.getContext('2d');function resize(){c.width=c.offsetWidth;c.height=c.offsetHeight}resize();window.addEventListener('resize',resize);const pts=Array.from({length:40},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*2.2+.6,vx:(Math.random()-.5)*.3,vy:-(Math.random()*.6+.3),life:Math.random(),maxLife:Math.random()*.6+.4}));function tick(){ctx.clearRect(0,0,c.width,c.height);pts.forEach(p=>{p.life+=.004;if(p.life>p.maxLife){p.life=0;p.x=Math.random()*c.width;p.y=c.height+10;p.vy=-(Math.random()*.6+.3)}p.x+=p.vx;p.y+=p.vy;const alpha=Math.sin((p.life/p.maxLife)*Math.PI)*.55;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(249,115,22,${alpha})`;ctx.fill()});requestAnimationFrame(tick)}tick()}
+function initCounters(){const statObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(!e.isIntersecting)return;const b=e.target;const target=parseFloat(b.dataset.target);const suffix=b.dataset.suffix||'';const decimal=parseInt(b.dataset.decimal||'0');let startTime=null;const dur=1200;function step(ts){if(!startTime)startTime=ts;const prog=Math.min((ts-startTime)/dur,1);const ease=1-Math.pow(1-prog,3);const val=ease*target;b.textContent=(decimal>0?val.toFixed(decimal):Math.round(val))+suffix;if(prog<1)requestAnimationFrame(step)}requestAnimationFrame(step);statObs.unobserve(b)})},{threshold:0.5});document.querySelectorAll('.stat b[data-target]').forEach(b=>statObs.observe(b))}
+function initPhoneEntrance(){const phone=document.querySelector('.phone-frame');if(!phone)return;const o=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){phone.classList.add('entered');o.unobserve(phone)}})},{threshold:0.2});o.observe(phone)}
+function initPromoParallax(){const promo=document.querySelector('.promo');if(!promo)return;const img=promo.querySelector('img');if(!img)return;function onScroll(){const rect=promo.getBoundingClientRect();img.style.transform=`translateY(${rect.top*0.3}px)`}window.addEventListener('scroll',onScroll,{passive:true});onScroll()}
+renderFoods('all');updateCartIndicators();
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target)}})},{threshold:0.12});document.querySelectorAll('.reveal,.eyebrow').forEach(el=>obs.observe(el));
+const fill=document.getElementById('ldFill');let prog=0;const ldInt=setInterval(()=>{prog+=Math.random()*22+8;if(prog>100)prog=100;fill.style.width=prog+'%';if(prog===100){clearInterval(ldInt);setTimeout(()=>{document.getElementById('ld').classList.add('out');initParticles();initCounters();initPhoneEntrance();initPromoParallax();const h1=document.querySelector('.hero h1');if(h1){splitText(h1);setTimeout(()=>{h1.classList.add('anim-in');const chars=h1.querySelectorAll('.char');chars.forEach((ch,i)=>{ch.style.transitionDelay=(0.04+i*0.028)+'s'})},200)}},300)}},120);
+</script>
+</body>
+</html>
