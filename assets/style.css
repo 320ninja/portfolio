@@ -457,3 +457,6 @@ p.reveal.in,.hero-sub.reveal.in,.work-note.reveal.in{filter:none}
   :root{transition:none}.section::before,.rip{display:none}.marquee{transform:none}
   .split .w:hover>span{transform:none}
 }
+
+/* starfield */
+#stars{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}

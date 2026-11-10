@@ -513,4 +513,58 @@ if (!reduce) {
   addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
   setInterval(() => { if (Math.abs(skew) > .05) { skew *= .8; $('.marquee').style.setProperty('--skew', skew.toFixed(2) + 'deg'); } }, 60);
 }
+
+/* ---------- starfield + shooting stars behind the whole page ---------- */
+(function starfield() {
+  const cv = document.createElement('canvas');
+  cv.id = 'stars'; cv.setAttribute('aria-hidden', 'true');
+  document.body.prepend(cv);
+  const ctx = cv.getContext('2d');
+  let w, h, dpr, stars = [], shots = [], last = 0, nextShot = 800, py = 0;
+  const accent = () => getComputedStyle(document.documentElement).getPropertyValue('--acc').trim() || '#ff5b2e';
+  function size() {
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    w = innerWidth; h = innerHeight; cv.width = w * dpr; cv.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const n = Math.min(260, Math.floor(w * h / 6000));
+    stars = Array.from({ length: n }, () => ({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 1.3 + .2, a: Math.random() * .6 + .2, tw: Math.random() * 2 + .5, ph: Math.random() * 6.3, z: Math.random() * .6 + .2 }));
+  }
+  function shoot() {
+    const fromLeft = Math.random() < .5, ang = (fromLeft ? 1 : -1) * (Math.PI / 5 + Math.random() * .35);
+    shots.push({ x: fromLeft ? Math.random() * w * .6 : w * .4 + Math.random() * w * .6, y: Math.random() * h * .45 - 40,
+      vx: Math.sin(Math.abs(ang)) * (fromLeft ? 1 : -1), vy: Math.cos(Math.abs(ang)) * .55, sp: 9 + Math.random() * 7, len: 140 + Math.random() * 160, life: 1, c: Math.random() < .5 ? '#ffffff' : accent() });
+  }
+  function frame(t) {
+    const dt = Math.min(50, t - last); last = t;
+    ctx.clearRect(0, 0, w, h);
+    const sy = scrollY;
+    for (const s of stars) {
+      const y = ((s.y - sy * s.z * .15) % h + h) % h;
+      const a = reduce ? s.a : s.a * (.55 + .45 * Math.sin(t / 1000 * s.tw + s.ph));
+      ctx.globalAlpha = a; ctx.fillStyle = '#fff';
+      ctx.beginPath(); ctx.arc(s.x, y, s.r, 0, 6.283); ctx.fill();
+    }
+    if (!reduce) {
+      nextShot -= dt;
+      if (nextShot <= 0) { shoot(); if (Math.random() < .25) setTimeout(shoot, 250); nextShot = 1600 + Math.random() * 2600; }
+      for (const s of shots) {
+        s.x += s.vx * s.sp * dt / 16; s.y += s.vy * s.sp * dt / 16; s.life -= dt / 1400;
+        const tx = s.x - s.vx * s.len, ty = s.y - s.vy * s.len;
+        const g = ctx.createLinearGradient(s.x, s.y, tx, ty);
+        g.addColorStop(0, s.c); g.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.globalAlpha = Math.max(0, s.life);
+        ctx.strokeStyle = g; ctx.lineWidth = 2; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(tx, ty); ctx.stroke();
+        ctx.fillStyle = '#fff'; ctx.shadowColor = s.c; ctx.shadowBlur = 14;
+        ctx.beginPath(); ctx.arc(s.x, s.y, 1.8, 0, 6.283); ctx.fill(); ctx.shadowBlur = 0;
+      }
+      shots = shots.filter(s => s.life > 0 && s.x > -400 && s.x < w + 400 && s.y < h + 400);
+    }
+    ctx.globalAlpha = 1;
+    if (!reduce && !document.hidden) requestAnimationFrame(frame);
+  }
+  size(); requestAnimationFrame(frame);
+  addEventListener('resize', size);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && !reduce) { last = performance.now(); requestAnimationFrame(frame); } });
+  if (reduce) addEventListener('scroll', () => requestAnimationFrame(frame), { passive: true });
+})();
 })();
