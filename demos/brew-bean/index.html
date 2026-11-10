@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Himalayan Brew &amp; Khaja — Nepali Café &amp; Kitchen</title>
+<meta name="description" content="Himalayan Brew & Khaja — slow-brewed chiya, hand-folded momo and Newari khaja sets in the heart of Kathmandu.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0e0b09;--ink2:#171210;--ink3:#211a16;--line:rgba(243,234,217,.12);--line2:rgba(243,234,217,.22);
+  --cream:#f3ead9;--mute:rgba(243,234,217,.66);--saffron:#d9a54a;--saffron2:#e8bd6e;--chili:#b8452f;
+  --serif:"Cormorant Garamond",Georgia,serif;--sans:Manrope,system-ui,-apple-system,sans-serif;
+  --ease:cubic-bezier(.2,.7,.2,1);--r:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--sans);background:var(--ink);color:var(--cream);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img,video{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+.icon{width:20px;height:20px;flex:none;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.wrap{max-width:1240px;margin:0 auto;padding:0 32px}
+.eyebrow{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--saffron);font-weight:600;display:inline-flex;align-items:center;gap:12px}
+.eyebrow:before{content:"";width:28px;height:1px;background:currentColor}
+h1,h2,h3,.stat b,.hero-meta b,.ref{font-variant-numeric:lining-nums}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.02;letter-spacing:-.01em}
+h2{font-size:clamp(40px,5.4vw,72px)}
+h2 em,h1 em{font-style:italic;color:var(--saffron2);font-weight:500}
+.lead{color:var(--mute);font-size:17px;max-width:520px}
+:focus-visible{outline:2px solid var(--saffron);outline-offset:3px;border-radius:6px}
+
+/* nav */
+.nav{position:fixed;inset:0 0 auto;z-index:50;transition:background .4s,backdrop-filter .4s,border-color .4s;border-bottom:1px solid transparent}
+.nav.solid{background:rgba(14,11,9,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:76px;gap:20px}
+.logo{display:flex;align-items:center;gap:12px;font-family:var(--serif);font-size:22px;font-weight:700;letter-spacing:.01em;white-space:nowrap}
+.logo svg{width:34px;height:34px;color:var(--saffron)}
+.logo small{display:block;font-family:var(--sans);font-size:9.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--mute);font-weight:600;margin-top:2px}
+.links{display:flex;gap:34px;font-size:14px;font-weight:500}
+.links a{color:var(--mute);transition:color .2s;position:relative}
+.links a:hover{color:var(--cream)}
+.links a:after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:1px;background:var(--saffron);transform:scaleX(0);transition:transform .3s var(--ease)}
+.links a:hover:after{transform:scaleX(1)}
+.nav-r{display:flex;gap:10px;align-items:center}
+.cart-btn{position:relative;display:flex;align-items:center;gap:10px;height:44px;padding:0 18px;border-radius:99px;border:1px solid var(--line2);font-size:14px;font-weight:600;transition:background .2s,border-color .2s}
+.cart-btn:hover{background:rgba(243,234,217,.08);border-color:var(--cream)}
+.cart-btn .count{min-width:22px;height:22px;padding:0 6px;border-radius:99px;background:var(--saffron);color:var(--ink);font-size:12px;font-weight:700;display:grid;place-items:center;transition:transform .35s var(--ease)}
+.cart-btn.bump .count{transform:scale(1.35)}
+.book-btn{height:44px;padding:0 20px;border-radius:99px;background:var(--cream);color:var(--ink);font-weight:700;font-size:14px;display:inline-flex;align-items:center;transition:background .2s}
+.book-btn:hover{background:var(--saffron2)}
+
+/* hero */
+.hero{position:relative;height:100vh;min-height:640px;max-height:1000px;overflow:hidden;display:flex;align-items:flex-end}
+.hero-media{position:absolute;inset:-8% 0 0;will-change:transform}
+.hero-media video{width:100%;height:100%;object-fit:cover}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,11,9,.55) 0%,rgba(14,11,9,.25) 35%,rgba(14,11,9,.85) 78%,var(--ink) 100%),linear-gradient(90deg,rgba(14,11,9,.7),transparent 70%)}
+.hero .wrap{position:relative;z-index:2;width:100%;padding-bottom:84px}
+.hero h1{font-size:clamp(54px,9.6vw,148px);font-weight:600;max-width:12ch;margin:22px 0 26px;line-height:.94}
+.hero h1 .ln{display:block;overflow:hidden;padding-bottom:.06em}
+.hero h1 .ln>span{display:inline-block;transform:translateY(110%);animation:rise 1.2s var(--ease) forwards}
+.hero h1 .ln:nth-child(2)>span{animation-delay:.14s}
+.hero h1 .ln:nth-child(3)>span{animation-delay:.28s}
+@keyframes rise{to{transform:none}}
+.fade-up{opacity:0;transform:translateY(18px);animation:fu 1s var(--ease) forwards}
+@keyframes fu{to{opacity:1;transform:none}}
+.hero-row{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap}
+.hero p{font-size:18px;color:rgba(243,234,217,.82);max-width:440px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.btn{height:54px;padding:0 28px;border-radius:99px;font-weight:700;font-size:15px;display:inline-flex;align-items:center;gap:10px;transition:transform .2s var(--ease),background .25s,color .25s,border-color .25s}
+.btn:active{transform:scale(.96)}
+.btn-gold{background:var(--saffron);color:var(--ink)}.btn-gold:hover{background:var(--saffron2)}
+.btn-line{border:1px solid var(--line2);color:var(--cream)}.btn-line:hover{border-color:var(--cream);background:rgba(243,234,217,.06)}
+.hero-meta{display:flex;gap:36px;font-size:13px;color:var(--mute)}
+.hero-meta b{display:block;font-family:var(--serif);font-size:30px;color:var(--cream);font-weight:600;line-height:1.1}
+.scroll-cue{position:absolute;right:32px;bottom:34px;z-index:3;writing-mode:vertical-rl;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--mute);display:flex;align-items:center;gap:12px}
+.scroll-cue:after{content:"";width:1px;height:56px;background:linear-gradient(var(--saffron),transparent);animation:cue 2.2s ease-in-out infinite}
+@keyframes cue{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* marquee */
+.marquee{border-block:1px solid var(--line);overflow:hidden;padding:22px 0;background:var(--ink2)}
+.marquee-track{display:flex;width:max-content;animation:mq 38s linear infinite}
+.marquee span{font-family:var(--serif);font-style:italic;font-size:30px;padding:0 28px;white-space:nowrap;display:flex;align-items:center;gap:56px;color:var(--cream)}
+.marquee span svg{width:14px;height:14px;color:var(--saffron)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+section{padding:130px 0}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap;margin-bottom:54px}
+.sec-head h2{margin-top:18px}
+
+/* menu */
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab{height:42px;padding:0 18px;border-radius:99px;border:1px solid var(--line2);font-size:14px;font-weight:600;color:var(--mute);transition:all .25s}
+.tab:hover{color:var(--cream);border-color:var(--cream)}
+.tab[aria-selected=true]{background:var(--cream);color:var(--ink);border-color:var(--cream)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.card{background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;transition:transform .5s var(--ease),border-color .3s,opacity .35s}
+.card:hover{border-color:var(--line2);transform:translateY(-4px)}
+.card.hide{display:none}
+.card .ph{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--ink3)}
+.card .ph img{width:100%;height:100%;object-fit:cover;transition:transform 1.1s var(--ease)}
+.card:hover .ph img{transform:scale(1.07)}
+.card .tag{position:absolute;left:14px;top:14px;background:rgba(14,11,9,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--line2);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:6px 10px;border-radius:99px}
+.card .tag.hot{color:var(--saffron2)}
+.card .body{padding:22px 22px 22px;display:flex;flex-direction:column;flex:1}
+.card .top{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.card h3{font-size:27px}
+.card .price{font-weight:700;font-size:16px;color:var(--saffron2);white-space:nowrap;font-variant-numeric:tabular-nums}
+.card p{color:var(--mute);font-size:14px;margin:8px 0 18px;flex:1}
+.card .bot{display:flex;gap:10px;align-items:center;justify-content:space-between}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:99px;padding:3px}
+.seg button{font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:99px;color:var(--mute);transition:all .2s}
+.seg button[aria-pressed=true]{background:var(--cream);color:var(--ink)}
+.add{height:40px;padding:0 16px;border-radius:99px;background:var(--saffron);color:var(--ink);font-weight:700;font-size:13.5px;display:inline-flex;align-items:center;gap:8px;transition:background .2s,transform .2s}
+.add:hover{background:var(--saffron2)}.add:active{transform:scale(.95)}
+.add .icon{width:16px;height:16px;stroke-width:2.2}
+.flyer{position:fixed;z-index:200;border-radius:50%;object-fit:cover;pointer-events:none;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+
+/* story */
+.story{background:var(--ink2);border-block:1px solid var(--line)}
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.story-pics{position:relative;height:620px}
+.story-pics figure{position:absolute;overflow:hidden;border-radius:var(--r)}
+.story-pics figure img{width:100%;height:100%;object-fit:cover}
+.story-pics .p1{inset:0 22% 18% 0}
+.story-pics .p2{inset:46% 0 0 38%;border:8px solid var(--ink2)}
+.story-pics .seal{position:absolute;left:58%;top:6%;width:120px;height:120px;color:var(--saffron);animation:spin 26s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.story p{color:var(--mute);margin-top:18px;max-width:520px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:0;margin-top:44px;border-top:1px solid var(--line)}
+.stat{padding:26px 0;border-bottom:1px solid var(--line)}
+.stat:nth-child(odd){padding-right:20px;border-right:1px solid var(--line)}
+.stat:nth-child(even){padding-left:28px}
+.stat b{font-family:var(--serif);font-size:56px;font-weight:600;line-height:1;color:var(--cream);font-variant-numeric:lining-nums tabular-nums}
+.stat b sup{font-size:.45em;color:var(--saffron);margin-left:2px}
+.stat span{display:block;font-size:13px;color:var(--mute);margin-top:8px}
+.sign{margin-top:34px;display:flex;align-items:center;gap:16px;font-size:14px;color:var(--mute)}
+.sign i{font-family:var(--serif);font-size:30px;color:var(--cream);font-style:italic}
+
+/* gallery */
+.masonry{columns:3 300px;column-gap:20px}
+.masonry button{display:block;width:100%;margin-bottom:20px;border-radius:14px;overflow:hidden;position:relative;break-inside:avoid}
+.masonry img{width:100%;height:auto;transition:transform 1s var(--ease),filter .6s}
+.masonry button:hover img{transform:scale(1.05);filter:brightness(1.08)}
+.masonry button:after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 60%,rgba(0,0,0,.55));opacity:0;transition:opacity .4s}
+.masonry button:hover:after{opacity:1}
+.masonry .cap{position:absolute;left:16px;bottom:14px;z-index:2;font-size:13px;font-weight:600;opacity:0;transform:translateY(8px);transition:all .4s var(--ease)}
+.masonry button:hover .cap{opacity:1;transform:none}
+.lb{position:fixed;inset:0;z-index:150;background:rgba(8,6,5,.94);display:grid;place-items:center;opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s}
+.lb.open{opacity:1;visibility:visible}
+.lb img{max-width:min(1100px,88vw);max-height:80vh;border-radius:10px;object-fit:contain;transition:opacity .25s}
+.lb figcaption{text-align:center;color:var(--mute);font-size:14px;margin-top:16px}
+.lb .ctl{position:absolute;width:52px;height:52px;border-radius:50%;border:1px solid var(--line2);display:grid;place-items:center;background:rgba(14,11,9,.6);transition:background .2s}
+.lb .ctl:hover{background:var(--cream);color:var(--ink)}
+.lb .prev{left:24px;top:50%;transform:translateY(-50%)}.lb .next{right:24px;top:50%;transform:translateY(-50%)}
+.lb .x{right:24px;top:24px}
+
+/* reserve */
+.reserve{position:relative;overflow:hidden}
+.reserve-bg{position:absolute;inset:0;background:url(../../media/img/swagat-swagat.jpg) center/cover}
+.reserve-bg:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,11,9,.95) 0%,rgba(14,11,9,.82) 48%,rgba(14,11,9,.55))}
+.reserve .wrap{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.info{margin-top:34px;display:grid;gap:18px}
+.info div{display:flex;gap:14px;align-items:flex-start;color:var(--mute);font-size:15px}
+.info .icon{color:var(--saffron);margin-top:2px}
+.info b{color:var(--cream);display:block;font-weight:600}
+.form{background:rgba(23,18,16,.82);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--line2);border-radius:24px;padding:38px;position:relative;min-height:520px}
+.form h3{font-size:34px;margin-bottom:6px}
+.form .sub{color:var(--mute);font-size:14px;margin-bottom:26px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
+.field label{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.field input,.field select,.field textarea{height:50px;padding:0 16px;border-radius:12px;border:1px solid var(--line2);background:rgba(14,11,9,.55);outline:none;transition:border-color .2s,box-shadow .2s;width:100%;color-scheme:dark}
+.field textarea{height:84px;padding:12px 16px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--saffron);box-shadow:0 0 0 3px rgba(217,165,74,.18)}
+.field.err input,.field.err select{border-color:#e0705a}
+.field .msg{font-size:12.5px;color:#f08b75;min-height:0;display:none}
+.field.err .msg{display:block}
+.form .btn{width:100%;justify-content:center;margin-top:6px}
+.done{position:absolute;inset:0;padding:38px;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px}
+.form.ok>*:not(.done){display:none}
+.form.ok{display:flex;align-items:center;justify-content:center}
+.form.ok .done{display:flex;position:static;padding:10px 0;animation:fu .7s var(--ease)}
+.check{width:76px;height:76px;border-radius:50%;background:rgba(217,165,74,.14);display:grid;place-items:center;color:var(--saffron)}
+.check svg{width:36px;height:36px;stroke-width:2.2;stroke-dasharray:40;stroke-dashoffset:40;animation:draw .8s .2s var(--ease) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.done p{color:var(--mute);max-width:340px}
+.ref{font-family:var(--serif);font-size:22px;letter-spacing:.06em;color:var(--saffron2)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:80px 0 110px;background:var(--ink)}
+.foot{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px}
+.foot h4{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--saffron);margin-bottom:16px;font-weight:600}
+.foot li{list-style:none;color:var(--mute);font-size:14px;margin-bottom:9px}
+.foot li a:hover{color:var(--cream)}
+.foot p{color:var(--mute);font-size:14px;margin-top:16px;max-width:320px}
+.social{display:flex;gap:10px;margin-top:22px}
+.social a{width:42px;height:42px;border-radius:50%;border:1px solid var(--line2);display:grid;place-items:center;transition:all .2s}
+.social a:hover{background:var(--cream);color:var(--ink)}
+.social .icon{width:18px;height:18px}
+.copy{margin-top:56px;padding-top:26px;border-top:1px solid var(--line);display:flex;justify-content:space-between;color:var(--mute);font-size:13px;flex-wrap:wrap;gap:12px}
+.big-word{font-family:var(--serif);font-size:clamp(60px,13vw,200px);line-height:.9;color:transparent;-webkit-text-stroke:1px rgba(243,234,217,.18);margin-top:60px;white-space:nowrap;overflow:hidden;font-weight:600}
+
+/* drawer */
+.drawer{position:fixed;inset:0;z-index:120;visibility:hidden}
+.drawer.open{visibility:visible}
+.drawer .scrim{position:absolute;inset:0;background:rgba(0,0,0,.6);opacity:0;transition:opacity .4s}
+.drawer.open .scrim{opacity:1}
+.sheet{position:absolute;right:0;top:0;bottom:0;width:min(440px,100%);background:var(--ink2);border-left:1px solid var(--line2);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .5s var(--ease)}
+.drawer.open .sheet{transform:none}
+.sheet header{display:flex;justify-content:space-between;align-items:center;padding:24px 26px;border-bottom:1px solid var(--line)}
+.sheet h3{font-size:30px}
+.iconbtn{width:42px;height:42px;border-radius:50%;border:1px solid var(--line2);display:grid;place-items:center;transition:background .2s}
+.iconbtn:hover{background:rgba(243,234,217,.1)}
+.lines{flex:1;overflow:auto;padding:10px 26px}
+.line{display:grid;grid-template-columns:68px 1fr auto;gap:14px;padding:16px 0;border-bottom:1px solid var(--line);align-items:center;animation:fu .4s var(--ease)}
+.line img{width:68px;height:68px;border-radius:12px;object-fit:cover}
+.line h5{font-family:var(--serif);font-size:19px;font-weight:600;line-height:1.15}
+.line small{color:var(--mute);font-size:12.5px}
+.qty{display:inline-flex;align-items:center;border:1px solid var(--line2);border-radius:99px;margin-top:8px}
+.qty button{width:30px;height:30px;display:grid;place-items:center}
+.qty button .icon{width:14px;height:14px;stroke-width:2.2}
+.qty span{min-width:22px;text-align:center;font-size:13.5px;font-weight:700;font-variant-numeric:tabular-nums}
+.line .lp{text-align:right;font-weight:700;font-size:14.5px;font-variant-numeric:tabular-nums}
+.line .rm{color:var(--mute);font-size:12px;margin-top:8px;text-decoration:underline;text-underline-offset:3px}
+.sum{padding:22px 26px 26px;border-top:1px solid var(--line);background:var(--ink3)}
+.sum .r{display:flex;justify-content:space-between;font-size:14px;color:var(--mute);margin-bottom:8px;font-variant-numeric:tabular-nums}
+.sum .r.t{color:var(--cream);font-size:18px;font-weight:700;margin:14px 0 18px}
+.sum .btn{width:100%;justify-content:center}
+.empty{padding:60px 10px;text-align:center;color:var(--mute)}
+.empty .icon{width:44px;height:44px;margin:0 auto 14px;color:var(--saffron);stroke-width:1.2}
+.empty h4{font-family:var(--serif);font-size:26px;color:var(--cream);font-weight:600;margin-bottom:6px}
+.empty .btn{margin-top:20px}
+.success{padding:50px 26px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;flex:1;justify-content:center}
+.success p{color:var(--mute)}
+
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,30px);opacity:0;z-index:160;background:var(--cream);color:var(--ink);padding:12px 20px;border-radius:99px;font-size:14px;font-weight:600;display:flex;gap:10px;align-items:center;transition:all .4s var(--ease);pointer-events:none;box-shadow:0 14px 40px rgba(0,0,0,.4)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast .icon{width:18px;height:18px;color:#3c7a4a;stroke-width:2.4}
+
+.back{position:fixed;left:16px;bottom:16px;z-index:90;background:rgba(243,234,217,.95);color:var(--ink);font-size:12px;font-weight:700;padding:8px 14px;border-radius:99px;box-shadow:0 6px 20px rgba(0,0,0,.35);transition:transform .2s}
+.back:hover{transform:translateY(-2px)}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(34px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.rv.in{opacity:1;transform:none}
+.rv-img{clip-path:inset(12% 12% 12% 12% round 18px);transition:clip-path 1.4s var(--ease)}
+.rv-img.in{clip-path:inset(0 0 0 0 round 18px)}
+
+.burger{display:none}
+@media (max-width:1020px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .story-grid,.reserve .wrap{grid-template-columns:1fr;gap:56px}
+  .foot{grid-template-columns:1fr 1fr}
+  .links{display:none}
+}
+@media (max-width:640px){
+  .wrap{padding:0 18px}
+  section{padding:88px 0}
+  .nav .wrap{height:64px}
+  .logo{font-size:18px}.logo svg{width:28px;height:28px}.logo small{display:none}
+  .book-btn{display:none}
+  .cart-btn{padding:0 14px}
+  .cart-btn .lbl{display:none}
+  .hero{min-height:600px;height:92vh}
+  .hero .wrap{padding-bottom:56px}
+  .hero p{font-size:16px}
+  .hero-meta{gap:22px}.hero-meta b{font-size:24px}
+  .scroll-cue{display:none}
+  .btn{height:50px;padding:0 22px}
+  .grid{grid-template-columns:1fr;gap:20px}
+  .marquee span{font-size:22px;gap:36px;padding:0 18px}
+  .story-pics{height:420px}
+  .story-pics .seal{width:86px;height:86px;left:62%}
+  .stat b{font-size:42px}
+  .row{grid-template-columns:1fr;gap:0}
+  .form{padding:26px 20px}
+  .foot{grid-template-columns:1fr}
+  .toast{bottom:64px;max-width:calc(100% - 32px);font-size:13px}
+  .hero:after{background:linear-gradient(180deg,rgba(14,11,9,.6) 0%,rgba(14,11,9,.5) 30%,rgba(14,11,9,.9) 70%,var(--ink) 100%)}
+  .lb .prev{left:8px}.lb .next{right:8px}
+  .lb .ctl{width:44px;height:44px}
+  .tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -18px;padding:0 18px;width:calc(100% + 36px)}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+  .marquee-track{animation:none}
+  .rv{opacity:1;transform:none}.rv-img{clip-path:none}
+  .hero h1 .ln>span{transform:none}.fade-up{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8L5 8Z"/><path d="M9 10V6.5a3 3 0 0 1 6 0V10"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-l" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+  <symbol id="i-r" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7L12 3Z"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6" fill="currentColor"/></symbol>
+  <symbol id="i-fb" viewBox="0 0 24 24"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v6h4v-6h3l1-4h-4V8.6c0-.3.3-.6.6-.6Z"/></symbol>
+  <symbol id="i-tt" viewBox="0 0 24 24"><path d="M14 4v10.5a3.5 3.5 0 1 1-3.5-3.5"/><path d="M14 4a5 5 0 0 0 5 5"/></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8Z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-cup" viewBox="0 0 24 24"><path d="M4 9h13v5a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6V9Z"/><path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M8 3c0 1.5 1.5 1.5 1.5 3M12 3c0 1.5 1.5 1.5 1.5 3"/></symbol>
+</svg>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a href="#top" class="logo" aria-label="Himalayan Brew and Khaja home">
+      <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><circle cx="20" cy="20" r="18.5"/><path d="M7 27l8-11 5 6 4-5 9 10"/><path d="M15 16l2.5 3.4M24 17l2 2.6"/><circle cx="27.5" cy="11.5" r="2"/></svg>
+      <span>Himalayan Brew<small>&amp; Khaja · Kathmandu</small></span>
+    </a>
+    <nav class="links" aria-label="Primary"><a href="#menu">Menu</a><a href="#story">Our story</a><a href="#gallery">Gallery</a><a href="#reserve">Visit</a></nav>
+    <div class="nav-r">
+      <a href="#reserve" class="book-btn">Reserve a table</a>
+      <button class="cart-btn" id="cartBtn" aria-label="Open cart"><svg class="icon"><use href="#i-bag"/></svg><span class="lbl">Order</span><span class="count" id="count">0</span></button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero" style="padding:0">
+  <div class="hero-media" id="heroMedia">
+    <video autoplay muted loop playsinline preload="auto" poster="../../media/img/poster-food-coffee-pour.jpg"><source src="../../media/video/food-coffee-pour.mp4" type="video/mp4"></video>
+  </div>
+  <div class="wrap">
+    <span class="eyebrow fade-up" style="animation-delay:.1s">Est. 2013 · Jhamsikhel, Lalitpur</span>
+    <h1><span class="ln"><span>Slow chiya,</span></span><span class="ln"><span><em>honest</em> momo,</span></span><span class="ln"><span>mountain air.</span></span></h1>
+    <div class="hero-row">
+      <div>
+        <p class="fade-up" style="animation-delay:.55s">A neighbourhood café and Newari kitchen. Single-estate Ilam tea, hand-folded momo and khaja sets cooked the way our grandmothers did.</p>
+        <div class="cta fade-up" style="animation-delay:.7s">
+          <a href="#menu" class="btn btn-gold">Order online <svg class="icon"><use href="#i-arrow"/></svg></a>
+          <a href="#reserve" class="btn btn-line">Book a table</a>
+        </div>
+      </div>
+      <div class="hero-meta fade-up" style="animation-delay:.85s">
+        <div><b>4.9</b>Google, 2.4k reviews</div>
+        <div><b>7am</b>Open daily till 10pm</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-cue" aria-hidden="true">Scroll</div>
+</section>
+
+<div class="marquee" aria-hidden="true"><div class="marquee-track" id="mq"></div></div>
+
+<section id="menu">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="rv"><span class="eyebrow">The menu</span><h2>Cooked to <em>order</em>,<br>served with care.</h2></div>
+      <div class="tabs rv" role="tablist" aria-label="Menu categories" id="tabs"></div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<section class="story" id="story">
+  <div class="wrap story-grid">
+    <div class="story-pics">
+      <figure class="p1 rv-img"><img src="../../media/img/the1971-interior.jpg" alt="Warm, wood-panelled dining room" loading="lazy"></figure>
+      <figure class="p2 rv-img"><img src="../../media/img/cafe-ambience.jpg" alt="Candle-lit café corner" loading="lazy"></figure>
+      <svg class="seal" viewBox="0 0 120 120" aria-hidden="true"><defs><path id="circ" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0"/></defs><text font-family="Manrope" font-size="10.5" font-weight="700" letter-spacing="3.2" fill="currentColor"><textPath href="#circ">HAND-FOLDED · SLOW-BREWED · SINCE 2013 ·</textPath></text><path d="M44 72l10-14 6 7 5-6 11 13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="rv">
+      <span class="eyebrow">Our story</span>
+      <h2 style="margin-top:18px">From a tea stall<br>to your <em>table</em>.</h2>
+      <p>It started with one copper kettle and a bench outside our aunt’s house in Patan. Eleven years later we still brew every pot of chiya by hand, grind spices each morning, and fold every momo in the open kitchen where you can watch.</p>
+      <p>Our tea comes from a single co-op in Ilam, our buffalo meat from a family farm in Kirtipur, and our recipes from three generations of Newar home cooks.</p>
+      <div class="stats" id="stats">
+        <div class="stat"><b data-to="11">0</b><span>Years on the same corner</span></div>
+        <div class="stat"><b data-to="48" data-suf="k">0</b><span>Momo folded every month</span></div>
+        <div class="stat"><b data-to="23">0</b><span>Spices ground in-house</span></div>
+        <div class="stat"><b data-to="4.9" data-dec="1">0</b><span>Average guest rating</span></div>
+      </div>
+      <div class="sign"><i>Pema &amp; Rajan</i> Founders</div>
+    </div>
+  </div>
+</section>
+
+<section id="gallery">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="rv"><span class="eyebrow">Gallery</span><h2>A taste of <em>the room</em>.</h2></div>
+      <p class="lead rv">Low light, long conversations and the sound of the tandoor. Tap any photo to look closer.</p>
+    </div>
+    <div class="masonry" id="masonry"></div>
+  </div>
+</section>
+
+<section class="reserve" id="reserve">
+  <div class="reserve-bg" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="rv">
+      <span class="eyebrow">Visit us</span>
+      <h2 style="margin-top:18px">Save a seat by<br>the <em>window</em>.</h2>
+      <p class="lead" style="margin-top:18px">Walk-ins always welcome. For groups of six or more, or for the Friday night Newari feast, we recommend booking ahead.</p>
+      <div class="info">
+        <div><svg class="icon"><use href="#i-pin"/></svg><span><b>Jhamsikhel Marg 14</b>Lalitpur 44600, Nepal</span></div>
+        <div><svg class="icon"><use href="#i-clock"/></svg><span><b>Every day, 7:00 – 22:00</b>Kitchen closes 21:30</span></div>
+        <div><svg class="icon"><use href="#i-phone"/></svg><span><b>+977 1-5543 210</b>hello@himalayanbrew.com.np</span></div>
+      </div>
+    </div>
+    <form class="form rv" id="resForm" novalidate>
+      <h3>Reserve a table</h3>
+      <p class="sub">We’ll confirm by SMS within 15 minutes.</p>
+      <div class="row">
+        <div class="field"><label for="rName">Full name</label><input id="rName" name="name" autocomplete="name"><span class="msg">Please add your name so we know who to expect.</span></div>
+        <div class="field"><label for="rPhone">Phone</label><input id="rPhone" name="phone" inputmode="tel" autocomplete="tel" placeholder="98XXXXXXXX"><span class="msg">Enter a 10-digit mobile number.</span></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="rDate">Date</label><input id="rDate" name="date" type="date"><span class="msg">Choose today or a later date.</span></div>
+        <div class="field"><label for="rTime">Time</label><select id="rTime" name="time"></select><span class="msg">Pick a time slot.</span></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="rGuests">Guests</label><select id="rGuests" name="guests"></select><span class="msg">How many are joining?</span></div>
+        <div class="field"><label for="rSeat">Seating</label><select id="rSeat" name="seat"><option>Window</option><option>Courtyard</option><option>Kitchen counter</option><option>No preference</option></select></div>
+      </div>
+      <div class="field"><label for="rNote">Notes (optional)</label><textarea id="rNote" name="note" placeholder="Birthdays, allergies, high chair…"></textarea></div>
+      <button class="btn btn-gold" type="submit">Request reservation <svg class="icon"><use href="#i-arrow"/></svg></button>
+      <div class="done" aria-live="polite">
+        <div class="check"><svg class="icon" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+        <h3>You’re on the list</h3>
+        <p id="doneTxt"></p>
+        <div class="ref" id="doneRef"></div>
+        <button type="button" class="btn btn-line" id="resAgain">Make another booking</button>
+      </div>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a href="#top" class="logo"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><circle cx="20" cy="20" r="18.5"/><path d="M7 27l8-11 5 6 4-5 9 10"/><circle cx="27.5" cy="11.5" r="2"/></svg><span>Himalayan Brew<small>&amp; Khaja · Kathmandu</small></span></a>
+        <p>Chiya, momo and Newari khaja, cooked slow in Lalitpur since 2013.</p>
+        <div class="social"><a href="#" aria-label="Instagram"><svg class="icon"><use href="#i-ig"/></svg></a><a href="#" aria-label="Facebook"><svg class="icon"><use href="#i-fb"/></svg></a><a href="#" aria-label="TikTok"><svg class="icon"><use href="#i-tt"/></svg></a></div>
+      </div>
+      <div><h4>Explore</h4><ul><li><a href="#menu">Menu</a></li><li><a href="#story">Our story</a></li><li><a href="#gallery">Gallery</a></li><li><a href="#reserve">Reservations</a></li></ul></div>
+      <div><h4>Hours</h4><ul><li>Mon – Fri · 7:00 – 22:00</li><li>Sat – Sun · 8:00 – 22:30</li><li>Newari feast · Fri 19:00</li></ul></div>
+      <div><h4>Contact</h4><ul><li>Jhamsikhel Marg 14, Lalitpur</li><li>+977 1-5543 210</li><li>hello@himalayanbrew.com.np</li></ul></div>
+    </div>
+    <div class="big-word" aria-hidden="true">Brew &amp; Khaja</div>
+    <div class="copy"><span>© 2026 Himalayan Brew &amp; Khaja Pvt. Ltd.</span><span>Prices in NPR · 13% VAT applied at checkout</span></div>
+  </div>
+</footer>
+
+<div class="drawer" id="drawer" aria-hidden="true">
+  <div class="scrim" data-close></div>
+  <aside class="sheet" role="dialog" aria-modal="true" aria-label="Your order">
+    <header><h3>Your order</h3><button class="iconbtn" data-close aria-label="Close cart"><svg class="icon"><use href="#i-x"/></svg></button></header>
+    <div class="lines" id="lines"></div>
+    <div class="sum" id="sum"></div>
+  </aside>
+</div>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <figure><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure>
+  <button class="ctl prev" id="lbPrev" aria-label="Previous photo"><svg class="icon"><use href="#i-l"/></svg></button>
+  <button class="ctl next" id="lbNext" aria-label="Next photo"><svg class="icon"><use href="#i-r"/></svg></button>
+  <button class="ctl x" id="lbX" aria-label="Close viewer"><svg class="icon"><use href="#i-x"/></svg></button>
+</div>
+
+<div class="toast" id="toast" role="status"><svg class="icon"><use href="#i-check"/></svg><span></span></div>
+<a class="back" href="../../index.html#work">← Back to portfolio</a>
+
+<script>
+const IMG='../../media/img/';
+const MENU=[
+ {id:'chiya',cat:'Chiya & Drinks',name:'Masala Chiya',d:'Ilam black tea simmered with milk, cardamom, clove and fresh ginger.',img:'masala-chiya',opts:[['Cup',120],['Pot for two',220]],tag:'Signature'},
+ {id:'glh',cat:'Chiya & Drinks',name:'Ginger Lemon Honey',d:'Pressed ginger, Himalayan wild honey and lemon. Our winter cure-all.',img:'ginger-lemon-honey-tea',opts:[['Cup',160],['Pot for two',290]]},
+ {id:'lime',cat:'Chiya & Drinks',name:'Fresh Lime Soda',d:'Hand-squeezed lime over crushed ice and soda, sweet or salted.',img:'fresh-lime-soda',opts:[['Sweet',180],['Salted',180]]},
+ {id:'smomo',cat:'Momo',name:'Chicken Steamed Momo',d:'Hand-folded dumplings, timur-spiced filling, roasted tomato achar.',img:'chicken-steamed-momo',opts:[['8 pcs',320],['12 pcs',440]],tag:'Best seller'},
+ {id:'cmomo',cat:'Momo',name:'C-Momo Chilli',d:'Crisp-fried momo tossed in a fiery capsicum and onion chilli glaze.',img:'c-momo-chilli',opts:[['Chicken',380],['Buff',360],['Veg',340]],tag:'Spicy'},
+ {id:'platter',cat:'Momo',name:'Momo Tasting Platter',d:'Steamed, kothey and jhol momo with three house achars. Made for sharing.',img:'momo-platter',opts:[['For two',890]]},
+ {id:'samay',cat:'Khaja Sets',name:'Samay Baji',d:'Newari ceremonial set: beaten rice, choila, bara, egg, aloo and pickles.',img:'samay-baji',opts:[['Classic',650],['Veg',560]],tag:'Newari'},
+ {id:'dalbhat',cat:'Khaja Sets',name:'Veg Dal Bhat Set',d:'Black lentils, jeera rice, seasonal tarkari, saag, papad and gundruk.',img:'veg-dal-bhat-set',opts:[['Regular',550],['Refill thali',690]]},
+ {id:'chatamari',cat:'Khaja Sets',name:'Chatamari',d:'Thin rice-flour crêpe topped with minced meat, egg and spring onion.',img:'chatamari',opts:[['Veg',350],['Chicken',420]]},
+ {id:'sekuwa',cat:'Khaja Sets',name:'Chicken Sekuwa',d:'Charcoal-grilled skewers marinated overnight in mustard oil and spices.',img:'chicken-sekuwa',opts:[['Half',480],['Full',820]]},
+ {id:'thukpa',cat:'Khaja Sets',name:'Veg Thukpa',d:'Hand-pulled noodles in a slow vegetable broth with greens and chilli oil.',img:'veg-thukpa',opts:[['Bowl',380]]},
+ {id:'chowmein',cat:'Khaja Sets',name:'Chicken Chowmein',d:'Wok-tossed noodles, cabbage, carrot and our smoky street-style sauce.',img:'chicken-chowmein',opts:[['Regular',360],['Large',460]]},
+ {id:'selroti',cat:'Sweets',name:'Sel Roti',d:'Ring-shaped rice doughnuts, crisp outside and soft within. With chiya.',img:'sel-roti',opts:[['2 pcs',180],['4 pcs',320]]},
+ {id:'halwa',cat:'Sweets',name:'Gajar Halwa',d:'Slow-cooked carrot pudding with ghee, khuwa, cashew and pistachio.',img:'gajar-halwa',opts:[['Bowl',260]],tag:'Seasonal'},
+ {id:'panipuri',cat:'Sweets',name:'Pani Puri',d:'Crisp puri, spiced potato and tangy tamarind-mint pani. A street favourite.',img:'pani-puri',opts:[['6 pcs',220],['10 pcs',340]]}
+];
+const CATS=['All','Chiya & Drinks','Momo','Khaja Sets','Sweets'];
+const GAL=[['cafe-g1','Tandoor chicken, straight off the coals'],['swagat-swagat','The arched dining hall'],['cafe-g2','Saffron biryani in brass'],['the1971-hero','The Friday Newari feast'],['cafe-ambience','Evening light in the back room'],['cinnamon-hero','House curries and fresh naan'],['cafe-g3','Spices we grind each morning'],['cafe-hero-poster','A table for six'],['the1971-interior','The green room, upstairs']];
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const rs=n=>'Rs '+Math.round(n).toLocaleString('en-IN');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}}
+
+/* marquee */
+const words=['Masala chiya','Hand-folded momo','Samay baji','Sel roti','Ilam single estate','Charcoal sekuwa','Newari feast Fridays'];
+const mqHTML=words.map(w=>`<span>${w}<svg><use href="#i-leaf"/></svg></span>`).join('');
+$('#mq').innerHTML=mqHTML+mqHTML;
+
+/* nav + parallax */
+const nav=$('#nav'),hm=$('#heroMedia');
+function onScroll(){const y=scrollY;nav.classList.toggle('solid',y>40);if(!reduce&&y<innerHeight*1.2)hm.style.transform=`translate3d(0,${y*.32}px,0) scale(${1+y*.0002})`}
+addEventListener('scroll',onScroll,{passive:true});onScroll();
+
+/* menu */
+let cat='All';const sel={};
+$('#tabs').innerHTML=CATS.map(c=>`<button class="tab" role="tab" aria-selected="${c===cat}" data-cat="${c}">${c}</button>`).join('');
+$('#grid').innerHTML=MENU.map(m=>{sel[m.id]=0;return `<article class="card rv" data-cat="${m.cat}" data-id="${m.id}">
+  <div class="ph"><img src="${IMG+m.img}.jpg" alt="${m.name}" loading="lazy">${m.tag?`<span class="tag ${m.tag==='Spicy'||m.tag==='Best seller'?'hot':''}">${m.tag}</span>`:''}</div>
+  <div class="body"><div class="top"><h3>${m.name}</h3><span class="price">${rs(m.opts[0][1])}</span></div><p>${m.d}</p>
+  <div class="bot">${m.opts.length>1?`<div class="seg" role="group" aria-label="Choose option">${m.opts.map((o,i)=>`<button type="button" aria-pressed="${i===0}" data-i="${i}">${o[0]}</button>`).join('')}</div>`:`<span style="font-size:13px;color:var(--mute)">${m.opts[0][0]}</span>`}
+  <button class="add" type="button"><svg class="icon"><use href="#i-plus"/></svg>Add</button></div></div></article>`}).join('');
+$('#tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(!b)return;cat=b.dataset.cat;$$('.tab').forEach(t=>t.setAttribute('aria-selected',t===b));
+  $$('.card').forEach((c,i)=>{const show=cat==='All'||c.dataset.cat===cat;c.classList.toggle('hide',!show);if(show&&!reduce){c.animate([{opacity:0,transform:'translateY(18px)'},{opacity:1,transform:'none'}],{duration:500,delay:(i%6)*50,easing:'cubic-bezier(.2,.7,.2,1)',fill:'backwards'})}})});
+$('#grid').addEventListener('click',e=>{const card=e.target.closest('.card');if(!card)return;const m=MENU.find(x=>x.id===card.dataset.id);
+  const sb=e.target.closest('.seg button');if(sb){sel[m.id]=+sb.dataset.i;card.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed',b===sb));card.querySelector('.price').textContent=rs(m.opts[sel[m.id]][1]);return}
+  if(e.target.closest('.add')){addToCart(m,sel[m.id]);fly(card.querySelector('.ph img'))}});
+
+/* cart */
+let cart=store.get('hbk-cart',[]);
+const cartBtn=$('#cartBtn');
+function key(id,o){return id+'|'+o}
+function addToCart(m,o){const k=key(m.id,o);const l=cart.find(x=>x.k===k);if(l)l.q++;else cart.push({k,id:m.id,o,q:1});save();toast(`${m.name}${m.opts.length>1?' · '+m.opts[o][0]:''} added`)}
+function save(){store.set('hbk-cart',cart);renderCart()}
+function totals(){const sub=cart.reduce((s,l)=>{const m=MENU.find(x=>x.id===l.id);return s+(m?m.opts[l.o][1]*l.q:0)},0);const svc=0;const vat=sub*.13;return{sub,vat,total:sub+vat}}
+function renderCart(){const n=cart.reduce((s,l)=>s+l.q,0);$('#count').textContent=n;
+  if(!cart.length){$('#lines').innerHTML=`<div class="empty"><svg class="icon"><use href="#i-bag"/></svg><h4>Your order is empty</h4><p>Add a pot of chiya or a plate of momo to get started.</p><button class="btn btn-gold" data-close data-go="menu">Browse the menu</button></div>`;$('#sum').style.display='none';return}
+  $('#sum').style.display='';
+  $('#lines').innerHTML=cart.map(l=>{const m=MENU.find(x=>x.id===l.id);if(!m)return'';return `<div class="line" data-k="${l.k}"><img src="${IMG+m.img}.jpg" alt=""><div><h5>${m.name}</h5><small>${m.opts[l.o][0]} · ${rs(m.opts[l.o][1])}</small><br><div class="qty"><button data-d="-1" aria-label="Decrease quantity"><svg class="icon"><use href="#i-minus"/></svg></button><span>${l.q}</span><button data-d="1" aria-label="Increase quantity"><svg class="icon"><use href="#i-plus"/></svg></button></div></div><div><div class="lp">${rs(m.opts[l.o][1]*l.q)}</div><button class="rm" data-rm>Remove</button></div></div>`}).join('');
+  const t=totals();$('#sum').innerHTML=`<div class="r"><span>Subtotal</span><span>${rs(t.sub)}</span></div><div class="r"><span>VAT (13%)</span><span>${rs(t.vat)}</span></div><div class="r"><span>Delivery within 3 km</span><span>Free</span></div><div class="r t"><span>Total</span><span>${rs(t.total)}</span></div><button class="btn btn-gold" id="checkout">Place order · ${rs(t.total)}</button>`}
+$('#lines').addEventListener('click',e=>{const ln=e.target.closest('.line');if(!ln)return;const l=cart.find(x=>x.k===ln.dataset.k);const d=e.target.closest('[data-d]');
+  if(d){l.q+= +d.dataset.d;if(l.q<1)cart=cart.filter(x=>x!==l);save()}else if(e.target.closest('[data-rm]')){cart=cart.filter(x=>x!==l);save()}});
+$('#sum').addEventListener('click',e=>{if(!e.target.closest('#checkout'))return;const t=totals();const ref='HBK-'+Math.random().toString(36).slice(2,7).toUpperCase();cart=[];store.set('hbk-cart',cart);$('#count').textContent=0;$('#sum').style.display='none';
+  $('#lines').innerHTML=`<div class="success"><div class="check"><svg class="icon" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><h3 style="font-size:32px">Order confirmed</h3><p>${rs(t.total)} paid · ready in about 25 minutes. We’ll text you when the rider leaves.</p><div class="ref">${ref}</div><button class="btn btn-line" data-close style="margin-top:10px">Back to the menu</button></div>`});
+const drawer=$('#drawer');let lastFocus;
+function openCart(){lastFocus=document.activeElement;drawer.classList.add('open');drawer.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';setTimeout(()=>drawer.querySelector('.iconbtn').focus(),50)}
+function closeCart(){drawer.classList.remove('open');drawer.setAttribute('aria-hidden','true');document.body.style.overflow='';if(!cart.length)renderCart();lastFocus&&lastFocus.focus()}
+cartBtn.addEventListener('click',openCart);
+drawer.addEventListener('click',e=>{const c=e.target.closest('[data-close]');if(c){closeCart();if(c.dataset.go)$('#menu').scrollIntoView()}});
+function fly(img){cartBtn.classList.add('bump');setTimeout(()=>cartBtn.classList.remove('bump'),380);if(reduce||!img)return;
+  const a=img.getBoundingClientRect(),b=cartBtn.getBoundingClientRect();const f=img.cloneNode();f.className='flyer';const s=90;
+  Object.assign(f.style,{width:s+'px',height:s+'px',left:(a.left+a.width/2-s/2)+'px',top:(a.top+a.height/2-s/2)+'px'});document.body.appendChild(f);
+  const dx=b.left+b.width/2-(a.left+a.width/2),dy=b.top+b.height/2-(a.top+a.height/2);
+  f.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${dx*.5}px,${dy*.5-120}px) scale(.6)`,opacity:1,offset:.5},{transform:`translate(${dx}px,${dy}px) scale(.15)`,opacity:.3}],{duration:850,easing:'cubic-bezier(.5,0,.3,1)'}).onfinish=()=>f.remove()}
+let tt;function toast(m){const t=$('#toast');t.querySelector('span').textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2200)}
+renderCart();
+
+/* gallery */
+$('#masonry').innerHTML=GAL.map((g,i)=>`<button class="rv" data-i="${i}" aria-label="Open photo: ${g[1]}"><img src="${IMG+g[0]}.jpg" alt="${g[1]}" loading="lazy"><span class="cap">${g[1]}</span></button>`).join('');
+let gi=0;const lb=$('#lb'),lbImg=$('#lbImg');
+function showLb(i){gi=(i+GAL.length)%GAL.length;lbImg.style.opacity=0;setTimeout(()=>{lbImg.src=IMG+GAL[gi][0]+'.jpg';lbImg.alt=GAL[gi][1];$('#lbCap').textContent=`${GAL[gi][1]}  ·  ${gi+1} / ${GAL.length}`;lbImg.style.opacity=1},reduce?0:150)}
+$('#masonry').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;lastFocus=b;showLb(+b.dataset.i);lb.classList.add('open');document.body.style.overflow='hidden';$('#lbX').focus()});
+function closeLb(){lb.classList.remove('open');document.body.style.overflow='';lastFocus&&lastFocus.focus()}
+$('#lbPrev').onclick=()=>showLb(gi-1);$('#lbNext').onclick=()=>showLb(gi+1);$('#lbX').onclick=closeLb;
+lb.addEventListener('click',e=>{if(e.target===lb)closeLb()});
+addEventListener('keydown',e=>{if(lb.classList.contains('open')){if(e.key==='ArrowLeft')showLb(gi-1);if(e.key==='ArrowRight')showLb(gi+1);if(e.key==='Escape')closeLb()}else if(e.key==='Escape'&&drawer.classList.contains('open'))closeCart()});
+
+/* reservation */
+const f=$('#resForm');const today=new Date();const iso=d=>d.toISOString().slice(0,10);
+$('#rDate').min=iso(today);$('#rDate').value=iso(new Date(today.getTime()+864e5));
+$('#rTime').innerHTML='<option value="">Select a time</option>'+['08:00','09:30','11:00','12:30','14:00','17:30','18:30','19:00','19:30','20:30'].map(t=>`<option ${t==='19:00'?'selected':''}>${t}</option>`).join('');
+$('#rGuests').innerHTML=[1,2,3,4,5,6,7,8,10,12].map(n=>`<option value="${n}" ${n===2?'selected':''}>${n} ${n>1?'guests':'guest'}</option>`).join('');
+const rules={name:v=>v.trim().length>=2,phone:v=>/^(\+?977[- ]?)?9\d{9}$/.test(v.replace(/[\s-]/g,'')),date:v=>v&&v>=iso(today),time:v=>!!v,guests:v=>!!v};
+function check(el){const r=rules[el.name];if(!r)return true;const ok=r(el.value);el.closest('.field').classList.toggle('err',!ok);el.setAttribute('aria-invalid',!ok);return ok}
+f.addEventListener('focusout',e=>{if(rules[e.target.name]&&e.target.value)check(e.target)});
+f.addEventListener('input',e=>{const fl=e.target.closest('.field');if(fl&&fl.classList.contains('err'))check(e.target)});
+f.addEventListener('submit',e=>{e.preventDefault();const els=[...f.elements].filter(x=>rules[x.name]);const bad=els.filter(x=>!check(x));if(bad.length){bad[0].focus();return}
+  const d=new Date(f.date.value+'T00:00');const ref='T-'+(Math.floor(Math.random()*9000)+1000);
+  $('#doneTxt').textContent=`${f.name.value.trim().split(' ')[0]}, we've held a ${f.seat.value.toLowerCase()} table for ${f.guests.value} on ${d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})} at ${f.time.value}.`;
+  $('#doneRef').textContent=ref;f.classList.add('ok');f.scrollIntoView({block:'center',behavior:reduce?'auto':'smooth'});const bk=store.get('hbk-bookings',[]);bk.push({ref,name:f.name.value,date:f.date.value,time:f.time.value,guests:f.guests.value});store.set('hbk-bookings',bk)});
+$('#resAgain').onclick=()=>{f.classList.remove('ok');f.name.value='';f.phone.value='';f.note.value='';f.name.focus()};
+
+/* reveal + counters */
+function count(el){const to=+el.dataset.to,dec=+(el.dataset.dec||0),suf=el.dataset.suf||'';if(reduce){el.innerHTML=to.toFixed(dec)+(suf?`<sup>${suf}</sup>`:'');return}const t0=performance.now(),D=1600;
+  (function tick(t){const p=Math.min((t-t0)/D,1),e=1-Math.pow(1-p,3);el.innerHTML=(to*e).toFixed(dec)+(suf?`<sup>${suf}</sup>`:'');if(p<1)requestAnimationFrame(tick)})(t0)}
+const io=new IntersectionObserver(es=>es.forEach(en=>{if(!en.isIntersecting)return;const el=en.target;el.classList.add('in');if(el.id==='stats')el.querySelectorAll('b').forEach(count);io.unobserve(el)}),{threshold:.12,rootMargin:'0px 0px -6% 0px'});
+$$('.rv,.rv-img,#stats').forEach((el,i)=>{if(el.classList.contains('card'))el.style.transitionDelay=(i%3)*90+'ms';io.observe(el)});
+</script>
+</body>
+</html>
