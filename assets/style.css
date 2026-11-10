@@ -611,3 +611,10 @@ footer a:hover{color:var(--acc)}
   .work-card.in .wc-media img,.wc-shine,.wc-sparks i,.work-card.in .wc-badge,.work-card.in .wc-live{animation:none}
   .wc-curtain{display:none}
 }
+
+/* testimonial avatar: full face, not clipped */
+.t-wrap{padding:14px 10px}
+.t-card{padding-left:12px}
+.t-av{flex:none;width:72px;height:72px;margin:6px}
+.t-av img{transform:none;object-position:50% 35%;border-radius:50%}
+.t-who{gap:18px}
