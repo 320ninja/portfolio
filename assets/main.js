@@ -12,6 +12,9 @@ const CAT = {
   app: { n: 'App Development', c: 'var(--app)' }
 };
 const PROJECTS = [
+  { id: 'techagent247', t: 'Tech Agent 247', cat: 'web', sub: 'My UK digital agency: websites, apps, hosting, SEO & marketing', c1: '#0b120a', y: 2026, client: 'My agency, UK', ext: 'https://www.techagent247.co.uk', live: 'techagent247.co.uk',
+    d: 'My own UK digital agency. Tech Agent 247 gives small businesses one team for websites, apps, UK hosting, SEO, marketing, design and social media, all on one simple monthly plan, plus AI chat assistants.',
+    try: ['Opens techagent247.co.uk in a new tab'], stack: ['Agency site', 'UK hosting', 'AI chat assistants'] },
   { id: 'brew-bean', t: 'Himalayan Brew & Khaja', cat: 'web', sub: 'Café & kitchen website with live ordering', c1: '#1a120c', y: 2025, client: 'Café, Lalitpur', vid: 'food-coffee-pour', size: 'wide',
     d: 'A premium website for a Nepali café and kitchen: a cinematic video hero, a photo menu with variants, a slide-out cart with VAT and pickup checkout, a lightbox gallery and table reservations.',
     try: ['Filter the menu and add momo or chiya to the cart', 'Open the cart, change quantities and check out', 'Browse the gallery and reserve a table'],
@@ -162,7 +165,7 @@ $('#filters').innerHTML = [['all', 'All'], ['web', 'Web'], ['design', 'Design'],
   .map(([k, n], i) => `<button role="tab" data-f="${k}" class="${i ? '' : 'on'}" aria-selected="${!i}">${n}<sup>${counts[k]}</sup></button>`).join('');
 
 $('#workGrid').innerHTML = PROJECTS.map((p, i) => `
-  <button class="work-card ${i===PROJECTS.length-1&&PROJECTS.length%2?'full':(Math.floor(i/2)%2?(i%2?'wide':'narrow'):(i%2?'narrow':'wide'))}" data-id="${p.id}" data-cat="${p.cat}" style="--cat:${CAT[p.cat].c};--c1:${p.c1}" aria-label="Open live demo: ${p.t}">
+  <button class="work-card ${i===PROJECTS.length-1&&PROJECTS.length%2?'full':(Math.floor(i/2)%2?(i%2?'wide':'narrow'):(i%2?'narrow':'wide'))}" data-id="${p.id}" data-cat="${p.cat}" style="--cat:${CAT[p.cat].c};--c1:${p.c1}" aria-label="${p.ext ? 'Visit website' : 'Open live demo'}: ${p.t}">
     <div class="wc-media">
       <img src="assets/shots/${p.id}.jpg" alt="${p.t} screenshot" loading="lazy" onerror="this.remove()">
       ${p.vid ? `<video class="wc-vid" muted loop playsinline preload="none" poster="media/img/poster-${p.vid}.jpg"><source src="media/video/${p.vid}.mp4" type="video/mp4"></video><span class="wc-play"><svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Hover to preview</span>` : ''}
@@ -395,6 +398,7 @@ const modal = $('#modal'), frame = $('#mFrame');
 let lastFocus;
 function openProject(id) {
   const p = PROJECTS.find(x => x.id === id); if (!p) return;
+  if (p.ext) { window.open(p.ext, '_blank', 'noopener'); return; }
   lastFocus = document.activeElement;
   const url = p.url || `demos/${p.id}/index.html`;
   $('#mUrl').textContent = p.live || `ninja.com.np/work/${p.id}`;

@@ -611,3 +611,7 @@ footer a:hover{color:var(--acc)}
   .work-card.in .wc-media img,.wc-shine,.wc-sparks i,.work-card.in .wc-badge,.work-card.in .wc-live{animation:none}
   .wc-curtain{display:none}
 }
+
+/* Tech Agent 247 link */
+.ta-link{text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--acc) 50%,transparent);text-underline-offset:4px;transition:text-decoration-color .3s}
+.ta-link:hover{text-decoration-color:var(--acc)}
