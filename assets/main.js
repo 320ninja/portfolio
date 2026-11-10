@@ -521,6 +521,20 @@ if (!reduce) {
   setInterval(() => { if (Math.abs(skew) > .05) { skew *= .8; $('.marquee').style.setProperty('--skew', skew.toFixed(2) + 'deg'); } }, 60);
 }
 
+/* ---------- hero portrait: page-in, scroll and pointer motion ---------- */
+(function portrait() {
+  const pt = $('#portrait'); if (!pt) return;
+  const tilt = $('.pt-tilt', pt);
+  const show = () => pt.classList.add('in');
+  if (reduce) show(); else { const t = setInterval(() => { if (!$('#loader') || $('#loader').classList.contains('done')) { clearInterval(t); setTimeout(show, 350); } }, 100); }
+  if (reduce) return;
+  let mx = 0, my = 0, sy = 0;
+  const apply = () => { tilt.style.transform = `perspective(900px) rotateY(${mx * 12}deg) rotateX(${-my * 12}deg) translateY(${sy * -0.18}px) rotate(${sy * 0.02}deg)`; pt.style.opacity = Math.max(0, 1 - sy / (innerHeight * .9)); };
+  $('.hero').addEventListener('pointermove', e => { const r = pt.getBoundingClientRect(); mx = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (innerWidth / 2))); my = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (innerHeight / 2))); apply(); });
+  $('.hero').addEventListener('pointerleave', () => { mx = my = 0; apply(); });
+  addEventListener('scroll', () => { sy = Math.min(scrollY, innerHeight * 1.2); requestAnimationFrame(apply); }, { passive: true });
+})();
+
 /* ---------- starfield + shooting stars behind the whole page ---------- */
 (function starfield() {
   const cv = document.createElement('canvas');
