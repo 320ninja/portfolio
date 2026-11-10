@@ -263,6 +263,7 @@ $$('.h2').forEach(h => {
     });
   };
   wrap(h);
+  const ws = h.querySelectorAll('.w>span'); ws.forEach((s, k) => s.style.setProperty('--t', ws.length > 1 ? (k / (ws.length - 1)).toFixed(3) : 0));
   h.classList.add('split');
   if (!h.classList.contains('reveal')) h.classList.add('reveal');
 });
