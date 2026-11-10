@@ -537,11 +537,11 @@ footer a:hover{color:var(--acc)}
 }
 
 /* ---------- hero portrait ---------- */
-.portrait{position:absolute;right:2%;top:50%;width:165px;aspect-ratio:1;margin:0;z-index:1;translate:0 -50%;pointer-events:auto}
+.portrait{position:absolute;right:2%;top:28%;width:195px;aspect-ratio:1;margin:0;z-index:1;translate:0 -28%;pointer-events:auto}
 .pt-tilt{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .25s ease-out}
-.pt-glow{position:absolute;inset:-18%;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--acc) 45%,transparent),transparent 65%);filter:blur(30px);opacity:.8;animation:ptBreathe 5s ease-in-out infinite}
+.pt-glow{position:absolute;inset:-22%;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--acc) 60%,#ff2e7e 20%) 0%,transparent 65%);filter:blur(28px);opacity:.9;animation:ptBreathe 5s ease-in-out infinite}
 @keyframes ptBreathe{50%{transform:scale(1.12);opacity:1}}
-.pt-ring{position:absolute;inset:-4%;border-radius:50%;padding:4px;background:conic-gradient(from var(--ang),var(--acc),var(--acc2),#ffb02e,#38e8b0,#4f8cff,var(--acc));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:edgeSpin 6s linear infinite}
+.pt-ring{position:absolute;inset:-4%;border-radius:50%;padding:4px;background:conic-gradient(from var(--ang),var(--acc),#ff2e7e,#ffb02e,#38e8b0,#4f8cff,#a855f7,var(--acc));filter:drop-shadow(0 0 8px color-mix(in srgb,var(--acc) 60%,transparent));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:edgeSpin 6s linear infinite}
 .pt-orbit{position:absolute;inset:-17%;width:134%;height:134%;animation:ptSpin 22s linear infinite;overflow:visible}
 .pt-orbit text{font-family:var(--display);font-size:9.6px;font-weight:600;letter-spacing:.32em;fill:color-mix(in srgb,var(--acc) 70%,#fff)}
 @keyframes ptSpin{to{transform:rotate(360deg)}}
