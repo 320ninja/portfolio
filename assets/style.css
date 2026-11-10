@@ -486,3 +486,8 @@ p b,.hero-sub b{background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit
 .marquee-track span:nth-child(5n+1){color:#ff8a5c}.marquee-track span:nth-child(5n+2){color:#ff5fa2}.marquee-track span:nth-child(5n+3){color:#7aa8ff}.marquee-track span:nth-child(5n+4){color:#5ef0c0}.marquee-track span:nth-child(5n){color:#ffc95c}
 .flabel,.field label{color:color-mix(in oklab,var(--acc) 40%,#ccc)}
 footer a:hover{color:var(--acc)}
+
+/* testimonial avatars */
+.t-av{width:64px;height:64px;overflow:hidden;color:#fff!important;box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--acc);transition:transform .4s var(--ease)}
+.t-av img{width:100%;height:100%;object-fit:cover;transform:translateY(4px) scale(1.08)}
+.t-card:hover .t-av{transform:rotate(-6deg) scale(1.08)}

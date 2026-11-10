@@ -173,7 +173,7 @@ $('#workGrid').innerHTML = PROJECTS.map((p, i) => `
 
 $('#processList').innerHTML = PROCESS.map(([h, p, t], i) => `<div class="step"><span class="n">0${i + 1}</span><h3>${h}</h3><p>${p}</p><small>${t}</small></div>`).join('');
 
-$('#tTrack').innerHTML = TESTI.map(([q, n, r, c]) => `<div class="t-card"><blockquote>${q}</blockquote><div class="t-who"><span class="t-av" style="background:${c}">${n.split(' ').map(w => w[0]).join('')}</span><div><b>${n}</b><span>${r}</span></div></div></div>`).join('');
+$('#tTrack').innerHTML = TESTI.map(([q, n, r, c]) => `<div class="t-card"><blockquote>${q}</blockquote><div class="t-who"><span class="t-av" style="background:${c}"><img src="https://api.dicebear.com/9.x/notionists/svg?seed=${encodeURIComponent(n)}&backgroundColor=transparent" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${n.split(' ').map(w => w[0]).join('')}'))"></span><div><b>${n}</b><span>${r}</span></div></div></div>`).join('');
 $('#tDots').innerHTML = TESTI.map((_, i) => `<i data-i="${i}" class="${i ? '' : 'on'}"></i>`).join('');
 
 /* ---------- loader ---------- */
