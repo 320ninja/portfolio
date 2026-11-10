@@ -135,10 +135,10 @@ const PROCESS = [
   ['Launch & grow', 'Deployment, SEO, analytics and a hand-over session, plus 30 days of free support after launch.', 'Ongoing']
 ];
 const TESTI = [
-  ['nin ja rebuilt our café website and online ordering in three weeks. Pickup orders went up 40% in the first month, and the site finally looks like us.', 'Sujata Shrestha', 'Owner, Himalayan Brew House', '#ff5b2e'],
-  ['The brand identity and launch video were so consistent it felt like one agency did everything. Turns out it was one very talented person.', 'Rohan Karki', 'Founder, Saathi Rides', '#4f8cff'],
-  ['Our support chatbot now answers 70% of customer questions automatically. Setup was smooth and everything was explained clearly.', 'Anjali Gurung', 'Ops lead, Kora Travels', '#38e8b0'],
-  ['Fast, reliable and genuinely creative. Our YouTube retention jumped after nin ja took over editing. We have not looked back.', 'Bikash Thapa', 'Creator, 450k subscribers', '#ffb02e']
+  ['nin ja rebuilt our café website and online ordering in three weeks. Pickup orders went up 40% in the first month, and the site finally looks like us.', 'Sujata Shrestha', 'Owner, Himalayan Brew House', '#ff5b2e', 48],
+  ['The brand identity and launch video were so consistent it felt like one agency did everything. Turns out it was one very talented person.', 'Rohan Karki', 'Founder, Saathi Rides', '#4f8cff', 52],
+  ['Our support chatbot now answers 70% of customer questions automatically. Setup was smooth and everything was explained clearly.', 'Anjali Gurung', 'Ops lead, Kora Travels', '#38e8b0', 45],
+  ['Fast, reliable and genuinely creative. Our YouTube retention jumped after nin ja took over editing. We have not looked back.', 'Bikash Thapa', 'Creator, 450k subscribers', '#ffb02e', 57]
 ];
 const ROLES = ['App Developer', 'Web Developer', 'SaaS Builder', 'Brand Designer', 'Video Editor', 'AI Builder', 'Social Media Manager', 'Digital Marketer', 'SEO Expert', 'Growth Partner'];
 const TOOLS = ['React', 'Next.js', 'Figma', 'After Effects', 'Premiere Pro', 'Illustrator', 'Python', 'DaVinci Resolve', 'Tailwind', 'OpenAI', 'Photoshop', 'Node.js', 'Blender', 'TypeScript', 'Meta Ads', 'Google Ads', 'Search Console', 'Ahrefs', 'Stripe', 'Supabase', 'HubSpot'];
@@ -173,7 +173,7 @@ $('#workGrid').innerHTML = PROJECTS.map((p, i) => `
 
 $('#processList').innerHTML = PROCESS.map(([h, p, t], i) => `<div class="step"><span class="n">0${i + 1}</span><h3>${h}</h3><p>${p}</p><small>${t}</small></div>`).join('');
 
-$('#tTrack').innerHTML = TESTI.map(([q, n, r, c]) => `<div class="t-card"><blockquote>${q}</blockquote><div class="t-who"><span class="t-av" style="background:${c}"><img src="https://api.dicebear.com/9.x/notionists/svg?seed=${encodeURIComponent(n)}&backgroundColor=transparent" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${n.split(' ').map(w => w[0]).join('')}'))"></span><div><b>${n}</b><span>${r}</span></div></div></div>`).join('');
+$('#tTrack').innerHTML = TESTI.map(([q, n, r, c, av]) => `<div class="t-card"><blockquote>${q}</blockquote><div class="t-who"><span class="t-av" style="background:${c}"><img src="https://i.pravatar.cc/150?img=${av}" alt="${n}" loading="lazy"></span><div><b>${n}</b><span>${r}</span></div></div></div>`).join('');
 $('#tDots').innerHTML = TESTI.map((_, i) => `<i data-i="${i}" class="${i ? '' : 'on'}"></i>`).join('');
 
 /* ---------- loader ---------- */
