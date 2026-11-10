@@ -485,6 +485,7 @@ if (!reduce) {
   document.addEventListener('pointermove', e => {
     const card = e.target.closest('.skill,.work-card,.step,.t-card,.form,.clink');
     if (card) { const r = card.getBoundingClientRect(); card.style.setProperty('--mx', (e.clientX - r.left) + 'px'); card.style.setProperty('--my', (e.clientY - r.top) + 'px'); }
+    if (card && card.matches('.work-card')) { const r = card.getBoundingClientRect(); card.style.setProperty('--px', ((e.clientX - r.left) / r.width - .5).toFixed(3)); card.style.setProperty('--py', ((e.clientY - r.top) / r.height - .5).toFixed(3)); }
     const c = e.target.closest('.work-card,.skill');
     cur.style.setProperty('--cc', c ? getComputedStyle(c).getPropertyValue(c.matches('.skill') ? '--c' : '--cat') : '');
     const sec = e.target.closest('.section'); if (sec) sec.style.setProperty('--sx', (e.clientX / innerWidth * 100) + '%');
@@ -506,6 +507,11 @@ if (!reduce) {
   /* scroll: heading parallax + marquee skew from scroll speed */
   const heads = $$('.section-head .h2,.about-copy .h2,.contact .h2');
   const boxes = $$('.skill,.work-card,.step,.float-card,.t-wrap,.form');
+  $$('.work-card .wc-media').forEach((m, i) => {
+    m.insertAdjacentHTML('beforeend', '<span class="wc-curtain" aria-hidden="true"></span><span class="wc-shine" aria-hidden="true"></span><span class="wc-glow" aria-hidden="true"></span><span class="wc-sparks" aria-hidden="true">' + '<i></i>'.repeat(8) + '</span>');
+    m.style.setProperty('--d', (i % 6) * .9 + 's');
+    m.querySelectorAll('.wc-sparks i').forEach((s, k) => { s.style.left = (8 + Math.random() * 84) + '%'; s.style.animationDelay = (k * .35 + Math.random() * .6).toFixed(2) + 's'; s.style.animationDuration = (2.4 + Math.random() * 1.8).toFixed(2) + 's'; });
+  });
   /* animated glowing edge on every box */
   $$('.skill,.work-card,.step,.form,.float-card,.clink,.about-tags span,.hero-meta>div,.t-wrap,.filters').forEach(b => { const e = document.createElement('i'); e.className = 'edge'; e.setAttribute('aria-hidden', 'true'); b.appendChild(e); if (getComputedStyle(b).position === 'static') b.style.position = 'relative'; });
   let lastS = scrollY, skew = 0, ticking = false;
