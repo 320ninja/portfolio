@@ -552,10 +552,10 @@ if (!reduce) {
     const foot = () => { const pr = pt.getBoundingClientRect(); let l = pr.left, r = pr.right;
       $$('.pt-orbit,.pt-badge,.pt-ring', pt).forEach(e => { if (getComputedStyle(e).display === 'none') return; const b = e.getBoundingClientRect(); l = Math.min(l, b.left); r = Math.max(r, b.right); });
       return { l: l - pr.left, w: r - l, s: pr.width }; };
-    let size = 205;
+    let size = 330;
     pt.classList.remove('pt-compact');
-    for (let k = 0; k < 3; k++) { pt.style.width = size + 'px'; const f = foot(); if (f.w <= gap) break; size = Math.max(120, size * gap / f.w); }
-    if (foot().w > gap) { pt.classList.add('pt-compact'); for (let k = 0; k < 3; k++) { pt.style.width = size + 'px'; const f = foot(); if (f.w <= gap) break; size = Math.max(110, size * gap / f.w); } }
+    for (let k = 0; k < 3; k++) { pt.style.width = size + 'px'; const f = foot(); if (f.w <= gap) break; size = Math.max(220, size * gap / f.w); }
+    if (foot().w > gap || size < 280) { pt.classList.add('pt-compact'); for (let k = 0; k < 3; k++) { pt.style.width = size + 'px'; const f = foot(); if (f.w <= gap) break; size = Math.max(110, size * gap / f.w); } }
     const f = foot();
     const left = gapL + Math.max(0, (gap - f.w) / 2) - f.l;          /* centre the footprint in the free space */
     pt.style.right = (ir.right - (left + f.s)) + 'px';

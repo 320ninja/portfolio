@@ -468,7 +468,7 @@ p.reveal.in,.hero-sub.reveal.in,.work-note.reveal.in{filter:none}
 .eyebrow{background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
 .eyebrow::before{background:var(--acc)}
 p b,.hero-sub b{background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero-title .line:first-child .word{background:linear-gradient(90deg,#fff 30%,#ffd1c2);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* (removed: first-line gradient clip caused "digital" to double and overlap) */
 .hero-meta b{background:linear-gradient(135deg,#fff,var(--acc) 60%,var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero-meta span{color:color-mix(in oklab,var(--acc) 35%,#bbb)}
 .skill h3{background:linear-gradient(90deg,#fff 20%,var(--c));-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -637,3 +637,18 @@ footer a:hover{color:var(--acc)}
 .pt-badge.b2{background:linear-gradient(rgba(14,14,20,.9),rgba(14,14,20,.9)) padding-box,linear-gradient(120deg,#38e8b0,#22d3ee,#4f8cff) border-box}
 .pt-badge.b3{background:linear-gradient(rgba(14,14,20,.9),rgba(14,14,20,.9)) padding-box,linear-gradient(120deg,#ffd23f,#ff5b2e,#ff2e7e) border-box}
 @media (prefers-reduced-motion:reduce){.pt-tilt::before{animation:none}}
+
+/* ---------- hero: narrower text column so the portrait can be big ---------- */
+@media (min-width:1001px){
+  .hero-inner>.pill{max-width:520px;flex-wrap:wrap;white-space:normal;line-height:1.5;border-radius:18px}
+  .hero-inner>.hero-title{max-width:640px;font-size:clamp(44px,5vw,80px)}
+  .hero-inner>.hero-sub{max-width:540px}
+  .hero-inner>.hero-cta,.hero-inner>.hero-meta{max-width:620px}
+}
+.hero-title .serif{display:inline-block;padding-right:.08em}
+/* badges sit in the corners, off the face */
+.portrait .b1{left:-24%;top:-2%;right:auto;bottom:auto}
+.portrait .b2{right:-36%;left:auto;top:46%;bottom:auto}
+.portrait .b3{left:-14%;bottom:-2%;top:auto;right:auto}
+.portrait .pt-badge{font-size:13px;padding:8px 14px}
+.pt-orbit text{font-size:9.6px}
