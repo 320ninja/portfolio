@@ -566,6 +566,21 @@ footer a:hover{color:var(--acc)}
 @media (max-width:1000px){.portrait{position:relative;right:auto;top:auto;translate:none;width:min(150px,40vw);margin:0 0 34px 6px}.b2{right:-30%}.b1{left:-22%}}
 @media (prefers-reduced-motion:reduce){.portrait .pt-tilt{opacity:1;scale:1;filter:none;clip-path:none}.portrait .pt-badge{opacity:1}.pt-ring,.pt-orbit,.pt-glow,.pt-badge{animation:none}}
 
+
+/* ---- 3D globe sphere cage ---- */
+.pt-sphere{position:absolute;width:380px;height:380px;top:50%;left:50%;translate:-50% -50%;pointer-events:none;perspective:700px;transform-style:preserve-3d;z-index:0}
+.sph-ring{position:absolute;top:50%;left:50%;border-radius:50%;box-sizing:border-box}
+.sr-m1,.sr-m2,.sr-m3{width:340px;height:340px;margin:-170px 0 0 -170px;border:1.5px solid rgba(80,190,255,.5);box-shadow:0 0 16px 2px rgba(80,190,255,.35);animation:merSpin 15s linear infinite}
+.sr-m2{animation-delay:-5s;border-color:rgba(255,90,170,.4);box-shadow:0 0 16px 2px rgba(255,90,170,.3)}
+.sr-m3{animation-delay:-10s;border-color:rgba(90,255,180,.35);box-shadow:0 0 16px 2px rgba(90,255,180,.25)}
+@keyframes merSpin{to{transform:rotateY(360deg)}}
+.sr-eq{width:340px;height:340px;margin:-170px 0 0 -170px;border:2px solid rgba(80,190,255,.65);box-shadow:0 0 20px 4px rgba(80,190,255,.4),0 0 40px rgba(80,190,255,.2);transform:rotateX(90deg) translateZ(0)}
+.sr-t1{width:294px;height:294px;margin:-147px 0 0 -147px;border:1px solid rgba(80,190,255,.35);box-shadow:0 0 10px rgba(80,190,255,.2);transform:rotateX(90deg) translateZ(-85px)}
+.sr-t2{width:294px;height:294px;margin:-147px 0 0 -147px;border:1px solid rgba(80,190,255,.35);box-shadow:0 0 10px rgba(80,190,255,.2);transform:rotateX(90deg) translateZ(85px)}
+.sr-p1{width:170px;height:170px;margin:-85px 0 0 -85px;border:1px solid rgba(80,190,255,.2);transform:rotateX(90deg) translateZ(-147px)}
+.sr-p2{width:170px;height:170px;margin:-85px 0 0 -85px;border:1px solid rgba(80,190,255,.2);transform:rotateX(90deg) translateZ(147px)}
+@media (prefers-reduced-motion:reduce){.sr-m1,.sr-m2,.sr-m3{animation:none}}
+
 /* ---------- project cards: rich motion ---------- */
 /* idle camera drift on every thumbnail */
 @keyframes kb{0%{translate:0 0;rotate:0deg}50%{translate:-1.6% -2.2%;rotate:.4deg}100%{translate:1.2% -1%;rotate:-.3deg}}
@@ -638,16 +653,7 @@ footer a:hover{color:var(--acc)}
 .pt-badge.b3{background:linear-gradient(rgba(14,14,20,.9),rgba(14,14,20,.9)) padding-box,linear-gradient(120deg,#ffd23f,#ff5b2e,#ff2e7e) border-box}
 @media (prefers-reduced-motion:reduce){.pt-tilt::before{animation:none}}
 
-/* ---- globe overlay ---- */
-.pt-globe{position:absolute;inset:0;border-radius:50%;overflow:hidden;pointer-events:none;z-index:2}
-.pt-glat{position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:rgba(80,200,255,.28);stroke-width:1}
-.pt-glat ellipse:nth-child(3){stroke:rgba(80,200,255,.45);stroke-width:1.2}
-.pt-lon{position:absolute;inset:0;border-radius:50%;border:1.2px solid rgba(80,200,255,.3);animation:lonSpin 10s linear infinite}
-.pt-lon:nth-child(3){animation-delay:-3.33s;border-color:rgba(80,200,255,.2)}
-.pt-lon:nth-child(4){animation-delay:-6.67s;border-color:rgba(100,220,255,.18)}
-@keyframes lonSpin{from{transform:perspective(260px) rotateY(0deg)}to{transform:perspective(260px) rotateY(360deg)}}
-.pt-atm{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 32% 30%,rgba(100,200,255,.15) 0%,transparent 55%),radial-gradient(circle at 70% 72%,rgba(56,232,176,.1) 0%,transparent 45%);pointer-events:none}
-@media (prefers-reduced-motion:reduce){.pt-lon{animation:none}}
+
 
 
 /* ---------- hero: narrower text column so the portrait can be big ---------- */
