@@ -536,7 +536,7 @@ if (!reduce) {
   const pt = $('#portrait'); if (!pt) return;
   const tilt = $('.pt-tilt', pt);
   const show = () => pt.classList.add('in');
-  if (reduce) show(); else { const t = setInterval(() => { if (!$('#loader') || $('#loader').classList.contains('done')) { clearInterval(t); setTimeout(show, 350); } }, 100); }
+  if (reduce) show(); else { const t = setInterval(() => { if (!$('#loader') || $('#loader').classList.contains('done')) { clearInterval(t); setTimeout(show, 80); } }, 100); }
   /* fit the portrait into the free space right of the text so it never overlaps */
   const fit = () => {
     if (innerWidth <= 1000) { pt.style.width = pt.style.right = pt.style.top = ''; pt.classList.remove('pt-compact'); return; }
