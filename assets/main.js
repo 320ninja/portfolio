@@ -580,13 +580,16 @@ if (!reduce) {
   cv.id = 'stars'; cv.setAttribute('aria-hidden', 'true');
   document.body.prepend(cv);
   const ctx = cv.getContext('2d');
-  let w, h, dpr, stars = [], shots = [], last = 0, nextShot = 800, py = 0;
+  let w, h, dpr, stars = [], shots = [], nodes = [], last = 0, nextShot = 800, py = 0;
+  const nodeCols = ['255,91,46','255,46,126','79,140,255','56,232,176','255,176,46'];
   const accent = () => getComputedStyle(document.documentElement).getPropertyValue('--acc').trim() || '#ff5b2e';
   function size() {
     dpr = Math.min(devicePixelRatio || 1, 2);
     w = innerWidth; h = innerHeight; cv.width = w * dpr; cv.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const n = Math.min(260, Math.floor(w * h / 6000));
     stars = Array.from({ length: n }, () => ({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 1.3 + .2, a: Math.random() * .6 + .2, tw: Math.random() * 2 + .5, ph: Math.random() * 6.3, z: Math.random() * .6 + .2 }));
+    const nc = Math.min(70, Math.floor(w * h / 18000));
+    nodes = Array.from({ length: nc }, () => { const c = nodeCols[Math.floor(Math.random() * nodeCols.length)]; const spd = .12 + Math.random() * .18; const ang = Math.random() * 6.283; return { x: Math.random() * w, y: Math.random() * h, vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd, r: Math.random() * 2 + 1.5, c, a: .55 + Math.random() * .35, tw: Math.random() * 1.5 + .5, ph: Math.random() * 6.3 }; });
   }
   function shoot() {
     const fromLeft = Math.random() < .5, ang = (fromLeft ? 1 : -1) * (Math.PI / 5 + Math.random() * .35);
@@ -604,6 +607,31 @@ if (!reduce) {
       ctx.beginPath(); ctx.arc(s.x, y, s.r, 0, 6.283); ctx.fill();
     }
     if (!reduce) {
+      for (const n of nodes) {
+        n.x += n.vx * dt / 16; n.y += n.vy * dt / 16;
+        if (n.x < -20) n.x = w + 20; else if (n.x > w + 20) n.x = -20;
+        if (n.y < -20) n.y = h + 20; else if (n.y > h + 20) n.y = -20;
+      }
+      const dist = 160;
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
+          const d = Math.sqrt(dx * dx + dy * dy);
+          if (d < dist) {
+            ctx.globalAlpha = (1 - d / dist) * .22;
+            ctx.strokeStyle = `rgba(${nodes[i].c},1)`;
+            ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y); ctx.stroke();
+          }
+        }
+      }
+      for (const n of nodes) {
+        ctx.globalAlpha = n.a * (.6 + .4 * Math.sin(t / 1000 * n.tw + n.ph));
+        ctx.fillStyle = `rgba(${n.c},1)`;
+        ctx.shadowColor = `rgba(${n.c},0.8)`; ctx.shadowBlur = 8;
+        ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, 6.283); ctx.fill();
+        ctx.shadowBlur = 0;
+      }
       nextShot -= dt;
       if (nextShot <= 0) { shoot(); if (Math.random() < .25) setTimeout(shoot, 250); nextShot = 1600 + Math.random() * 2600; }
       for (const s of shots) {
