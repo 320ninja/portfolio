@@ -1,0 +1,138 @@
+/* ==========================================================================
+   Motion layer v3: transitions adapted from the Nepal Yatra build.
+   Loaded after style.css. Everything here switches off with reduced motion.
+   ========================================================================== */
+
+/* Fix: style.css declares @keyframes shine twice; the later (sliding) one made the gradient
+   serif words ("digital") drift over their neighbours. Give the text sheen its own name. */
+.h2 em.serif,.hero-title .serif{animation-name:serif-sheen}
+@keyframes serif-sheen{to{background-position:300% 0}}
+
+/* 0. Prayer flags strung across the top of the hero, swaying in the wind */
+.prayer-flags{position:absolute;left:0;right:0;top:82px;z-index:0;pointer-events:none;opacity:.9}
+.prayer-flags svg{display:block;overflow:visible}
+.prayer-flags rect{transform-box:fill-box;transform-origin:50% 0;animation:flag-sway var(--fd,2.6s) ease-in-out var(--fdl,0s) infinite}
+@keyframes flag-sway{0%,100%{transform:rotate(-5deg) skewY(-4deg) scaleY(1)}50%{transform:rotate(6deg) skewY(4deg) scaleY(.94)}}
+.hero-inner{position:relative;z-index:1}
+/* Fix: a later ".portrait{translate:0 -50%}" in style.css also hit the stacked phone layout and pushed the
+   photo up over the logo. On narrow screens the portrait sits in the flow, so no offset. */
+@media (max-width:1000px){.portrait{translate:none;margin-top:36px}}
+/* phones: the small Earth behind the hero photo is wider than the photo there, so leave it out; keep chips on screen */
+@media (max-width:1000px){.portrait .pt-sphere{display:none}.portrait .b1{left:-14%;top:10%}.portrait .b2{right:-34%;top:-8%}}
+
+/* 1. Headline words rise out of their mask with a tilt and a blur */
+.split .w>span{filter:blur(8px);transition:transform 1s var(--ease),opacity .6s,filter .9s var(--ease),color .3s,text-shadow .3s;transition-delay:calc(var(--i,0) * 70ms)}
+.split.in .w>span{filter:blur(0)}
+.split .w:hover>span{transition-delay:0s}
+
+/* 2. Eyebrow rule carries a travelling highlight */
+.eyebrow::before{width:40px;height:1px;background:linear-gradient(90deg,transparent,currentColor,transparent) no-repeat,color-mix(in srgb,currentColor 28%,transparent);background-size:50% 100%,100% 100%;animation:eb-run 1.8s ease-in-out infinite}
+@keyframes eb-run{from{background-position:-100% 0,0 0}to{background-position:200% 0,0 0}}
+
+/* 3. A light sweeps across the primary buttons every few seconds */
+.btn:not(.btn-ghost)::after{content:'';position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);transform:translateX(-120%);animation:btn-shine 3.4s ease-in-out infinite}
+@keyframes btn-shine{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+
+/* 4. Showreel: a small window that opens to full screen as you scroll */
+@media (min-width:861px){
+  .reel.expand{height:220vh;padding:0}
+  .reel.expand .reel-frame{position:sticky;top:0;height:100vh;width:100%;border-radius:0;background:transparent;transform:none!important;will-change:auto}
+  .reel.expand .reel-frame video,.reel.expand .reel-shade{clip-path:var(--clip,inset(0));will-change:clip-path}
+  .reel.expand .reel-ui{translate:0 var(--uy,0px)}
+  .reel.expand .reel-meta{opacity:var(--mo,1)}
+}
+
+/* 5. Skill cards: the two columns drift apart and settle as the section scrolls past */
+.skill.in{translate:0 calc(var(--sy,0px) + var(--shear,0px));rotate:var(--shr,0deg)}
+
+/* 6. Skill hover: a colour wash rises up the card and the title slides */
+.skill .wash{position:absolute;inset:auto 0 0 0;height:0;background:linear-gradient(0deg,color-mix(in srgb,var(--c) 22%,transparent),transparent);transition:height .55s var(--ease);pointer-events:none;z-index:0}
+.skill:hover .wash{height:100%}
+.skill h3{transition:translate .35s var(--ease),color .35s,letter-spacing .5s}
+.skill:hover h3{translate:6px 0}
+
+/* 7. Process step numbers pop in on a spring */
+.step .n{display:inline-block;transition:transform .8s cubic-bezier(.34,1.56,.64,1),opacity .6s;transform:scale(.3) rotate(-25deg);opacity:0}
+.step.in .n{transform:none;opacity:1;transition-delay:.3s}
+
+/* 8. Testimonials swing on a 3D axis as they change */
+.t-wrap{perspective:1600px}
+.t-card{transition:rotate .9s var(--ease),scale .9s var(--ease),opacity .9s var(--ease),filter .9s var(--ease)}
+.t-card.side-l{rotate:y 32deg;scale:.82;opacity:.12;filter:blur(10px)}
+.t-card.side-r{rotate:y -32deg;scale:.82;opacity:.12;filter:blur(10px)}
+
+/* 9. Big footer wordmark spirals in from a blur and settles with a bounce */
+.foot-big{transition:transform 1.5s cubic-bezier(.34,1.35,.64,1),opacity 1s,filter 1.2s var(--ease)}
+.foot-big.spin-wait{transform:rotate(-14deg) scale(.6) translate(10%,18%);opacity:0;filter:blur(18px)}
+
+/* 10. A thick rule draws out from the centre under the marquee */
+.draw-rule{height:3px;border-radius:3px;margin:28px auto 0;width:min(1240px,100% - 40px);background:var(--grad);transform:scaleX(0);transform-origin:center;transition:transform 1.2s cubic-bezier(.76,0,.24,1)}
+.draw-rule.in{transform:scaleX(1)}
+
+@media (prefers-reduced-motion:reduce){
+  .prayer-flags rect,.eyebrow::before,.btn::after{animation:none}
+  .split .w>span{filter:none}
+  .skill.in{translate:none;rotate:none}
+  .t-card.side-l,.t-card.side-r{rotate:none;scale:none;filter:none;opacity:1}
+  .foot-big.spin-wait{transform:none;opacity:1;filter:none}
+  .step .n,.draw-rule{transform:none;opacity:1}
+}
+
+/* ==========================================================================
+   Globe journey: a pinned Earth that spins, opens like an iris, and hands
+   over to the portrait. All values are driven by --p-style vars from globe.js.
+   ========================================================================== */
+body{overflow-x:clip}   /* "hidden" turns body into a scroll box and breaks position:sticky */
+/* hero keeps its original 140px top padding: the straight flag line ends ~127px down */
+.globe-journey{position:relative;height:560vh;background:#030712}
+.gj-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.gj-sky{position:absolute;inset:0;background:radial-gradient(60% 60% at 50% 45%,#0d1f4d 0%,#030712 70%)}
+.gj-canvas{position:absolute;inset:0;opacity:var(--g-op,1)}
+.gj-canvas canvas{display:block;width:100%!important;height:100%!important}
+.gj-caption{position:absolute;inset:auto 0 9% 0;display:flex;flex-direction:column;align-items:center;gap:10px;padding:0 20px;text-align:center;pointer-events:none}
+.gj-caption .eyebrow{justify-content:center;color:#ffc46b}
+.gj-line{font-family:var(--display);font-weight:600;font-size:clamp(34px,6vw,84px);line-height:1;letter-spacing:-.04em;text-shadow:0 6px 30px rgba(0,0,0,.7)}
+.gj-line .serif{color:var(--acc)}
+.gj-cap1{opacity:var(--c1o,0);translate:0 var(--c1y,40px);filter:blur(var(--c1b,10px))}
+.gj-cap2{opacity:var(--c2o,0);translate:0 var(--c2y,40px);filter:blur(var(--c2b,10px))}
+.gj-iris{position:absolute;inset:0;display:grid;place-items:center;clip-path:circle(var(--iris,0%) at var(--ix,50%) var(--iy,46%));background:#08080b}
+.gj-portrait{position:relative;width:clamp(200px,24vw,320px);aspect-ratio:1;margin:0 0 12vh;scale:var(--ps,.6);filter:blur(var(--pb,16px));translate:var(--pdx,0px) calc(var(--pdy,0px) - 2vh)}
+.gj-portrait .pt-glow{opacity:calc(var(--go,0) * .85);animation:edgeSpin 10s linear infinite}   /* the colour halo arrives last, so the emerging photo stays a clean flat circle */
+.gj-portrait .pt-orbit{opacity:var(--oo,0);animation-duration:30s}
+.gj-ringwrap .pt-ring{inset:5%}
+.gj-ringwrap{position:absolute;inset:-10%;border-radius:50%;-webkit-mask:conic-gradient(from -90deg,#000 calc(var(--draw,0) * 1turn),transparent 0);mask:conic-gradient(from -90deg,#000 calc(var(--draw,0) * 1turn),transparent 0)}
+.gj-chip{scale:var(--cs,0);transform-origin:center}
+.gj-chip.b1{--cs:var(--cs1,0)}.gj-chip.b2{--cs:var(--cs2,0)}.gj-chip.b3{--cs:var(--cs3,0)}.gj-chip.b4{--cs:var(--cs4,0)}.gj-chip.b5{--cs:var(--cs5,0)}.gj-chip.b6{--cs:var(--cs6,0)}
+/* three more chips around the globe portrait, same style as "7+ years" */
+.gj-portrait .b4{right:-64%;top:36%;animation:ptFloat 6.8s ease-in-out -1s infinite;background:linear-gradient(rgba(14,14,20,.9),rgba(14,14,20,.9)) padding-box,linear-gradient(120deg,#ffb02e,#ff5b2e,#ff2e7e) border-box}
+.gj-portrait .b5{right:-46%;bottom:-12%;animation:ptFloat 7.4s ease-in-out -3s infinite;background:linear-gradient(rgba(14,14,20,.9),rgba(14,14,20,.9)) padding-box,linear-gradient(120deg,#a855f7,#4f8cff,#22d3ee) border-box}
+.gj-portrait .b6{left:-86%;top:56%;animation:ptFloat 6.2s ease-in-out -5s infinite;background:linear-gradient(rgba(14,14,20,.9),rgba(14,14,20,.9)) padding-box,linear-gradient(120deg,#d01020,#ff2e7e,#2d5bd8) border-box}
+.gj-cap3{bottom:7%;opacity:var(--c3o,0);translate:0 var(--c3y,30px)}
+@media (max-width:860px){
+  .globe-journey{height:420vh}
+  .gj-portrait{width:min(190px,48vw)}
+  .gj-portrait .b1{left:-34%;top:-8%}.gj-portrait .b2{right:-38%;top:auto;bottom:-16%}.gj-portrait .b3{left:-36%;bottom:4%}
+  .gj-portrait .b4{right:-30%;top:4%}.gj-portrait .b5,.gj-portrait .b6{display:none}   /* phones: four chips, not six */
+  .gj-caption .eyebrow{font-size:10px;letter-spacing:.14em}
+}
+@media (prefers-reduced-motion:reduce){
+  .globe-journey{height:auto}
+  .gj-stage{position:relative;height:auto;min-height:100svh}
+  .gj-canvas,.gj-cap1,.gj-cap2,.gj-sky{display:none}
+  .gj-iris{position:relative;min-height:100svh;clip-path:none}
+  .gj-portrait{scale:1;filter:none;translate:none}
+  .gj-portrait .pt-glow{opacity:.85}
+  .gj-portrait .pt-orbit{opacity:1}
+  .gj-ringwrap{-webkit-mask:none;mask:none}
+  .gj-chip{scale:1}
+  .gj-cap3{opacity:1;translate:none}
+}
+
+/* Fix: during the scroll reveal the photo is scaled and blurred; Chrome can drop the rounded overflow clip
+   for a frame and show the square, light photo background. Clip the photo with a real circle at every step. */
+.pt-photo,.gj-portrait .pt-photo{border-radius:50%;overflow:hidden;clip-path:circle(50% at 50% 50%);isolation:isolate;transform:translateZ(0)}
+.pt-photo img{border-radius:50%;display:block;background:transparent;clip-path:circle(50% at 50% 50%)}
+.gj-portrait{background:transparent}
+.gj-canvas canvas{background:transparent}
+/* style.css hides every .pt-photo until the hero portrait gets .in; the globe portrait drives its own reveal */
+.gj-portrait .pt-photo{opacity:1;scale:1;filter:none;transition:none}

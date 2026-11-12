@@ -345,8 +345,8 @@ $$('.work-card').forEach(c => {
 /* ---------- showreel ---------- */
 (function reel() {
   const wrap = $('#reel'); if (!wrap) return;
-  const clips = ['nature-coast-aerial', 'travel-market-walk', 'food-coffee-pour', 'city-night-traffic', 'nature-forest-rays', 'food-pan-sizzle', 'tech-code-glow', 'travel-beach-stroll', 'city-crosswalk-rush', 'house-tour'];
-  const labels = ['Travel film · Pokhara coast', 'Documentary · Street market', 'Café promo · Himalayan Brew', 'Music video · City nights', 'Brand film · Into the woods', 'Restaurant ad · Kitchen fire', 'Product teaser · Dev tools', 'Nepal travel · Lakeside stroll', 'Nepal vlog · Kathmandu streets', 'Nepal travel · Himalayan village'];
+  const clips = ['prayer-flags', 'nature-coast-aerial', 'travel-market-walk', 'food-coffee-pour', 'city-night-traffic', 'nature-forest-rays', 'food-pan-sizzle', 'tech-code-glow', 'travel-beach-stroll', 'city-crosswalk-rush', 'house-tour'];
+  const labels = ['Lungta · Every flag carries a wish', 'Travel film · Pokhara coast', 'Documentary · Street market', 'Café promo · Himalayan Brew', 'Music video · City nights', 'Brand film · Into the woods', 'Restaurant ad · Kitchen fire', 'Product teaser · Dev tools', 'Nepal travel · Lakeside stroll', 'Nepal vlog · Kathmandu streets', 'Nepal travel · Himalayan village'];
   const vids = $$('video', wrap); let i = 0, a = 0;
   const load = (v, k) => { v.poster = `media/img/poster-${clips[k]}.jpg`; v.src = `media/video/${clips[k]}.mp4`; };
   load(vids[0], 0); load(vids[1], 1);

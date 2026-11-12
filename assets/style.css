@@ -573,9 +573,9 @@ footer a:hover{color:var(--acc)}
 /* ---- 3D globe sphere cage ---- */
 /* Real Earth globe — replaces cartoon wireframe rings */
 .pt-sphere{position:absolute;width:230px;height:230px;top:50%;left:50%;translate:-50% -50%;pointer-events:none;z-index:0;border-radius:50%}
-.pt-earth{position:absolute;inset:0;border-radius:50%;overflow:hidden;background:url('media/img/earth-day.jpg') 0 50%/200% 100%;animation:earth-spin 22s linear infinite}
+.pt-earth{position:absolute;inset:0;border-radius:50%;overflow:hidden;background:url('../media/img/earth-day.jpg') 0 50%/200% 100%;animation:earth-spin 22s linear infinite}
 .pt-earth::after{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 30% 28%,rgba(255,255,255,.22) 0%,rgba(255,255,255,.04) 32%,transparent 55%),radial-gradient(circle at 73% 65%,rgba(0,5,20,.92) 0%,rgba(0,5,20,.55) 35%,transparent 65%);pointer-events:none}
-.pt-earth-clouds{position:absolute;inset:0;border-radius:50%;overflow:hidden;background:url('media/img/earth-clouds.png') 0 50%/200% 100%;animation:earth-spin 17s linear infinite;mix-blend-mode:screen;opacity:.55}
+.pt-earth-clouds{position:absolute;inset:0;border-radius:50%;overflow:hidden;background:url('../media/img/earth-clouds.png') 0 50%/200% 100%;animation:earth-spin 17s linear infinite;mix-blend-mode:screen;opacity:.55}
 .pt-earth-atm{position:absolute;inset:-10px;border-radius:50%;background:radial-gradient(circle,transparent 48%,rgba(80,160,255,.48) 65%,rgba(40,100,255,.72) 78%,transparent 92%);pointer-events:none;z-index:1}
 @keyframes earth-spin{from{background-position:0% 50%}to{background-position:-200% 50%}}
 @media (prefers-reduced-motion:reduce){.pt-earth,.pt-earth-clouds{animation:none}}

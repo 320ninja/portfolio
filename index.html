@@ -12,7 +12,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=1794470041">
+<link rel="stylesheet" href="assets/style.css?v=1794470042">
+<link rel="stylesheet" href="assets/motion-v3.css?v=14">
 </head>
 <body>
 <div class="loader" id="loader" aria-hidden="true"><div class="ld-logo">nin<span>ja</span>.</div><div class="ld-num" id="ldNum">0</div><div class="ld-bar"><i id="ldBar"></i></div></div>
@@ -47,7 +48,7 @@
       </div>
       <span class="pt-badge b1"><b>7+</b> years</span>
       <span class="pt-badge b2"><i></i>Available now</span>
-      <span class="pt-badge b3"><b>7+</b> years experience</span>
+      <span class="pt-badge b3">📱 Apps that ship</span>
     </figure>
     <div class="pill reveal"><span class="dot"></span> Available for new projects · Now building iOS &amp; Android apps · Kathmandu, Nepal</div>
     <h1 class="hero-title">
@@ -69,6 +70,30 @@
   </div>
   <a href="#about" class="scroll-hint" aria-label="Scroll down"><span></span></a>
 </header>
+
+<section class="globe-journey" id="globe" aria-label="Based in Kathmandu, working worldwide">
+  <div class="gj-stage">
+    <div class="gj-sky" aria-hidden="true"></div>
+    <div class="gj-canvas" id="gjCanvas" aria-hidden="true"></div>
+    <div class="gj-caption gj-cap1" aria-hidden="true"><p class="eyebrow">Kathmandu · 27.7° N</p><p class="gj-line">Based in Nepal.</p></div>
+    <div class="gj-caption gj-cap2" aria-hidden="true"><p class="eyebrow">London · Sydney · Dubai · New York · Tokyo</p><p class="gj-line">Clients <em class="serif">worldwide.</em></p></div>
+    <div class="gj-iris">
+      <figure class="gj-portrait" aria-label="Portrait of Ninja">
+        <div class="pt-glow"></div>
+        <span class="gj-ringwrap"><span class="pt-ring"></span></span>
+        <svg class="pt-orbit" viewBox="0 0 200 200" aria-hidden="true"><defs><linearGradient id="gjGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb02e"/><stop offset=".35" stop-color="#ff2e7e"/><stop offset=".65" stop-color="#a855f7"/><stop offset="1" stop-color="#38e8b0"/></linearGradient><path id="gjOrb" d="M100,100 m-92,0 a92,92 0 1,1 184,0 a92,92 0 1,1 -184,0"/></defs><text fill="url(#gjGrad)"><textPath href="#gjOrb">APP DEVELOPER · WEB · SAAS · BRANDING · MARKETING · SEO ·</textPath></text></svg>
+        <div class="pt-photo"><img src="media/img/ninja-portrait.jpg" alt="Ninja, app and web developer" width="900" height="900" loading="lazy"></div>
+        <span class="pt-badge b1 gj-chip"><b>7+</b> years</span>
+        <span class="pt-badge b2 gj-chip"><i></i>Available now</span>
+        <span class="pt-badge b3 gj-chip">📱 Apps that ship</span>
+        <span class="pt-badge b4 gj-chip"><b>60+</b> projects</span>
+        <span class="pt-badge b5 gj-chip"><b>35+</b> happy clients</span>
+        <span class="pt-badge b6 gj-chip">🇳🇵 Based in Kathmandu</span>
+      </figure>
+      <div class="gj-caption gj-cap3"><p class="eyebrow">Hi, I'm Ninja</p><p class="gj-line">One person. <em class="serif">Every</em> time zone.</p></div>
+    </div>
+  </div>
+</section>
 
 <div class="marquee" aria-hidden="true"><div class="marquee-track" id="marquee"></div></div>
 
@@ -104,19 +129,6 @@
   </div>
 </section>
 
-<section class="flags-band" aria-label="Prayer flags of Nepal">
-  <div class="flags-video-wrap" aria-hidden="true">
-    <video class="flags-video" autoplay muted loop playsinline preload="metadata" poster="media/img/poster-prayer-flags.jpg">
-      <source src="media/video/prayer-flags.mp4" type="video/mp4">
-    </video>
-    <div class="flags-shade"></div>
-  </div>
-  <div class="flags-copy container">
-    <p class="eyebrow">Lungta · wind horses</p>
-    <h2 class="h2 flags-h">Every flag carries a wish <em class="serif">for the road ahead.</em></h2>
-    <p class="flags-sub">Born in Kathmandu, building for the world.</p>
-  </div>
-</section>
 
 <section id="skills" class="section">
   <div class="container">
@@ -254,6 +266,8 @@
   </div>
 </div>
 
-<script src="assets/main.js?v=1794470041"></script>
+<script src="assets/main.js?v=1794470042"></script>
+<script src="assets/motion-v3.js?v=7"></script>
+<script type="module" src="assets/globe.js?v=10"></script>
 </body>
 </html>
