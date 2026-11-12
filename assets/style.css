@@ -67,7 +67,7 @@ img{max-width:100%;display:block}
 .btn-sm{padding:11px 18px;font-size:14px}
 
 /* hero */
-.hero{min-height:100svh;position:relative;display:flex;align-items:center;padding:140px 0 100px;overflow:hidden}
+.hero{min-height:100svh;position:relative;display:flex;align-items:center;padding:140px 0 100px;overflow-x:hidden}
 #heroCanvas{position:absolute;inset:0;width:100%;height:100%}
 .hero-glow{position:absolute;width:900px;height:900px;right:-300px;top:-300px;background:radial-gradient(circle,rgba(255,46,126,.18),transparent 60%);pointer-events:none;animation:glow 12s ease-in-out infinite alternate}
 @keyframes glow{to{transform:translate(-200px,200px) scale(1.2)}}
@@ -552,13 +552,13 @@ footer a:hover{color:var(--acc)}
   background:rgba(14,14,20,.78);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.12);box-shadow:0 14px 40px -14px rgba(0,0,0,.8);transform:translateZ(40px)}
 .pt-badge b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;font-size:16px}
 .pt-badge i{width:8px;height:8px;border-radius:50%;background:#38e8b0;box-shadow:0 0 0 0 rgba(56,232,176,.6);animation:livePulse 1.6s infinite}
-.b1{left:-82%;top:6%;animation:ptFloat 6s ease-in-out infinite}
-.b2{right:-8%;top:-20%;animation:ptFloat 7s ease-in-out -2s infinite}
-.b3{left:-5%;bottom:-22%;animation:ptFloat 6.5s ease-in-out -4s infinite}
+.b1{left:-60%;top:-5%;animation:ptFloat 6s ease-in-out infinite}
+.b2{right:-18%;top:-16%;animation:ptFloat 7s ease-in-out -2s infinite}
+.b3{left:-8%;bottom:-18%;animation:ptFloat 6.5s ease-in-out -4s infinite}
 @keyframes ptFloat{50%{translate:0 -12px}}
 /* page-in */
 .portrait .pt-tilt{opacity:0;scale:.6;filter:blur(14px);clip-path:circle(0% at 50% 50%)}
-.portrait.in .pt-tilt{opacity:1;scale:1;filter:none;clip-path:circle(75% at 50% 50%);transition:opacity 1s var(--ease),scale 1.4s cubic-bezier(.2,1.2,.3,1),filter 1.2s var(--ease),clip-path 1.6s var(--ease),transform .25s ease-out}
+.portrait.in .pt-tilt{opacity:1;scale:1;filter:none;clip-path:circle(200% at 50% 50%);transition:opacity 1s var(--ease),scale 1.4s cubic-bezier(.2,1.2,.3,1),filter 1.2s var(--ease),clip-path 1.6s var(--ease),transform .25s ease-out}
 .portrait .pt-badge{opacity:0}
 .portrait.in .pt-badge{opacity:1;transition:opacity .8s var(--ease) .9s}
 .portrait.in .b2{transition-delay:1.1s}.portrait.in .b3{transition-delay:1.3s}
@@ -568,17 +568,17 @@ footer a:hover{color:var(--acc)}
 
 
 /* ---- 3D globe sphere cage ---- */
-.pt-sphere{position:absolute;width:215px;height:215px;top:50%;left:50%;translate:-50% -50%;pointer-events:none;perspective:500px;transform-style:preserve-3d;z-index:0}
+.pt-sphere{position:absolute;width:230px;height:230px;top:50%;left:50%;translate:-50% -50%;pointer-events:none;perspective:500px;transform-style:preserve-3d;z-index:0}
 .sph-ring{position:absolute;top:50%;left:50%;border-radius:50%;box-sizing:border-box}
-.sr-m1,.sr-m2,.sr-m3{width:194px;height:194px;margin:-97px 0 0 -97px;border:1.5px solid rgba(80,190,255,.5);box-shadow:0 0 12px 2px rgba(80,190,255,.35);animation:merSpin 15s linear infinite}
-.sr-m2{animation-delay:-5s;border-color:rgba(255,90,170,.4);box-shadow:0 0 16px 2px rgba(255,90,170,.3)}
-.sr-m3{animation-delay:-10s;border-color:rgba(90,255,180,.35);box-shadow:0 0 16px 2px rgba(90,255,180,.25)}
+.sr-m1,.sr-m2,.sr-m3{width:210px;height:210px;margin:-105px 0 0 -105px;border:1.5px solid rgba(80,190,255,.55);box-shadow:0 0 14px 2px rgba(80,190,255,.4);animation:merSpin 15s linear infinite}
+.sr-m2{animation-delay:-5s;border-color:rgba(255,90,170,.45);box-shadow:0 0 14px 2px rgba(255,90,170,.35)}
+.sr-m3{animation-delay:-10s;border-color:rgba(90,255,180,.4);box-shadow:0 0 14px 2px rgba(90,255,180,.3)}
 @keyframes merSpin{to{transform:rotateY(360deg)}}
-.sr-eq{width:194px;height:194px;margin:-97px 0 0 -97px;border:2px solid rgba(80,190,255,.65);box-shadow:0 0 16px 3px rgba(80,190,255,.4),0 0 30px rgba(80,190,255,.2);transform:rotateX(90deg) translateZ(0)}
-.sr-t1{width:168px;height:168px;margin:-84px 0 0 -84px;border:1px solid rgba(80,190,255,.35);box-shadow:0 0 8px rgba(80,190,255,.2);transform:rotateX(90deg) translateZ(-48px)}
-.sr-t2{width:168px;height:168px;margin:-84px 0 0 -84px;border:1px solid rgba(80,190,255,.35);box-shadow:0 0 8px rgba(80,190,255,.2);transform:rotateX(90deg) translateZ(48px)}
-.sr-p1{width:96px;height:96px;margin:-48px 0 0 -48px;border:1px solid rgba(80,190,255,.2);transform:rotateX(90deg) translateZ(-84px)}
-.sr-p2{width:96px;height:96px;margin:-48px 0 0 -48px;border:1px solid rgba(80,190,255,.2);transform:rotateX(90deg) translateZ(84px)}
+.sr-eq{width:210px;height:210px;margin:-105px 0 0 -105px;border:2px solid rgba(80,190,255,.7);box-shadow:0 0 18px 3px rgba(80,190,255,.45),0 0 32px rgba(80,190,255,.2);transform:rotateX(90deg) translateZ(0)}
+.sr-t1{width:182px;height:182px;margin:-91px 0 0 -91px;border:1.5px solid rgba(80,190,255,.4);box-shadow:0 0 10px rgba(80,190,255,.25);transform:rotateX(90deg) translateZ(-52px)}
+.sr-t2{width:182px;height:182px;margin:-91px 0 0 -91px;border:1.5px solid rgba(80,190,255,.4);box-shadow:0 0 10px rgba(80,190,255,.25);transform:rotateX(90deg) translateZ(52px)}
+.sr-p1{width:105px;height:105px;margin:-52px 0 0 -52px;border:1px solid rgba(80,190,255,.25);transform:rotateX(90deg) translateZ(-91px)}
+.sr-p2{width:105px;height:105px;margin:-52px 0 0 -52px;border:1px solid rgba(80,190,255,.25);transform:rotateX(90deg) translateZ(91px)}
 @media (prefers-reduced-motion:reduce){.sr-m1,.sr-m2,.sr-m3{animation:none}}
 
 /* ---------- project cards: rich motion ---------- */
@@ -665,8 +665,8 @@ footer a:hover{color:var(--acc)}
 }
 .hero-title .serif{display:inline-block;padding-right:.08em}
 /* badges sit in the corners, off the face */
-.portrait .b1{left:-55%;top:-2%;right:auto;bottom:auto}
-.portrait .b2{right:-5%;left:auto;top:-18%;bottom:auto}
-.portrait .b3{left:-10%;bottom:-12%;top:auto;right:auto}
+.portrait .b1{left:-68%;top:-8%;right:auto;bottom:auto}
+.portrait .b2{right:-20%;left:auto;top:-14%;bottom:auto}
+.portrait .b3{left:-12%;bottom:-14%;top:auto;right:auto}
 .portrait .pt-badge{font-size:13px;padding:8px 14px}
 .pt-orbit text{font-size:9.6px}
